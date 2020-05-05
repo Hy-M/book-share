@@ -5,7 +5,6 @@
         <input type="text" placeholder="Enter a title, author or keyword" />
         <button>Search</button>
       </form>
-      <h2>Browse available books nearby</h2>
     </section>
     <AvailableBooks />
   </div>

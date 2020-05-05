@@ -8,9 +8,16 @@
   },
   {
     "title": "harry potter 2",
-    "id": 1,
+    "id": 2,
     "img": "https://images.unsplash.com/photo-1535398089889-dd807df1dfaa?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80",
     "author": "jk rowling",
     "distance": "0.9 miles away"
+  },
+  {
+    "title": "harry potter 3",
+    "id": 3,
+    "img": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=600&q=60",
+    "author": "jk rowling",
+    "distance": "2 miles away"
   }
 ]
