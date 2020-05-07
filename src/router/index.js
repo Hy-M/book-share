@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Profile from "../views/Profile.vue";
+import SingleBook from "../views/SingleBook.vue";
 
 Vue.use(VueRouter);
 
@@ -15,6 +16,11 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: Profile
+  },
+  {
+    path: "/:book_id",
+    name: "SingleBook",
+    component: SingleBook
   },
   {
     path: "/about",
