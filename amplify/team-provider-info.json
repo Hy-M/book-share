@@ -1,19 +1,19 @@
 {
     "dev": {
         "awscloudformation": {
-            "AuthRoleName": "amplify-bookshare-dev-14819-authRole",
-            "UnauthRoleArn": "arn:aws:iam::450773282713:role/amplify-bookshare-dev-14819-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::450773282713:role/amplify-bookshare-dev-14819-authRole",
-            "Region": "eu-west-2",
-            "DeploymentBucketName": "amplify-bookshare-dev-14819-deployment",
-            "UnauthRoleName": "amplify-bookshare-dev-14819-unauthRole",
-            "StackName": "amplify-bookshare-dev-14819",
-            "StackId": "arn:aws:cloudformation:eu-west-2:450773282713:stack/amplify-bookshare-dev-14819/1e87df40-8e6a-11ea-9bae-021679f87d94",
-            "AmplifyAppId": "di8wyxu3juks6"
+            "AuthRoleName": "amplify-bookshare-dev-232043-authRole",
+            "UnauthRoleArn": "arn:aws:iam::450773282713:role/amplify-bookshare-dev-232043-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::450773282713:role/amplify-bookshare-dev-232043-authRole",
+            "Region": "us-east-2",
+            "DeploymentBucketName": "amplify-bookshare-dev-232043-deployment",
+            "UnauthRoleName": "amplify-bookshare-dev-232043-unauthRole",
+            "StackName": "amplify-bookshare-dev-232043",
+            "StackId": "arn:aws:cloudformation:us-east-2:450773282713:stack/amplify-bookshare-dev-232043/7f090690-930c-11ea-bdbc-0a3121d24df0",
+            "AmplifyAppId": "dvu1tmbr5s01l"
         },
         "categories": {
             "auth": {
-                "bookshareb3a23a95": {}
+                "bookshare28dde848": {}
             }
         }
     }

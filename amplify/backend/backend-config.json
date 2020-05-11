@@ -1,17 +1,10 @@
 {
 	"auth": {
-		"bookshareb3a23a95": {
+		"bookshare28dde848": {
 			"service": "Cognito",
 			"providerPlugin": "awscloudformation",
 			"dependsOn": [],
 			"customAuth": false
-		}
-	},
-	"function": {
-		"booksharea08fd9f3": {
-			"build": true,
-			"providerPlugin": "awscloudformation",
-			"service": "Lambda"
 		}
 	}
 }

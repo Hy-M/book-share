@@ -35,16 +35,16 @@ export default {
       signedIn: false,
     };
   },
-  //beforeCreate is a lifecycle page which will listen to the authState event by using AmplifyEventBus
+  //beforeCreate is a lifecycle  which will listen to the authState event by using AmplifyEventBus
   //if signed in they can view their profile and set signed in to true or if not then redirected to auth so they can sign in
   beforeCreate() {
     AmplifyEventBus.$on("authState", (info) => {
       if (info === "signedIn") {
         this.signedIn = true;
-        this.$router.push("/profile");
+        this.$router.push("/profile").catch((err) => {});
       }
       if (info === "signedOut") {
-        this.$router.push("/auth");
+        this.$router.push("/auth").catch((err) => {});
         this.signedIn = false;
       }
     });

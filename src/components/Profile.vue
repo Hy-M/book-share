@@ -1,7 +1,7 @@
 // src/components/Profile.vue
 
 <template>
-  <h1>Welcome, {{ user.username }}</h1>
+  <h1>Welcome, {{ user.attributes.email }}</h1>
   <!--retrieves the users username by usign amplify -->
 </template>
 
@@ -21,7 +21,9 @@ export default {
       .then((user) => {
         this.user = user;
       })
-      .catch(() => console.log("not signed in..."));
+      .catch(() => {
+        alert("Please sign in to view the app.");
+      });
   },
 };
 </script>

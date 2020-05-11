@@ -20,7 +20,7 @@ const router = new VueRouter({
 
 //beforeResolve guard is a built in component from Vue Router, called right before navigation is confirmed
 //it checks right before navigation is confirmed to check if user is confirmed
-//if authenticated they can go onto to next router or redirected to sign up sign page
+//if authenticated they can go onto to next router or redirected to sign up sign
 router.beforeResolve((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     let user;
