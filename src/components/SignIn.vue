@@ -11,6 +11,9 @@
         placeholder="Password:"
       />
       <button v-on:click="signIn" class="button">Sign In</button>
+      <button v-on:click="forgotPasswordFlow" class="button">
+        Forgot Password ?
+      </button>
     </div>
   </div>
 </template>
@@ -37,6 +40,15 @@ export default {
         this.$router.push("/profile");
       } catch (err) {
         console.log("error signing in", err);
+        alert(err.message);
+      }
+    },
+    async forgotPasswordFlow() {
+      try {
+        this.$router.push("ForgotPassword");
+      } catch (err) {
+        console.log("error", err);
+        alert(err.message);
       }
     },
   },

@@ -50,6 +50,7 @@ export default {
         this.formState = "confirmSignUp";
       } catch (err) {
         console.log("error signing up ", err);
+        alert(err.message);
       }
     },
     async confirmSignUp() {
@@ -60,6 +61,7 @@ export default {
         this.toggle();
       } catch (err) {
         console.log("error confirming signing up ", err);
+        alert(err.message);
       }
     },
     async resendConfirmationCode() {
@@ -69,6 +71,7 @@ export default {
         console.log("code resent successfully");
       } catch (err) {
         console.log("error resending code ", err);
+        alert(err.message);
       }
     },
   },
