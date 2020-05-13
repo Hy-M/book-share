@@ -1,7 +1,6 @@
 <template>
   <header>
-    <h1>Book share</h1>
-    <p>User 1 is logged in</p>
+    <img class="header--logo" src="../assets/shookLogo.gif" />
   </header>
 </template>
 
@@ -11,5 +10,13 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style scoped>
+.header--logo {
+  height: 250px;
+  margin: -1.5rem 0 -1rem 0;
+}
+
+.header--user {
+  margin-top: -1rem;
+}
+</style> 
