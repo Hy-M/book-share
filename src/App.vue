@@ -28,6 +28,8 @@ export default {
   --pink-color: #d65a85;
   --grey-color: rgb(139, 139, 139);
 }
+
+/* make all router-links cursor: pointer */
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

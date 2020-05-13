@@ -1,27 +1,44 @@
 <template>
   <div>
     <section id="searchBar">
-      <form class="searchBar--form">
-        <input class="searchBar--form-input" type="text" placeholder="Enter a title or author" />
+      <form class="searchBar--form" v-on:submit.prevent="fetchBooksByInput">
+        <input
+          class="searchBar--form-input"
+          type="text"
+          placeholder="Enter a title or author"
+          v-model="searchForm.input"
+        />
         <button class="searchBar--form-btn">Search</button>
       </form>
     </section>
     <AvailableBooks />
-    <h2>Got a spare book lying around?</h2>
-    <p>
-      <router-link to="/profile">Click here</router-link>to list your books
-    </p>
+    <router-link to="/profile">
+      <h3 class="availableBooks--h3">Got a spare book lying around?</h3>
+    </router-link>
   </div>
 </template>
 
 <script>
 import AvailableBooks from "@/components/AvailableBooks.vue";
+import * as api from "@/api.js";
 export default {
   name: "Homepage",
   components: {
     AvailableBooks
   },
-  props: {}
+  props: {},
+  data() {
+    return {
+      searchForm: {
+        input: ""
+      }
+    };
+  },
+  methods: {
+    fetchBooksByInput() {
+      api.getBooksByInput(this.searchForm.input);
+    }
+  }
 };
 </script>
 
