@@ -7,6 +7,8 @@
       </form>
     </section>
     <AvailableBooks />
+    <h2>Got a spare book lying around?</h2>
+    <p>Click here to list your books</p>
   </div>
 </template>
 

@@ -3,7 +3,7 @@
     <h2>Browse available books near you</h2>
     <main>
       <div v-for="book in availableBooks" v-bind:key="book.id">
-        {{ path = `/${book.id}`}}
+        {{ path = `/home/${book.id}`}}
         <router-link :to="path">
           <img :src="book.img" />
           <p>book id: {{book.id}}</p>
@@ -23,7 +23,6 @@ export default {
   data() {
     return {
       availableBooks: booksData
-      // path: `/${book.id}`
     };
   }
 };
