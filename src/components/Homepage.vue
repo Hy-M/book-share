@@ -1,11 +1,12 @@
 <template>
   <div>
     <section id="searchBar">
+      <!-- search dynamoDB to see if anyone is selling a book with the given title -->
       <form class="searchBar--form" v-on:submit.prevent="fetchBooksByInput">
         <input
           class="searchBar--form-input"
           type="text"
-          placeholder="Enter a title or author"
+          placeholder="Enter a title to see if it's available"
           v-model="searchForm.input"
         />
         <button class="searchBar--form-btn">Search</button>
@@ -31,7 +32,8 @@ export default {
     return {
       searchForm: {
         input: ""
-      }
+      },
+      booksByInput: []
     };
   },
   methods: {
