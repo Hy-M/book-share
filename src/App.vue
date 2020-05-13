@@ -26,6 +26,7 @@ export default {
 :root {
   --brown-color: #422a25;
   --pink-color: #d65a85;
+  --grey-color: rgb(139, 139, 139);
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

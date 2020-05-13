@@ -1,9 +1,9 @@
 <template>
   <div>
-    <section>
-      <form>
-        <input type="text" placeholder="Enter a title, author or keyword" />
-        <button>Search</button>
+    <section id="searchBar">
+      <form class="searchBar--form">
+        <input class="searchBar--form-input" type="text" placeholder="Enter a title or author" />
+        <button class="searchBar--form-btn">Search</button>
       </form>
     </section>
     <AvailableBooks />
@@ -25,6 +25,37 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#searchBar {
+  width: 95%;
+  margin: 0 auto;
+}
+
+.searchBar--form {
+  height: 80px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.searchBar--form-input {
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: none;
+  text-shadow: none;
+  width: 95%;
+  outline-color: var(--pink-color);
+}
+
+.searchBar--form-btn {
+  border-radius: 8px;
+  padding: 4px 0;
+  width: 50%;
+  background-color: transparent;
+  border: 1px solid var(--pink-color);
+  box-shadow: 1px 1px 3px var(--grey-color);
+  outline-color: var(--pink-color);
+}
 </style>
