@@ -78,6 +78,12 @@ export default {
   align-items: center;
 }
 
+.imgPreview {
+  height: 250px;
+  width: 200px;
+  border-radius: 8px;
+}
+
 #nav {
   margin-bottom: 2rem;
   padding: 0 30px;
