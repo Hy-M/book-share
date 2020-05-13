@@ -41,8 +41,46 @@ export default {
   padding: 0;
 }
 
+.btn {
+  border-radius: 8px;
+  padding: 4px 0;
+  width: 50%;
+  background-color: transparent;
+  border: 1px solid var(--pink-color);
+  box-shadow: 1px 1px 3px var(--grey-color);
+  outline-color: var(--pink-color);
+}
+
+.h3 {
+  color: var(--brown-color);
+  line-height: 1.7rem;
+}
+
+.h4 {
+  color: var(--brown-color);
+}
+
+.input {
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: none;
+  text-shadow: none;
+  width: 95%;
+  outline-color: var(--pink-color);
+}
+
+.form {
+  height: 80px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
 #nav {
-  padding: 0 30px 30px 30px;
+  margin-bottom: 2rem;
+  padding: 0 30px;
   color: var(--brown-color);
 }
 
