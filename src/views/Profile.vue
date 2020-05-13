@@ -1,9 +1,15 @@
 <template>
-  <p>Profile</p>
+  <ProfilePage />
 </template>
 
 <script>
-export default {};
+import ProfilePage from "@/components/ProfilePage.vue";
+export default {
+  name: "Profile",
+  components: {
+    ProfilePage
+  }
+};
 </script>
 
 <style>
