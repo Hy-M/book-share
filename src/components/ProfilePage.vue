@@ -43,7 +43,7 @@
       <p
         class="list--subtext"
       >Please enter the postcode where this book will be available to collect from in UPPERCASE</p>
-      <form class="upload--form form" v-on:submit.prevent="listBook">
+      <form class="upload--form form" v-on:submit.prevent="checkPostcode">
         <input
           required
           class="upload--form-input input"
@@ -55,7 +55,10 @@
       </form>
     </section>
     <section v-if="this.uploadHasBeenClicked && this.error">
-      <p>Sorry, we can't find this book!</p>
+      <p class="list--subtext">Sorry, we can't find this book!</p>
+    </section>
+    <section v-if="!this.uploadForm.inputPoscode && this.error">
+      <p class="list--subtext">Please enter a valid UK postcode</p>
     </section>
   </main>
 </template>
@@ -99,6 +102,7 @@ export default {
             this.uploadForm.inputTitle = "";
             this.uploadForm.inputAuthor = "";
             this.bookToSell = book.items[0].volumeInfo;
+            this.uploadHasBeenClicked = false;
           } else {
             this.error = true;
           }
@@ -130,6 +134,21 @@ export default {
           })
           .catch(err => console.log(err, "< err in fetchUsersBooksImages()"));
       }
+    },
+    checkPostcode() {
+      return api
+        .validatePostcode(this.uploadForm.inputPostcode)
+        .then(({ result }) => {
+          if (result) {
+            this.uploadForm.inputPostcode = null;
+            this.error = false;
+            this.listBook();
+          } else {
+            this.uploadForm.inputPostcode = null;
+            this.error = true;
+          }
+        })
+        .catch(err => console.log(err, "< err in checkPostcode"));
     },
     listBook() {}
   },

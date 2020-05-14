@@ -29,3 +29,12 @@ exports.getBookToUpload = (title, author) => {
     })
     .catch(err => console.log(err, "< err in getBookToUpload"));
 };
+
+exports.validatePostcode = postcode => {
+  return axios
+    .get(`https://api.postcodes.io/postcodes/${postcode}/validate`)
+    .then(({ data }) => {
+      return data;
+    })
+    .catch(err => console.log(err, "< err in validatePostcode"));
+};
