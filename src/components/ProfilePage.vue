@@ -20,8 +20,17 @@
         <br />3) Upload it for others to use
       </p>
       <form class="upload--form form">
-        <input class="upload--form-input input" placeholder="enter book title or author" />
-        <button class="upload--form-btn btn">Search</button>
+        <input
+          class="upload--form-input input"
+          placeholder="Enter book title"
+          v-model="uploadForm.inputTitle"
+        />
+        <input
+          class="upload--form-input input"
+          placeholder="Enter book author"
+          v-model="uploadForm.inputAuthor"
+        />
+        <button class="upload--form-btn btn">Find book</button>
       </form>
     </section>
 
@@ -49,7 +58,8 @@ export default {
   data() {
     return {
       uploadForm: {
-        input: ""
+        inputTitle: "",
+        inputAuthor: ""
       },
       purchasedBooks: [],
       purchasedBooksImages: [],
@@ -95,8 +105,15 @@ export default {
   border-bottom: 1px solid var(--pink-color);
   padding-bottom: 20px;
 }
+
+.upload {
+  margin-bottom: 5rem;
+}
 .upload--info {
   line-height: 1.5rem;
   text-align: left;
+}
+.upload--form-input {
+  margin: 8px 0;
 }
 </style>
