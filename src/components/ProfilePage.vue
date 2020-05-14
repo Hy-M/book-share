@@ -17,6 +17,7 @@
       <ol class="upload--info">
         <li>Check that the book is available to give away</li>
         <li>Enter the title and author below</li>
+        <li>Type in your postcode to confirm</li>
         <li>List it for someone else to get hooked!</li>
       </ol>
       <form class="upload--form form" v-on:submit.prevent="fetchBookToUpload">
@@ -37,7 +38,14 @@
       <h4 class="list--title h4">{{this.bookToSell.title}}</h4>
       <p class="list--info">{{this.bookToSell.authors[0]}}</p>
       <img class="imgPreview" :src="this.bookToSell.imageLinks.thumbnail" />
-      <button class="list--btn btn">List this book</button>
+      <form class="upload--form form" v-on:submit.prevent="listBook">
+        <input
+          class="upload--form-input input"
+          placeholder="Enter your postcode to confirm listing"
+          v-model="uploadForm.inputPostcode"
+        />
+        <button class="list--btn btn">List this book</button>
+      </form>
     </section>
     <section v-if="this.uploadHasBeenClicked && this.error">
       <p>Sorry, we can't find this book!</p>
@@ -114,7 +122,8 @@ export default {
           })
           .catch(err => console.log(err, "< err in fetchUsersBooksImages()"));
       }
-    }
+    },
+    listBook() {}
   },
   mounted() {
     this.fetchUsersBooks();
