@@ -1,6 +1,6 @@
 <template>
   <div>
-    <main>
+    <main class="main">
       <img :src="singleBook.img" />
       <h2>{{ singleBook.title }}</h2>
       <p>{{ singleBook.author }}</p>
@@ -58,10 +58,5 @@ img {
   height: 200px;
   width: 200px;
   align-self: center;
-}
-
-main {
-  width: 80%;
-  margin: 0 auto;
 }
 </style>

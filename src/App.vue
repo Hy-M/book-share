@@ -41,6 +41,10 @@ export default {
   padding: 0;
 }
 
+.main {
+  width: 95%;
+  margin: 0 auto;
+}
 .btn {
   border-radius: 8px;
   padding: 4px 0;

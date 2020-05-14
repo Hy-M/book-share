@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section id="searchBar">
+    <section class="searchBar main">
       <!-- search dynamoDB to see if anyone is selling a book with the given title -->
       <form class="searchBar--form form" v-on:submit.prevent="fetchBooksByInput">
         <input
@@ -45,8 +45,4 @@ export default {
 </script>
 
 <style scoped>
-#searchBar {
-  width: 95%;
-  margin: 0 auto;
-}
 </style>

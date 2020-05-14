@@ -7,7 +7,6 @@
 
     <section class="bookshelves">
       <h4 class="h4">My bookshelf</h4>
-      <!-- pass the array on props to carouselComponent -->
       <CarouselComponent :images="this.collectionImages" />
       <h4 class="h4">Books i'm giving away</h4>
       <CarouselComponent />
@@ -64,12 +63,16 @@ export default {
     fetchBookImages() {
       // 1) for every title in the data, put it through google books api
       // 2) get the image URL and store it in an array
+      // 3) pass the array on props to carouselComponent
       for (let book of this.dbCollection) {
-        api.getBookByTitle(book.title).then(book => {
-          this.collectionImages.push(
-            book.items[0].volumeInfo.imageLinks.thumbnail
-          );
-        });
+        api
+          .getBookByTitle(book.title)
+          .then(book => {
+            this.collectionImages.push(
+              book.items[0].volumeInfo.imageLinks.thumbnail
+            );
+          })
+          .catch(err => console.log(err, "< err in fetchBookImages()"));
       }
     }
   },
