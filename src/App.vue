@@ -87,6 +87,11 @@ export default {
   width: 200px;
   border-radius: 8px;
 }
+.imgLarge {
+  height: 250px;
+  width: 250px;
+  border-radius: 8px;
+}
 
 #nav {
   margin-bottom: 2rem;

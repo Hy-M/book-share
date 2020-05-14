@@ -1,24 +1,23 @@
 <template>
-  <div>
-    <main class="main">
-      <img :src="singleBook.img" />
-      <h2>{{ singleBook.title }}</h2>
-      <p>{{ singleBook.author }}</p>
-      <p>{{ singleBook.distance }}</p>
-      <p>Goodreads rating via api</p>
-      <p>
-        Description about book. Here we would make API call to get the single
-        book by id
-      </p>
-      <button>I want this book</button>
-      <button>Ask the owner a question</button>
-    </main>
-  </div>
+  <main class="singleBook main">
+    <img class="singleBook--img imgLarge" :src="singleBook.img" />
+    <h3 class="singleBook--title book--title">{{ singleBook.title }}</h3>
+    <p class="singleBook--info book--author">{{ singleBook.author }}</p>
+    <p class="singleBook--info book--distance">{{ singleBook.distance }}</p>
+    <p>Goodreads rating via api</p>
+    <p class="singleBook--description">
+      Description about book. Here we would make API call to get the single
+      book by id
+    </p>
+    <button class="singleBook--btn btn">I want this book</button>
+    <button class="singleBook--btn btn">Ask the owner a question</button>
+  </main>
 </template>
 
 <script>
 const booksData = require("../data.json");
 const axios = require("axios");
+
 export default {
   mounted() {
     this.getSingleBook();
@@ -54,9 +53,12 @@ export default {
 </script>
 
 <style scoped>
-img {
-  height: 200px;
-  width: 200px;
-  align-self: center;
+.singleBook {
+  margin-bottom: 2rem;
+}
+
+.singleBook--btn {
+  width: 100%;
+  margin: 8px 0;
 }
 </style>

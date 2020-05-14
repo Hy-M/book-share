@@ -7,10 +7,10 @@
         <router-link :to="path">
           <img class="availableBooks--book-img imgPreview" :src="book.img" />
 
-          <h4 class="availableBooks--book-h4">{{ book.title.toUpperCase() }}</h4>
+          <h4 class="availableBooks--book-h4 book--title">{{ book.title }}</h4>
         </router-link>
-        <p class="availableBooks--book-info">{{ book.author.toUpperCase() }}</p>
-        <p class="availableBooks--book-info">{{ book.distance.toUpperCase() }}</p>
+        <p class="availableBooks--book-info book--author">{{ book.author }}</p>
+        <p class="availableBooks--book-info book--distance">{{ book.distance}}</p>
       </div>
     </main>
   </div>
@@ -39,7 +39,7 @@ export default {
   justify-content: space-evenly;
   padding: 1rem 0;
 }
-
+/* 
 .availableBooks--book-h4 {
   text-decoration: none;
   color: var(--brown-color);
@@ -48,5 +48,21 @@ export default {
 .availableBooks--book-h4,
 .availableBooks--book-info {
   margin: 0.3rem;
+  text-transform: uppercase;
+} */
+
+.book--title {
+  text-decoration: none;
+  color: var(--brown-color);
+  margin: 0.3rem;
+  text-transform: capitalize;
+}
+
+.book--author {
+  text-transform: capitalize;
+}
+
+.book--distance {
+  font-size: 0.9rem;
 }
 </style>
