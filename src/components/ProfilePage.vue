@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main class="main">
     <section class="userStatus">
       <p class="userStatus--status">Hello, user 1</p>
       <button class="user--btn btn">Log out</button>
@@ -7,9 +7,9 @@
 
     <section class="bookshelves">
       <h4 class="h4">My bookshelf</h4>
-      <CarouselComponent :images="this.purchasedBookImages" />
+      <CarouselComponent :images="this.purchasedBooksImages" />
       <h4 class="h4">Books i'm giving away</h4>
-      <CarouselComponent />
+      <CarouselComponent :images="this.sellingBooksImages" />
     </section>
 
     <section class="upload">
@@ -40,6 +40,7 @@
 import CarouselComponent from "./CarouselComponent.vue";
 import * as api from "../api.js";
 const data = require("../data.json");
+const sellingData = require("../sellingData.json");
 
 export default {
   components: {
@@ -51,45 +52,44 @@ export default {
         input: ""
       },
       purchasedBooks: [],
-      purchasedBookImages: []
+      purchasedBooksImages: [],
+      sellingBooks: [],
+      sellingBooksImages: []
     };
   },
   methods: {
     fetchBookToUpload() {},
-    fetchPurchasedBooks() {
+    fetchUsersBooks() {
       this.purchasedBooks = data;
-      this.fetchPurchasedBookImages();
+      this.sellingBooks = sellingData;
+
+      this.fetchUsersBooksImages(
+        this.purchasedBooks,
+        this.purchasedBooksImages
+      );
+
+      this.fetchUsersBooksImages(this.sellingBooks, this.sellingBooksImages);
     },
-    fetchPurchasedBookImages() {
-      // 1) for every title in the data, put it through google books api
-      // 2) get the image URL and store it in an array
-      // 3) pass the array on props to carouselComponent
-      for (let book of this.purchasedBooks) {
+    fetchUsersBooksImages(collection, collectionImages) {
+      for (let book of collection) {
         api
           .getBookByTitle(book.title)
           .then(book => {
-            this.purchasedBookImages.push(
+            collectionImages.push(
               book.items[0].volumeInfo.imageLinks.thumbnail
             );
           })
-          .catch(err =>
-            console.log(err, "< err in fetchPurchasedBookImages()")
-          );
+          .catch(err => console.log(err, "< err in fetchUsersBooksImages()"));
       }
     }
   },
   mounted() {
-    this.fetchPurchasedBooks();
+    this.fetchUsersBooks();
   }
 };
 </script>
 
 <style>
-main {
-  width: 95%;
-  margin: 0 auto;
-}
-
 .userStatus {
   border-top: 1px solid var(--pink-color);
   border-bottom: 1px solid var(--pink-color);
