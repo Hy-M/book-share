@@ -14,11 +14,11 @@
 
     <section class="upload">
       <h3 class="h3">Got a spare book lying around?</h3>
-      <p class="upload--info">
-        1) Search for your book
-        <br />2) Select the right option
-        <br />3) Upload it for others to use
-      </p>
+      <ol class="upload--info">
+        <li>Check that the book is available to give away</li>
+        <li>Enter the title and author below</li>
+        <li>List it for someone else to get hooked!</li>
+      </ol>
       <form class="upload--form form" v-on:submit.prevent="fetchBookToUpload">
         <input
           class="upload--form-input input"
@@ -32,6 +32,15 @@
         />
         <button class="upload--form-btn btn">Find book</button>
       </form>
+    </section>
+    <section class="list" v-if="this.bookToSell.title">
+      <h4 class="list--title h4">{{this.bookToSell.title}}</h4>
+      <p class="list--info">{{this.bookToSell.authors[0]}}</p>
+      <img class="imgPreview" :src="this.bookToSell.imageLinks.thumbnail" />
+      <button class="list--btn btn">List this book</button>
+    </section>
+    <section v-if="this.uploadHasBeenClicked && this.error">
+      <p>Sorry, we can't find this book!</p>
     </section>
   </main>
 </template>
@@ -48,6 +57,8 @@ export default {
   },
   data() {
     return {
+      uploadHasBeenClicked: false,
+      error: false,
       uploadForm: {
         inputTitle: "",
         inputAuthor: ""
@@ -63,10 +74,23 @@ export default {
     fetchBookToUpload() {
       let title = this.uploadForm.inputTitle;
       let author = this.uploadForm.inputAuthor;
-      api.getBookToUpload(title, author).then(book => {
-        this.bookToSell = book.items[0].volumeInfo;
-        console.log(this.bookToSell, "< book i want to sell");
-      });
+      this.uploadHasBeenClicked = true;
+      api
+        .getBookToUpload(title, author)
+        .then(book => {
+          if (book.items[0]) {
+            this.error = false;
+            this.uploadForm.inputTitle = "";
+            this.uploadForm.inputAuthor = "";
+            this.bookToSell = book.items[0].volumeInfo;
+          } else {
+            this.error = true;
+          }
+        })
+        .catch(err => {
+          this.error = true;
+          console.log(err, "< err in fetchBookToUpload");
+        });
     },
     fetchUsersBooks() {
       this.purchasedBooks = data;
@@ -106,13 +130,21 @@ export default {
 }
 
 .upload {
-  margin-bottom: 5rem;
+  border-top: 1px solid var(--pink-color);
+  margin: 1rem 0 4rem 0;
 }
-.upload--info {
-  line-height: 1.5rem;
+
+.upload--info li {
+  line-height: 1.4rem;
   text-align: left;
+  padding: 8px 0;
 }
+
 .upload--form-input {
   margin: 8px 0;
+}
+
+.list--info {
+  text-transform: uppercase;
 }
 </style>

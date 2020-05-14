@@ -21,7 +21,11 @@ exports.getBookToUpload = (title, author) => {
       `https://www.googleapis.com/books/v1/volumes?q=intitle:${title}+inauthor:${author}&maxResults=1`
     )
     .then(({ data }) => {
-      return data;
+      if (data.totalItems) {
+        return data;
+      } else {
+        return Promise.reject("Book not found");
+      }
     })
     .catch(err => console.log(err, "< err in getBookToUpload"));
 };
