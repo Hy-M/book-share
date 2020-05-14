@@ -7,7 +7,7 @@
 
     <section class="bookshelves">
       <h4 class="h4">My bookshelf</h4>
-      <CarouselComponent :images="this.collectionImages" />
+      <CarouselComponent :images="this.purchasedBookImages" />
       <h4 class="h4">Books i'm giving away</h4>
       <CarouselComponent />
     </section>
@@ -50,34 +50,36 @@ export default {
       uploadForm: {
         input: ""
       },
-      dbCollection: [],
-      collectionImages: []
+      purchasedBooks: [],
+      purchasedBookImages: []
     };
   },
   methods: {
     fetchBookToUpload() {},
-    fetchdbCollection() {
-      this.dbCollection = data;
-      this.fetchBookImages();
+    fetchPurchasedBooks() {
+      this.purchasedBooks = data;
+      this.fetchPurchasedBookImages();
     },
-    fetchBookImages() {
+    fetchPurchasedBookImages() {
       // 1) for every title in the data, put it through google books api
       // 2) get the image URL and store it in an array
       // 3) pass the array on props to carouselComponent
-      for (let book of this.dbCollection) {
+      for (let book of this.purchasedBooks) {
         api
           .getBookByTitle(book.title)
           .then(book => {
-            this.collectionImages.push(
+            this.purchasedBookImages.push(
               book.items[0].volumeInfo.imageLinks.thumbnail
             );
           })
-          .catch(err => console.log(err, "< err in fetchBookImages()"));
+          .catch(err =>
+            console.log(err, "< err in fetchPurchasedBookImages()")
+          );
       }
     }
   },
   mounted() {
-    this.fetchdbCollection();
+    this.fetchPurchasedBooks();
   }
 };
 </script>
