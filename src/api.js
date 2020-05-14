@@ -14,3 +14,14 @@ exports.getBookByTitle = input => {
     })
     .catch(err => console.log(err, "< err in api.js"));
 };
+
+exports.getBookToUpload = (title, author) => {
+  return axios
+    .get(
+      `https://www.googleapis.com/books/v1/volumes?q=intitle:${title}+inauthor:${author}&maxResults=1`
+    )
+    .then(({ data }) => {
+      return data;
+    })
+    .catch(err => console.log(err, "< err in getBookToUpload"));
+};

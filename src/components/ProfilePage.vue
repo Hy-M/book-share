@@ -19,7 +19,7 @@
         <br />2) Select the right option
         <br />3) Upload it for others to use
       </p>
-      <form class="upload--form form">
+      <form class="upload--form form" v-on:submit.prevent="fetchBookToUpload">
         <input
           class="upload--form-input input"
           placeholder="Enter book title"
@@ -33,15 +33,6 @@
         <button class="upload--form-btn btn">Find book</button>
       </form>
     </section>
-
-    <!-- <ul>
-      <li>each book result from the api would go here</li>
-      <button>Add this book to give away</button>
-      <li>each book result from the api would go here</li>
-      <button>Add this book to give away</button>
-      <li>each book result from the api would go here</li>
-      <button>Add this book to give away</button>
-    </ul>-->
   </main>
 </template>
 
@@ -61,6 +52,7 @@ export default {
         inputTitle: "",
         inputAuthor: ""
       },
+      bookToSell: {},
       purchasedBooks: [],
       purchasedBooksImages: [],
       sellingBooks: [],
@@ -68,7 +60,14 @@ export default {
     };
   },
   methods: {
-    fetchBookToUpload() {},
+    fetchBookToUpload() {
+      let title = this.uploadForm.inputTitle;
+      let author = this.uploadForm.inputAuthor;
+      api.getBookToUpload(title, author).then(book => {
+        this.bookToSell = book.items[0].volumeInfo;
+        console.log(this.bookToSell, "< book i want to sell");
+      });
+    },
     fetchUsersBooks() {
       this.purchasedBooks = data;
       this.sellingBooks = sellingData;
