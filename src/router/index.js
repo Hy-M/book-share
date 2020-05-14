@@ -18,7 +18,7 @@ const routes = [
     component: Profile
   },
   {
-    path: "/home/:book_id",
+    path: "/browse/:book_id",
     name: "SingleBook",
     component: SingleBook
   },

@@ -3,8 +3,7 @@
     <main class="availableBooks main">
       <h3 class="availableBooks--h3 h3">Browse books for sharing near you</h3>
       <div class="availableBooks--book" v-for="book in availableBooks" v-bind:key="book.id">
-        {{ (path = `/home/${book.id}`) }}
-        <router-link :to="path">
+        <router-link :to="`/browse/${book.id.toString()}`">
           <img class="availableBooks--book-img imgPreview" :src="book.img" />
 
           <h4 class="availableBooks--book-h4 book--title">{{ book.title }}</h4>
@@ -39,30 +38,22 @@ export default {
   justify-content: space-evenly;
   padding: 1rem 0;
 }
-/* 
-.availableBooks--book-h4 {
-  text-decoration: none;
-  color: var(--brown-color);
-}
-
-.availableBooks--book-h4,
-.availableBooks--book-info {
-  margin: 0.3rem;
-  text-transform: uppercase;
-} */
 
 .book--title {
   text-decoration: none;
   color: var(--brown-color);
   margin: 0.3rem;
   text-transform: capitalize;
+  line-height: 1.4rem;
 }
 
 .book--author {
   text-transform: capitalize;
+  margin: 0.5rem;
 }
 
 .book--distance {
   font-size: 0.9rem;
+  margin: 0.5rem;
 }
 </style>
