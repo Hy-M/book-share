@@ -22,11 +22,13 @@
       </ol>
       <form class="upload--form form" v-on:submit.prevent="fetchBookToUpload">
         <input
+          required
           class="upload--form-input input"
           placeholder="Enter book title"
           v-model="uploadForm.inputTitle"
         />
         <input
+          required
           class="upload--form-input input"
           placeholder="Enter book author"
           v-model="uploadForm.inputAuthor"
@@ -38,11 +40,16 @@
       <h4 class="list--title h4">{{this.bookToSell.title}}</h4>
       <p class="list--info">{{this.bookToSell.authors[0]}}</p>
       <img class="imgPreview" :src="this.bookToSell.imageLinks.thumbnail" />
+      <p
+        class="list--subtext"
+      >Please enter the postcode where this book will be available to collect from in UPPERCASE</p>
       <form class="upload--form form" v-on:submit.prevent="listBook">
         <input
+          required
           class="upload--form-input input"
-          placeholder="Enter your postcode to confirm listing"
+          placeholder="Enter your postcode"
           v-model="uploadForm.inputPostcode"
+          pattern="^([A-Z][A-HJ-Y]?[0-9][A-Z0-9]? ?[0-9][A-Z]{2}|GIR ?0A{2})$"
         />
         <button class="list--btn btn">List this book</button>
       </form>
@@ -68,8 +75,9 @@ export default {
       uploadHasBeenClicked: false,
       error: false,
       uploadForm: {
-        inputTitle: "",
-        inputAuthor: ""
+        inputTitle: null,
+        inputAuthor: null,
+        inputPostcode: null
       },
       bookToSell: {},
       purchasedBooks: [],
@@ -155,5 +163,10 @@ export default {
 
 .list--info {
   text-transform: uppercase;
+}
+
+.list--subtext {
+  font-size: 0.9rem;
+  line-height: 1.4rem;
 }
 </style>

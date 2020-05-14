@@ -42,7 +42,7 @@ export default {
 
 .availableBooks--book-h4 {
   text-decoration: none;
-  color: var(--pink-color);
+  color: var(--brown-color);
 }
 
 .availableBooks--book-h4,
