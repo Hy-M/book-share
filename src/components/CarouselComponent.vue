@@ -10,8 +10,8 @@
     :paginationColor="'var(--grey-color)'"
     :paginationActiveColor="'#d65a85'"
   >
-    <slide v-for="slide in slides" :key="slide.id">
-      <img class="imgPreview" :src="slide.imgUrl" />
+    <slide v-for="image in images" :key="image">
+      <img class="imgPreview" :src="image" />
     </slide>
   </carousel>
 </template>
@@ -20,6 +20,11 @@
 import { Carousel, Slide } from "vue-carousel";
 export default {
   components: { Carousel, Slide },
+  props: {
+    images: {
+      type: Array
+    }
+  },
   data() {
     return {
       slides: [
@@ -43,7 +48,8 @@ export default {
         }
       ]
     };
-  }
+  },
+  mounted() {}
 };
 </script>
 
