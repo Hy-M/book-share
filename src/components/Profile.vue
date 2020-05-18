@@ -1,7 +1,7 @@
 // src/components/Profile.vue
 
 <template>
-  <h1>Welcome, {{ user.attributes.email }}</h1>
+  <h1>Welcome, {{ user.username }}</h1>
   <!--retrieves the users username by usign amplify -->
 </template>
 

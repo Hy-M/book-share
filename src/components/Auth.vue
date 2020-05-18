@@ -6,7 +6,7 @@
     <p v-on:click="toggle" class="toggle">
       {{
         formState === "signUp"
-          ? "Already sign up? Sign In"
+          ? "Already signed up? Sign In"
           : "Need an account? Sign Up"
       }}
     </p>

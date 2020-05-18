@@ -40,7 +40,7 @@ export default {
         this.$router.push("/profile");
       } catch (err) {
         console.log("error signing in", err);
-        alert(err.message);
+        // alert(err.message);
       }
     },
     async forgotPasswordFlow() {
@@ -54,3 +54,5 @@ export default {
   },
 };
 </script>
+
+<!--vagesiw656@zaelmo.com-->
