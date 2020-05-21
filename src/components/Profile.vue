@@ -7,6 +7,7 @@
 
 <script>
 import { Auth } from "aws-amplify";
+import * as api from "../api";
 
 export default {
   name: "Profile",
@@ -20,6 +21,12 @@ export default {
     Auth.currentAuthenticatedUser()
       .then((user) => {
         this.user = user;
+        console.log(user.username);
+        // return new Promise((resolve, reject) => {
+        //   resolve(api.getUser(this.user.username)).then((data) => {
+        //     console.log(data);
+        //   });
+        // });
       })
       .catch(() => {
         alert("Please sign in to view the app.");

@@ -37,7 +37,7 @@ export default {
       try {
         await Auth.signIn(username, password);
         AmplifyEventBus.$emit("authState", "signedIn");
-        this.$router.push("/profile");
+        this.$router.push("Profile");
       } catch (err) {
         console.log("error signing in", err);
         // alert(err.message);
