@@ -13,12 +13,11 @@
     </section>
 
     <section class="upload">
-      <h3 class="h3">Got a spare book lying around?</h3>
+      <h3 class="h3">Shook - share your old books!</h3>
       <ol class="upload--info">
-        <li>Check that the book is available to give away</li>
-        <li>Enter the title and author below</li>
-        <li>Type in your postcode to confirm</li>
-        <li>List it for someone else to get hooked!</li>
+        <li>Make sure you're ready to part with the book forever!</li>
+        <li>Enter the title and author</li>
+        <li>Type in your postcode and list the book!</li>
       </ol>
       <form class="upload--form form" v-on:submit.prevent="fetchBookToUpload">
         <input

@@ -38,3 +38,10 @@ exports.validatePostcode = postcode => {
     })
     .catch(err => console.log(err, "< err in validatePostcode"));
 };
+
+exports.getDistance = postcode => {
+  return axios.get(`${postcode}`).then(({ data }) => {
+    console.log(data, "< data");
+    return data;
+  });
+};

@@ -45,4 +45,7 @@ export default {
 </script>
 
 <style scoped>
+.availableBooks--h3 {
+  color: var(--pink-color);
+}
 </style>

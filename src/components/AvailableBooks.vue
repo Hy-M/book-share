@@ -17,13 +17,23 @@
 
 <script>
 const booksData = require("../data.json");
+import * as api from "../api.js";
 
 export default {
   data() {
     return {
       availableBooks: booksData
     };
-  }
+  },
+  methods: {
+    calculateDistance() {
+      let postcode = this.availableBooks[0].postcode;
+      api.getPostcode(postcode).then(result => {
+        console.log(result, "< result");
+      });
+    }
+  },
+  mounted() {}
 };
 </script>
 
