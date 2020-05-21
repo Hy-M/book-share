@@ -34,15 +34,14 @@
 <!--Displays the navigation links, renders the router and authentication logic for signing and signing out -->
 
 <script>
-
 import { AmplifyEventBus } from "aws-amplify-vue";
 import { Auth } from "aws-amplify";
 import Header from "@/components/Header.vue";
 
 export default {
   name: "app",
-   components: {
-    Header
+  components: {
+    Header,
   },
   data() {
     return {
@@ -71,7 +70,7 @@ export default {
       })
       .catch(() => (this.signedIn = false));
   },
-
+};
 </script>
 <style>
 .nav {
@@ -91,7 +90,7 @@ export default {
 .sign-out {
   width: 160px;
   margin: 0 auto;
-=======
+}
 :root {
   --brown-color: #422a25;
   --pink-color: #d65a85;
