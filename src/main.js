@@ -12,6 +12,8 @@ Amplify.configure(config);
 Vue.use(VueRouter);
 Vue.use(AmplifyPlugin, AmplifyModules);
 Vue.config.productionTip = false;
+import VueCarousel from "vue-carousel";
+Vue.use(VueCarousel);
 
 new Vue({
   render: (h) => h(App),
