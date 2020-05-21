@@ -1,0 +1,108 @@
+// src/components/SignUp.vue
+<template>
+  <div>
+    <h2>{{ formState === "signUp" ? "Sign Up" : "Confirm Sign Up" }}</h2>
+    <div class="formcontainer" v-if="formState === 'signUp'">
+      <input v-model="form.username" class="input" placeholder="Email:" />
+      <input
+        type="password"
+        v-model="form.password"
+        class="input"
+        placeholder="Password"
+      />
+      <button v-on:click="signUp" class="button">Sign Up</button>
+    </div>
+    <div class="formcontainer" v-if="formState === 'confirmSignUp'">
+      <input v-model="form.authCode" class="input" />
+      <button v-on:click="confirmSignUp" class="button">Confirm Sign Up</button>
+      <button v-on:click="resendConfirmationCode" class="button">
+        Resend Confirmation Code
+      </button>
+    </div>
+  </div>
+</template>
+
+<script>
+import { Auth } from "aws-amplify";
+
+export default {
+  name: "home",
+  props: ["toggle"],
+  data() {
+    return {
+      formState: "signUp",
+      form: {
+        username: "",
+        password: "",
+        email: "",
+      },
+    };
+  },
+  methods: {
+    async signUp() {
+      const { username, password, email } = this.form;
+      try {
+        await Auth.signUp({
+          username,
+          password,
+          attributes: { email: username },
+        });
+        this.formState = "confirmSignUp";
+      } catch (err) {
+        console.log("error signing up ", err);
+        alert(err.message);
+      }
+    },
+    async confirmSignUp() {
+      const { username, authCode } = this.form;
+      try {
+        await Auth.confirmSignUp(username, authCode);
+        alert("successfully signed up! Sign in to view the app.");
+        this.toggle();
+      } catch (err) {
+        console.log("error confirming signing up ", err);
+        alert(err.message);
+      }
+    },
+    async resendConfirmationCode() {
+      const { username } = this.form;
+      try {
+        await Auth.resendSignUp(username);
+        console.log("code resent successfully");
+      } catch (err) {
+        console.log("error resending code ", err);
+        alert(err.message);
+      }
+    },
+  },
+};
+</script>
+
+<style>
+.formcontainer {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  margin: 0 auto;
+}
+.input {
+  margin-bottom: 7px;
+  height: 38px;
+  border: none;
+  outline: none;
+  border-bottom: 2px solid #ddd;
+  font-size: 20px;
+}
+.button {
+  height: 45px;
+  border: none;
+  outline: none;
+  background-color: #dddddd;
+  margin-top: 8px;
+  cursor: pointer;
+  font-size: 18px;
+}
+.button:hover {
+  opacity: 0.7;
+}
+</style>

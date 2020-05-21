@@ -1,12 +1,21 @@
+// src/main.js
 import Vue from "vue";
-import App from "./App.vue";
-import router from "./router";
-import VueCarousel from "vue-carousel";
+import VueRouter from "vue-router";
+import Amplify, * as AmplifyModules from "aws-amplify";
+import { AmplifyPlugin } from "aws-amplify-vue";
 
+import App from "./App";
+import router from "./router";
+import config from "./aws-exports";
+
+Amplify.configure(config);
+Vue.use(VueRouter);
+Vue.use(AmplifyPlugin, AmplifyModules);
 Vue.config.productionTip = false;
+import VueCarousel from "vue-carousel";
 Vue.use(VueCarousel);
 
 new Vue({
+  render: (h) => h(App),
   router,
-  render: h => h(App)
 }).$mount("#app");

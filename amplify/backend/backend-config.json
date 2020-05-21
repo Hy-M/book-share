@@ -1,0 +1,10 @@
+{
+	"auth": {
+		"bookshare6a3c7580": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [],
+			"customAuth": false
+		}
+	}
+}
