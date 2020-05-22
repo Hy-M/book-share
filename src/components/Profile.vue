@@ -98,10 +98,9 @@ export default {
     Auth.currentAuthenticatedUser()
       .then((user) => {
         this.user = user;
-        console.log(user.username);
       })
-      .catch(() => {
-        alert("Please sign in to view the app.");
+      .catch((err) => {
+        console.log(err, "<-error getting user data");
       });
   },
   methods: {
@@ -109,7 +108,7 @@ export default {
       try {
         await Auth.signOut();
         AmplifyEventBus.$emit("authState", "signedOut");
-        this.$router.push("/");
+        this.$router.push("Home");
       } catch (error) {
         console.log("error signing out: ", error);
       }

@@ -5,7 +5,7 @@ import * as apiKey from "./apiConfig";
 
 export const getUser = (username) => {
   return axios.get(`${baseURL}user/${username}`).then(({ data }) => {
-    console.log(data);
+    return data;
   });
 };
 
@@ -13,19 +13,19 @@ export const updateUserDetails = (username, newAddress) => {
   return axios
     .patch(`${baseURL}user/${username}`, { Address: newAddress })
     .then(({ data }) => {
-      console.log(data);
+      return data;
     });
 };
 
 export const deleteUser = (username) => {
   return axios.delete(`${baseURL}user/${username}`).then(({ data }) => {
-    console.log(data);
+    return data;
   });
 };
 
 export const getPurchasedBooks = (username) => {
   return axios.get(`${baseURL}books/${username}/purchased`).then(({ data }) => {
-    console.log(data);
+    return data;
   });
 };
 
@@ -36,7 +36,7 @@ export const updatePurchasedBooks = (username, purchasedBookArr) => {
       Purchased: purchasedBookArr,
     })
     .then(({ data }) => {
-      console.log(data);
+      return data;
     });
 };
 
@@ -46,13 +46,13 @@ export const deleteFromPurchased = (username, purchasedBook) => {
       Purchased: purchasedBook,
     })
     .then(({ data }) => {
-      console.log(data);
+      return data;
     });
 };
 
 export const getSellingBooks = (username) => {
   return axios.get(`${baseURL}books/${username}/selling`).then(({ data }) => {
-    console.log(data);
+    return data;
   });
 };
 
@@ -61,7 +61,7 @@ export const updateSellingBooks = (username, sellingBookArr) => {
   return axios
     .post(`${baseURL}books/${username}/selling`, { Selling: sellingBookArr })
     .then(({ data }) => {
-      console.log(data);
+      return data;
     });
 };
 
@@ -69,13 +69,13 @@ export const deleteFromSelling = (username, sellingBook) => {
   return axios
     .delete(`${baseURL}books/${username}/selling`, { Selling: sellingBook })
     .then(({ data }) => {
-      console.log(data);
+      return data;
     });
 };
 
 export const getAllSellingBooks = () => {
   return axios.get(`${baseURL}books/`).then(({ data }) => {
-    console.log(data);
+    return data;
   });
 };
 
