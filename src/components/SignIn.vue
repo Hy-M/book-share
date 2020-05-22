@@ -22,7 +22,7 @@
 import { Auth } from "aws-amplify";
 import { AmplifyEventBus } from "aws-amplify-vue";
 export default {
-  name: "home",
+  name: "SignIn",
   data() {
     return {
       form: {

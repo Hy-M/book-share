@@ -79,6 +79,52 @@ export const getAllSellingBooks = () => {
   });
 };
 
+export const getBooksByInput = (input) => {
+  console.log(input);
+};
+
+export const getBookByTitle = (input) => {
+  return axios
+    .get(
+      `https://www.googleapis.com/books/v1/volumes?q=intitle:${input}&maxResults=1`
+    )
+    .then(({ data }) => {
+      return data;
+    })
+    .catch((err) => console.log(err, "< err in api.js"));
+};
+
+export const getBookToUpload = (title, author) => {
+  return axios
+    .get(
+      `https://www.googleapis.com/books/v1/volumes?q=intitle:${title}+inauthor:${author}&maxResults=1`
+    )
+    .then(({ data }) => {
+      if (data.totalItems) {
+        return data;
+      } else {
+        return Promise.reject("Book not found");
+      }
+    })
+    .catch((err) => console.log(err, "< err in getBookToUpload"));
+};
+
+export const validatePostcode = (postcode) => {
+  return axios
+    .get(`https://api.postcodes.io/postcodes/${postcode}/validate`)
+    .then(({ data }) => {
+      return data;
+    })
+    .catch((err) => console.log(err, "< err in validatePostcode"));
+};
+
+export const getDistance = (postcode) => {
+  return axios.get(`${postcode}`).then(({ data }) => {
+    console.log(data, "< data");
+    return data;
+  });
+};
+
 // Database tree schema
 /*{
    "User": {

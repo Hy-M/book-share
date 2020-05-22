@@ -26,7 +26,7 @@
 import { Auth } from "aws-amplify";
 
 export default {
-  name: "home",
+  name: "SignOut",
   props: ["toggle"],
   data() {
     return {
