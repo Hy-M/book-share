@@ -1,7 +1,7 @@
 <template>
   <main class="main">
     <section class="userStatus">
-      <p class="userStatus--status">Hello, {{ user.username }}</p>
+      <p class="userStatus--status">Hello, {{ user.attributes.email }}</p>
       <button v-on:click="signOut" class="user--btn btn">Log out</button>
     </section>
 
@@ -96,9 +96,9 @@ export default {
   //uses the Auth.current method to return meta data about user or error out if user si not signed in
   beforeCreate() {
     Auth.currentAuthenticatedUser()
-      .then((user) => {
-        this.user = user;
-      })
+      // .then((user) => {
+      //  this.user = user;
+      // })
       .catch((err) => {
         console.log(err, "<-error getting user data");
       });
@@ -111,6 +111,15 @@ export default {
         this.$router.push("Home");
       } catch (error) {
         console.log("error signing out: ", error);
+      }
+    },
+    getUserAttributes() {
+      try {
+        Auth.currentUserInfo().then((user) => {
+          this.user = user;
+        });
+      } catch (err) {
+        console.log("Error getting user attributes");
       }
     },
     fetchBookToUpload() {
@@ -177,6 +186,7 @@ export default {
   },
   mounted() {
     this.fetchUsersBooks();
+    this.getUserAttributes();
   },
 };
 </script>

@@ -1,7 +1,6 @@
 // src/components/SignIn.vue
 <template>
   <div>
-    <h2>Sign In</h2>
     <div class="formcontainer">
       <input v-model="form.username" class="input" placeholder="Email:" />
       <input
@@ -55,4 +54,13 @@ export default {
 };
 </script>
 
-<!--vagesiw656@zaelmo.com-->
+<style>
+.input {
+  outline-color: black;
+}
+
+.formcontainer {
+  display: flex;
+  flex-direction: row;
+}
+</style>

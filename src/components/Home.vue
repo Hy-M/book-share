@@ -52,4 +52,9 @@ export default {
 .availableBooks--h3 {
   color: var(--pink-color);
 }
+.searchBar {
+  border-top: 1px solid var(--pink-color);
+  border-bottom: 1px solid var(--pink-color);
+  padding-bottom: 20px;
+}
 </style>
