@@ -49,7 +49,7 @@ router.beforeResolve((to, from, next) => {
       })
       .catch((e) => {
         next({
-          path: "/",
+          path: "/auth",
         });
       });
   }

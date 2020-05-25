@@ -24,6 +24,7 @@
       <!-- <amplify-sign-out v-if="signedIn"></amplify-sign-out> -->
       <!--if user is signed in, it will render out a sign out page-->
     </div>
+    <Footer />
   </div>
 </template>
 <!--Displays the navigation links, renders the router and authentication logic for signing and signing out -->
@@ -32,11 +33,13 @@
 import { AmplifyEventBus } from "aws-amplify-vue";
 import { Auth } from "aws-amplify";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 export default {
   name: "app",
   components: {
     Header,
+    Footer,
   },
   data() {
     return {
@@ -140,15 +143,18 @@ export default {
 }
 
 #nav {
-  margin-bottom: 2rem;
-  padding: 0 30px;
+  margin-left: 2rem;
+  padding: 0 20px;
   color: var(--brown-color);
+  display: flex;
+  flex-direction: row;
 }
 
 #nav a {
   font-weight: bold;
   color: var(--brown-color);
   text-decoration: none;
+  padding: 10px;
 }
 
 #nav a.router-link-exact-active {
