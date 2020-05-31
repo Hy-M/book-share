@@ -11,7 +11,7 @@ import SingleBook from "./views/SingleBook";
 const routes = [
   { path: "/", component: Home },
   {
-    path: "/browse/:user/:book_id",
+    path: "/browse/:user/:book_title",
     name: "SingleBook",
     component: SingleBook
   },
