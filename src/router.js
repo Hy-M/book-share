@@ -11,9 +11,9 @@ import SingleBook from "./views/SingleBook";
 const routes = [
   { path: "/", component: Home },
   {
-    path: "/browse/:book_id",
+    path: "/browse/:user/:book_id",
     name: "SingleBook",
-    component: SingleBook,
+    component: SingleBook
   },
   { path: "/auth", component: Auth },
   { path: "/protected", component: Protected, meta: { requiresAuth: true } },
@@ -25,31 +25,30 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "./views/About.vue"),
-  },
+    component: () => import(/* webpackChunkName: "about" */ "./views/About.vue")
+  }
 ];
 
 const router = new VueRouter({
-  routes,
+  routes
 });
 
 //beforeResolve guard is a built in component from Vue Router, called right before navigation is confirmed
 //it checks right before navigation is confirmed to check if user is confirmed
 //if authenticated they can go onto to next router or redirected to sign up sign
 router.beforeResolve((to, from, next) => {
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
     let user;
     Vue.prototype.$Amplify.Auth.currentAuthenticatedUser()
-      .then((data) => {
+      .then(data => {
         if (data && data.signInUserSession) {
           user = data;
         }
         next();
       })
-      .catch((e) => {
+      .catch(e => {
         next({
-          path: "/auth",
+          path: "/auth"
         });
       });
   }
