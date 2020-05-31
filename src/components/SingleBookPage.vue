@@ -1,14 +1,13 @@
 <template>
   <main class="singleBook main">
-    <img class="singleBook--img imgLarge" :src="singleBook.img" />
-    <h3 class="singleBook--title book--title">{{ singleBook.title }}</h3>
-    <p class="singleBook--info book--author">{{ singleBook.author }}</p>
-    <p class="singleBook--info book--distance">{{ singleBook.distance }}</p>
+    <img class="singleBook--img imgLarge" :src="singleBook.volumeInfo.imageLinks.thumbnail" />
+    <h3 class="singleBook--title book--title">{{singleBook.volumeInfo.title}}</h3>
+    <p class="singleBook--info book--author">{{singleBook.volumeInfo.authors[0]}}</p>
+    <p class="singleBook--info book--subText">distance</p>
     <p>Goodreads rating via api</p>
-    <p class="singleBook--description">
-      Description about book. Here we would make API call to get the single book
-      by id
-    </p>
+
+    <p class="singleBook--description">{{singleBook.volumeInfo.description}}</p>
+    <p class="singleBook--info book--subText">Published in {{singleBook.volumeInfo.publishedDate}}</p>
     <button class="singleBook--btn btn">I want this book</button>
     <button class="singleBook--btn btn">Ask the owner a question</button>
   </main>
@@ -17,20 +16,23 @@
 <script>
 const booksData = require("../data.json");
 const axios = require("axios");
+import * as api from "../api.js";
 
 export default {
   mounted() {
-    this.getSingleBook();
+    this.fetchBookByTitle();
+  },
+  data() {
+    return {
+      singleBook: {}
+    };
   },
   methods: {
-    getSingleBook() {
-      let book_id = Number(this.$route.params.book_id);
-      let data = JSON.parse(JSON.stringify(booksData));
-      for (let book of data) {
-        if (book.id === book_id) {
-          this.singleBook = book;
-        }
-      }
+    fetchBookByTitle() {
+      let book_title = this.$route.params.book_title;
+      api.getBookByTitle(book_title).then(book => {
+        this.singleBook = book.items[0];
+      });
     },
     getGoodreadsReview() {
       return axios
@@ -41,14 +43,9 @@ export default {
           console.log(data);
           return data;
         })
-        .catch((err) => console.log(err, "< err"));
-    },
-  },
-  data() {
-    return {
-      singleBook: {},
-    };
-  },
+        .catch(err => console.log(err, "< err"));
+    }
+  }
 };
 </script>
 
