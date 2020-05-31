@@ -2,16 +2,16 @@
   <div>
     <main class="availableBooks main">
       <h3 class="availableBooks--h3 h3">Browse books for sharing near you</h3>
-      <div class="availableBooks--book" v-for="book in availableBooks" v-bind:key="book.id">
-        <router-link :to="`/browse/${book.id}`">
+      <div class="availableBooks--book" v-for="book of availableBooks" v-bind:key="book.user">
+        <router-link :to="`/browse/${book.user}/${book.bookDetails.volumeInfo.title}`">
           <img
             class="availableBooks--book-img imgPreview"
-            :src="book.volumeInfo.imageLinks.smallThumbnail"
+            :src="book.bookDetails.volumeInfo.imageLinks.smallThumbnail"
           />
 
-          <h4 class="availableBooks--book-h4 book--title">{{ book.volumeInfo.title }}</h4>
+          <h4 class="availableBooks--book-h4 book--title">{{ book.bookDetails.volumeInfo.title }}</h4>
         </router-link>
-        <p class="availableBooks--book-info book--author">{{book.volumeInfo.authors[0]}}</p>
+        <p class="availableBooks--book-info book--author">{{book.bookDetails.volumeInfo.authors[0]}}</p>
         <p class="availableBooks--book-info book--distance">distance</p>
       </div>
     </main>
@@ -36,12 +36,15 @@ export default {
       //   });
     },
     fetchAllSellingBooks() {
-      api.getAllSellingBooks().then(({ body }) => {
+      api.getAllSellingBooks().then(book => {
         let availableBookTitles = [];
         while (availableBookTitles.length < 3) {
-          let randomNum = Math.floor(Math.random() * body.length);
-          if (body[randomNum].Selling) {
-            availableBookTitles.push(body[randomNum].Selling[0]);
+          let randomNum = Math.floor(Math.random() * book.body.length);
+          if (book.body[randomNum].Selling) {
+            availableBookTitles.push({
+              user: book.body[randomNum].User,
+              title: book.body[randomNum].Selling[0]
+            });
           }
         }
 
@@ -49,9 +52,12 @@ export default {
       });
     },
     fetchBookByTitle(availableBookTitles) {
-      for (let title of availableBookTitles) {
-        api.getBookByTitle(title).then(book => {
-          this.availableBooks.push(book.items[0]);
+      for (let item of availableBookTitles) {
+        api.getBookByTitle(item.title).then(book => {
+          this.availableBooks.push({
+            user: item.user,
+            bookDetails: book.items[0]
+          });
         });
       }
     }
