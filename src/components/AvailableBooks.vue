@@ -12,7 +12,7 @@
           <h4 class="availableBooks--book-h4 book--title">{{ book.bookDetails.volumeInfo.title }}</h4>
         </router-link>
         <p class="availableBooks--book-info book--author">{{book.bookDetails.volumeInfo.authors[0]}}</p>
-        <p class="availableBooks--book-info book--distance">distance</p>
+        <p class="availableBooks--book-info book--subText">distance</p>
       </div>
     </main>
   </div>
@@ -93,7 +93,7 @@ export default {
   margin: 0.5rem;
 }
 
-.book--distance {
+.book--subText {
   font-size: 0.9rem;
   margin: 0.5rem;
 }
