@@ -2,17 +2,15 @@
 <template>
   <div>
     <div class="formcontainer">
-      <input v-model="form.username" class="input" placeholder="Email:" />
+      <input v-model="form.username" class="input" placeholder="Enter your email address" />
       <input
         type="password"
         v-model="form.password"
         class="input"
-        placeholder="Password:"
+        placeholder="Enter your password"
       />
-      <button v-on:click="signIn" class="button">Sign In</button>
-      <button v-on:click="forgotPasswordFlow" class="button">
-        Forgot Password ?
-      </button>
+      <button v-on:click="signIn" class="btn">Sign In</button>
+      <button v-on:click="forgotPasswordFlow" class="btn">Forgot your password?</button>
     </div>
   </div>
 </template>
@@ -26,8 +24,8 @@ export default {
     return {
       form: {
         username: "",
-        password: "",
-      },
+        password: ""
+      }
     };
   },
   methods: {
@@ -49,8 +47,8 @@ export default {
         console.log("error", err);
         alert(err.message);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

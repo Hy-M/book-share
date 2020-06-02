@@ -3,21 +3,14 @@
   <div>
     <h2>{{ formState === "signUp" ? "Sign Up" : "Confirm Sign Up" }}</h2>
     <div class="formcontainer" v-if="formState === 'signUp'">
-      <input v-model="form.username" class="input" placeholder="Email:" />
-      <input
-        type="password"
-        v-model="form.password"
-        class="input"
-        placeholder="Password"
-      />
-      <button v-on:click="signUp" class="button">Sign Up</button>
+      <input v-model="form.username" class="input" placeholder="Enter your email address" />
+      <input type="password" v-model="form.password" class="input" placeholder="Create a password" />
+      <button v-on:click="signUp" class="btn">Sign Up</button>
     </div>
     <div class="formcontainer" v-if="formState === 'confirmSignUp'">
-      <input v-model="form.authCode" class="input" />
-      <button v-on:click="confirmSignUp" class="button">Confirm Sign Up</button>
-      <button v-on:click="resendConfirmationCode" class="button">
-        Resend Confirmation Code
-      </button>
+      <input v-model="form.authCode" class="input" placeholder="Enter confirmation code" />
+      <button v-on:click="confirmSignUp" class="btn">Confirm Sign Up</button>
+      <button v-on:click="resendConfirmationCode" class="btn">Resend Confirmation Code</button>
     </div>
   </div>
 </template>
@@ -34,8 +27,8 @@ export default {
       form: {
         username: "",
         password: "",
-        email: "",
-      },
+        email: ""
+      }
     };
   },
   methods: {
@@ -45,7 +38,7 @@ export default {
         await Auth.signUp({
           username,
           password,
-          attributes: { email: username },
+          attributes: { email: username }
         });
         this.formState = "confirmSignUp";
       } catch (err) {
@@ -73,8 +66,8 @@ export default {
         console.log("error resending code ", err);
         alert(err.message);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
