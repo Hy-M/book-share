@@ -16,7 +16,6 @@
       <ol class="upload--info">
         <li>Make sure you're ready to part with the book forever!</li>
         <li>Enter the title and author</li>
-        <li>Type in your postcode and list the book!</li>
       </ol>
       <form class="upload--form form" v-on:submit.prevent="fetchBookToUpload">
         <input
@@ -38,6 +37,7 @@
       <h4 class="list--title h4">{{ this.bookToSell.title }}</h4>
       <p class="list--info">{{ this.bookToSell.authors[0] }}</p>
       <img class="imgPreview" :src="this.bookToSell.imageLinks.thumbnail" />
+      <button class="btn" v-on:click="listBook">Confirm</button>
       <!-- <p class="list--subtext">
         Please enter the postcode where this book will be available to collect
         from in UPPERCASE
@@ -56,7 +56,7 @@
     <section v-if="this.uploadHasBeenClicked && this.error">
       <p class="list--subtext">Sorry, we can't find this book!</p>
     </section>
-    <button class="btn" v-on:click="listBook">Confirm</button>
+
     <!-- <section v-if="!this.uploadForm.inputPoscode && this.error">
       <p class="list--subtext">Please enter a valid UK postcode</p>
     </section>-->
@@ -154,9 +154,15 @@ export default {
         api
           .getBookByTitle(book)
           .then(bookDetails => {
-            collectionImages.push(
-              bookDetails.items[0].volumeInfo.imageLinks.thumbnail
-            );
+            if (
+              !collectionImages.includes(
+                bookDetails.items[0].volumeInfo.imageLinks.thumbnail
+              )
+            ) {
+              collectionImages.push(
+                bookDetails.items[0].volumeInfo.imageLinks.thumbnail
+              );
+            }
           })
           .catch(err => console.log(err, "< err in fetchUsersBooksImages()"));
       }
@@ -200,8 +206,8 @@ export default {
     },
     listBook() {
       let sellingBookArr = [this.bookToSell.title];
-      api.updateSellingBooks(this.username, sellingBookArr).then(response => {
-        console.log(response, "< response");
+      api.updateSellingBooks(this.username, sellingBookArr).then(() => {
+        this.fetchSellingBooks();
       });
     }
   },
