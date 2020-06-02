@@ -12,11 +12,8 @@
       <router-link tag="p" to="/profile">
         <a>Profile</a>
       </router-link>
-      <router-link tag="p" to="/protected">
-        <a>Protected</a>
-      </router-link>
       <router-link tag="p" to="/auth" v-if="!signedIn">
-        <a>Sign Up / Sign In</a>
+        <a>Sign in</a>
       </router-link>
     </div>
     <router-view></router-view>
@@ -39,23 +36,23 @@ export default {
   name: "app",
   components: {
     Header,
-    Footer,
+    Footer
   },
   data() {
     return {
-      signedIn: false,
+      signedIn: false
     };
   },
   //beforeCreate is a lifecycle  which will listen to the authState event by using AmplifyEventBus
   //if signed in they can view their profile and set signed in to true or if not then redirected to auth so they can sign in
   beforeCreate() {
-    AmplifyEventBus.$on("authState", (info) => {
+    AmplifyEventBus.$on("authState", info => {
       if (info === "signedIn") {
         this.signedIn = true;
-        this.$router.push("/profile").catch((err) => {});
+        this.$router.push("/profile").catch(err => {});
       }
       if (info === "signedOut") {
-        this.$router.push("/").catch((err) => {});
+        this.$router.push("/").catch(err => {});
         this.signedIn = false;
       }
     });
@@ -63,11 +60,11 @@ export default {
     //when app loads we also call auth.currentauthenticated user to check whether or not the user has signed in and set it to true
 
     Auth.currentAuthenticatedUser()
-      .then((user) => {
+      .then(user => {
         this.signedIn = true;
       })
       .catch(() => (this.signedIn = false));
-  },
+  }
 };
 </script>
 
@@ -143,7 +140,6 @@ export default {
 }
 
 #nav {
-  margin-left: 2rem;
   padding: 0 20px;
   color: var(--brown-color);
   display: flex;
