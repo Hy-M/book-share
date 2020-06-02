@@ -14,8 +14,9 @@
     <section class="upload">
       <h3 class="h3">Shook - share your old books!</h3>
       <ol class="upload--info">
-        <li>Make sure you're ready to part with the book forever!</li>
+        <li>Make sure you're ready to part with the book forever</li>
         <li>Enter the title and author</li>
+        <li>Check that the book details are correct then click confirm!</li>
       </ol>
       <form class="upload--form form" v-on:submit.prevent="fetchBookToUpload">
         <input
