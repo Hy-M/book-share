@@ -122,27 +122,6 @@ export default {
         this.fetchSellingBooks();
       });
     },
-    fetchBookToUpload() {
-      let title = this.uploadForm.inputTitle;
-      let author = this.uploadForm.inputAuthor;
-      this.uploadHasBeenClicked = true;
-      api
-        .getBookToUpload(title, author)
-        .then(book => {
-          if (book.items[0]) {
-            this.error = false;
-            this.uploadForm.inputTitle = "";
-            this.uploadForm.inputAuthor = "";
-            this.bookToSell = book.items[0].volumeInfo;
-            this.uploadHasBeenClicked = false;
-          } else {
-            this.error = true;
-          }
-        })
-        .catch(err => {
-          console.log("Error getting user attributes");
-        });
-    },
     fetchPurchasedBooks() {
       api
         .getPurchasedBooks(this.username)
