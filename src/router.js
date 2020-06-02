@@ -48,7 +48,11 @@ router.beforeResolve((to, from, next) => {
       })
       .catch(e => {
         next({
+<<<<<<< HEAD
           path: "/auth"
+=======
+          path: "/auth",
+>>>>>>> 434c36e78852c6eb6b833e0e0de6ce10b0f99e86
         });
       });
   }

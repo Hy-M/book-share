@@ -116,11 +116,28 @@ export default {
       }
     },
     getUserAttributes() {
-      Auth.currentUserInfo()
-        .then(currentUser => {
-          this.username = currentUser.username;
-          this.fetchPurchasedBooks();
-          this.fetchSellingBooks();
+      Auth.currentUserInfo().then(currentUser => {
+        this.username = currentUser.username;
+        this.fetchPurchasedBooks();
+        this.fetchSellingBooks();
+      });
+    },
+    fetchBookToUpload() {
+      let title = this.uploadForm.inputTitle;
+      let author = this.uploadForm.inputAuthor;
+      this.uploadHasBeenClicked = true;
+      api
+        .getBookToUpload(title, author)
+        .then(book => {
+          if (book.items[0]) {
+            this.error = false;
+            this.uploadForm.inputTitle = "";
+            this.uploadForm.inputAuthor = "";
+            this.bookToSell = book.items[0].volumeInfo;
+            this.uploadHasBeenClicked = false;
+          } else {
+            this.error = true;
+          }
         })
         .catch(err => {
           console.log("Error getting user attributes");
