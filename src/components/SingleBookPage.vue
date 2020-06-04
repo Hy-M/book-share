@@ -10,6 +10,7 @@
     <p class="singleBook--info book--subText">Published in {{singleBook.volumeInfo.publishedDate}}</p>
     <button class="singleBook--btn btn">I want this book</button>
     <button class="singleBook--btn btn">Ask the owner a question</button>
+    <Email />
   </main>
 </template>
 
@@ -17,8 +18,12 @@
 const booksData = require("../data.json");
 const axios = require("axios");
 import * as api from "../api.js";
+import Email from "./Email";
 
 export default {
+  components: {
+    Email
+  },
   mounted() {
     this.fetchBookByTitle();
   },

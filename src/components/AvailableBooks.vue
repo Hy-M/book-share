@@ -17,7 +17,9 @@
     </main>
   </div>
 </template>
+ 
 
+ 
 <script>
 const booksData = require("../data.json");
 import * as api from "../api.js";
@@ -37,6 +39,7 @@ export default {
     },
     fetchAllSellingBooks() {
       api.getAllSellingBooks().then(book => {
+        console.log(book);
         let availableBookTitles = [];
         while (availableBookTitles.length < 3) {
           let randomNum = Math.floor(Math.random() * book.body.length);
