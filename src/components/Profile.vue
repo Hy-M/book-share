@@ -1,5 +1,5 @@
 <template>
-  <main class="main">
+  <main v-if="this.user.attributes" class="main">
     <section class="userStatus">
       <p class="userStatus--status">Hello, {{ this.user.attributes.email }}</p>
       <button v-on:click="signOut" class="user--btn btn">Log out</button>
@@ -38,8 +38,7 @@
       <h4 class="list--title h4">{{ this.bookToSell.title }}</h4>
       <p class="list--info">{{ this.bookToSell.authors[0] }}</p>
       <img class="imgPreview" :src="this.bookToSell.imageLinks.thumbnail" />
-      <button class="btn" v-on:click="listBook">Confirm</button>
-      <!-- <p class="list--subtext">
+      <p class="list--subtext">
         Please enter the postcode where this book will be available to collect
         from in UPPERCASE
       </p>
@@ -51,16 +50,12 @@
           v-model="uploadForm.inputPostcode"
           pattern="^([A-Z][A-HJ-Y]?[0-9][A-Z0-9]? ?[0-9][A-Z]{2}|GIR ?0A{2})$"
         />
-        <button class="list--btn btn">List this book</button>
-      </form>-->
+        <button class="btn" v-on:click="listBook">Confirm</button>
+      </form>
     </section>
     <section v-if="this.uploadHasBeenClicked && this.error">
       <p class="list--subtext">Sorry, we can't find this book!</p>
     </section>
-
-    <!-- <section v-if="!this.uploadForm.inputPoscode && this.error">
-      <p class="list--subtext">Please enter a valid UK postcode</p>
-    </section>-->
   </main>
 </template>
 
@@ -95,7 +90,6 @@ export default {
       sellingBooksImages: []
     };
   },
-  //uses the Auth.current method to return meta data about user or error out if user si not signed in
   beforeCreate() {
     Auth.currentAuthenticatedUser()
       .then(user => {
@@ -121,27 +115,6 @@ export default {
         this.fetchPurchasedBooks();
         this.fetchSellingBooks();
       });
-    },
-    fetchBookToUpload() {
-      let title = this.uploadForm.inputTitle;
-      let author = this.uploadForm.inputAuthor;
-      this.uploadHasBeenClicked = true;
-      api
-        .getBookToUpload(title, author)
-        .then(book => {
-          if (book.items[0]) {
-            this.error = false;
-            this.uploadForm.inputTitle = "";
-            this.uploadForm.inputAuthor = "";
-            this.bookToSell = book.items[0].volumeInfo;
-            this.uploadHasBeenClicked = false;
-          } else {
-            this.error = true;
-          }
-        })
-        .catch(err => {
-          console.log("Error getting user attributes");
-        });
     },
     fetchPurchasedBooks() {
       api
@@ -224,9 +197,15 @@ export default {
     },
     listBook() {
       let sellingBookArr = [this.bookToSell.title];
-      api.updateSellingBooks(this.username, sellingBookArr).then(() => {
-        this.fetchSellingBooks();
-      });
+      api
+        .updateSellingBooks(this.username, sellingBookArr)
+        .then(() => {
+          this.fetchSellingBooks();
+        })
+        .then(() => {
+          this.bookToSell = {};
+        })
+        .catch(err => console.log(err, "err in listBook"));
     }
   },
   mounted() {
