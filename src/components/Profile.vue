@@ -6,8 +6,10 @@
     </section>
     <section class="bookshelves">
       <h4 class="h4">My bookshelf</h4>
+      <p class="list--subtext" v-if="this.loading">Loading</p>
       <CarouselComponent :images="this.purchasedBooksImages" />
       <h4 class="h4">Books i'm giving away</h4>
+      <p class="list--subtext" v-if="this.loading">Loading</p>
       <CarouselComponent :images="this.sellingBooksImages" />
     </section>
 
@@ -34,6 +36,7 @@
         <button class="upload--form-btn btn">Find book</button>
       </form>
     </section>
+    <p class="list--subtext" v-if="this.uploadHasBeenClicked && this.loading">Loading</p>
     <section class="list" v-if="this.bookToSell.title">
       <h4 class="list--title h4">{{ this.bookToSell.title }}</h4>
       <p class="list--info">{{ this.bookToSell.authors[0] }}</p>
@@ -50,8 +53,15 @@
           v-model="uploadForm.inputPostcode"
           pattern="^([A-Z][A-HJ-Y]?[0-9][A-Z0-9]? ?[0-9][A-Z]{2}|GIR ?0A{2})$"
         />
-        <button class="btn" v-on:click="listBook">Confirm</button>
+        <button class="btn">List this book</button>
       </form>
+      <p class="list--subtext" v-if="this.listHasBeenClicked && this.loading">Loading</p>
+      <section v-if="this.listHasBeenClicked && !this.loading && !this.error">
+        <p class="list--subtext">Done! Your book is now live</p>
+      </section>
+      <section v-else-if="this.listHasBeenClicked && this.error">
+        <p class="list--subtext">Something went wrong in listing your book</p>
+      </section>
     </section>
     <section v-if="this.uploadHasBeenClicked && this.error">
       <p class="list--subtext">Sorry, we can't find this book!</p>
@@ -87,7 +97,9 @@ export default {
       purchasedBooks: [],
       purchasedBooksImages: [],
       sellingBooks: [],
-      sellingBooksImages: []
+      sellingBooksImages: [],
+      loading: true,
+      listHasBeenClicked: false
     };
   },
   beforeCreate() {
@@ -120,31 +132,44 @@ export default {
       api
         .getPurchasedBooks(this.username)
         .then(books => {
+          this.error = false;
           this.purchasedBooks = books.Purchased;
           this.fetchUsersBooksImages(
             this.purchasedBooks,
             this.purchasedBooksImages
           );
         })
-        .catch(err => console.log(err, "< err in fetchPurchasedBooks"));
+        .catch(err => {
+          this.error = true;
+          this.loading = false;
+          console.log(err, "< err in fetchPurchasedBooks");
+        });
     },
     fetchSellingBooks() {
       api
         .getSellingBooks(this.username)
         .then(books => {
+          this.loading = false;
+          this.error = false;
           this.sellingBooks = books.Selling;
           this.fetchUsersBooksImages(
             this.sellingBooks,
             this.sellingBooksImages
           );
         })
-        .catch(err => console.log(err, "< err in fetchSellingBooks"));
+        .catch(err => {
+          this.error = true;
+          this.loading = false;
+          console.log(err, "< err in fetchSellingBooks");
+        });
     },
     fetchUsersBooksImages(collection, collectionImages) {
       for (let book of collection) {
         api
           .getBookByTitle(book)
           .then(bookDetails => {
+            this.loading = false;
+            this.error = false;
             if (
               !collectionImages.includes(
                 bookDetails.items[0].volumeInfo.imageLinks.thumbnail
@@ -155,10 +180,16 @@ export default {
               );
             }
           })
-          .catch(err => console.log(err, "< err in fetchUsersBooksImages()"));
+          .catch(err => {
+            this.error = true;
+            this.loading = false;
+            console.log(err, "< err in fetchUsersBooksImages()");
+          });
       }
     },
     checkPostcode() {
+      this.loading = true;
+      this.listHasBeenClicked = true;
       return api
         .validatePostcode(this.uploadForm.inputPostcode)
         .then(({ result }) => {
@@ -171,17 +202,23 @@ export default {
             this.error = true;
           }
         })
-        .catch(err => console.log(err, "< err in checkPostcode"));
+        .catch(err => {
+          this.error = true;
+          this.loading = false;
+          console.log(err, "< err in checkPostcode");
+        });
     },
     fetchBookToUpload() {
       let title = this.uploadForm.inputTitle;
       let author = this.uploadForm.inputAuthor;
       this.uploadHasBeenClicked = true;
+      this.loading = true;
       api
         .getBookToUpload(title, author)
         .then(book => {
           if (book.items[0]) {
             this.error = false;
+            this.loading = false;
             this.uploadForm.inputTitle = "";
             this.uploadForm.inputAuthor = "";
             this.bookToSell = book.items[0].volumeInfo;
@@ -192,6 +229,7 @@ export default {
         })
         .catch(err => {
           this.error = true;
+          this.loading = false;
           console.log(err, "< err in fetchBookToUpload");
         });
     },
@@ -200,17 +238,20 @@ export default {
       api
         .updateSellingBooks(this.username, sellingBookArr)
         .then(() => {
+          this.loading = false;
+          this.error = false;
+          this.bookToSell = {};
           this.fetchSellingBooks();
         })
-        .then(() => {
-          this.bookToSell = {};
-        })
-        .catch(err => console.log(err, "err in listBook"));
+        .catch(err => {
+          this.error = true;
+          this.loading = false;
+          console.log(err, "err in listBook");
+        });
     }
   },
   mounted() {
     this.getUserAttributes();
-    // this.fetchUsersBooks();
   }
 };
 </script>
