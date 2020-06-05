@@ -96,4 +96,12 @@ export default {
   font-size: 0.9rem;
   margin: 0.5rem;
 }
+
+@media (min-width: 425px) {
+  .book--title {
+    padding-top: 5px;
+    font-size: 1.3rem;
+    line-height: 1.8rem;
+  }
+}
 </style>

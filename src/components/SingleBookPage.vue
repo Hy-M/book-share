@@ -6,7 +6,7 @@
     <p class="singleBook--info book--subText">distance</p>
     <p>Goodreads rating via api</p>
 
-    <p class="singleBook--description">{{singleBook.volumeInfo.description}}</p>
+    <p class="singleBook--description book--description">{{singleBook.volumeInfo.description}}</p>
     <p class="singleBook--info book--subText">Published in {{singleBook.volumeInfo.publishedDate}}</p>
     <button class="singleBook--btn btn">I want this book</button>
     <button class="singleBook--btn btn">Ask the owner a question</button>
@@ -57,5 +57,11 @@ export default {
 .singleBook--btn {
   width: 100%;
   margin: 8px 0;
+}
+
+@media (min-width: 425px) {
+  .singleBook {
+    margin-top: 1rem;
+  }
 }
 </style>
