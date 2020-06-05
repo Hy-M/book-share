@@ -47,7 +47,6 @@ export default {
             });
           }
         }
-
         this.fetchBookByTitle(availableBookTitles);
       });
     },
