@@ -21,7 +21,6 @@
 <script>
 const booksData = require("../data.json");
 import * as api from "../api.js";
-
 export default {
   data() {
     return {
@@ -35,29 +34,51 @@ export default {
       //     console.log(result, "< result");
       //   });
     },
-    fetchAllSellingBooks() {
-      api.getAllSellingBooks().then(book => {
+    async fetchAllSellingBooks() {
+      await api.getAllSellingBooks().then(books => {
+        // console.log(book);
         let availableBookTitles = [];
-        while (availableBookTitles.length < 3) {
-          let randomNum = Math.floor(Math.random() * book.body.length);
-          if (book.body[randomNum].Selling) {
-            availableBookTitles.push({
-              user: book.body[randomNum].User,
-              title: book.body[randomNum].Selling[0]
-            });
+        let result = books.body.map(book => {
+          // console.log(b, "<----single book");
+          // console.log(b.Email, "<----single book");
+          // console.log(b.Selling);
+          if (book.Selling) {
+            availableBookTitles.push(book);
           }
-        }
+        });
+        console.log(availableBookTitles, "<-- avaialble book titles");
+        // while (availableBookTitles.length < 8) {
+        //   let randomNum = Math.floor(Math.random() * book.body.length);
+        //   if (book.body[randomNum].Selling) {
+        //     availableBookTitles.push({
+        //       user: book.body[randomNum].User,
+        //       title: book.body[randomNum].Selling[0]
+        //     });
+        //   }
+        // }
         this.fetchBookByTitle(availableBookTitles);
       });
     },
     fetchBookByTitle(availableBookTitles) {
       for (let item of availableBookTitles) {
-        api.getBookByTitle(item.title).then(book => {
-          this.availableBooks.push({
-            user: item.user,
-            bookDetails: book.items[0]
+        // console.log(item);
+        item.Selling.forEach(title => {
+          // console.log(title, "<--- book arr");
+          api.getBookByTitle(title).then(details => {
+            this.availableBooks.push({
+              bookDetails: details.items[0]
+            });
+            // console.log(this.availableBooks, "<----");
           });
         });
+
+        // console.log(item, "<---item");
+        //   api.getBookByTitle(item.title).then(book => {
+        //     this.availableBooks.push({
+        //       user: item.user,
+        //       bookDetails: book.items[0]
+        //     });
+        //   });
       }
     }
   },
