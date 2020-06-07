@@ -35,36 +35,40 @@
         />
         <button class="upload--form-btn btn">Find book</button>
       </form>
-    </section>
-    <p class="list--subtext" v-if="this.uploadHasBeenClicked && this.loading">Loading</p>
-    <section class="list" v-if="this.bookToSell.title">
-      <h4 class="list--title h4">{{ this.bookToSell.title }}</h4>
-      <p class="list--info">{{ this.bookToSell.authors[0] }}</p>
-      <img class="imgPreview" :src="this.bookToSell.imageLinks.thumbnail" />
-      <p class="list--subtext">
-        Please enter the postcode where this book will be available to collect
-        from in UPPERCASE
-      </p>
-      <form class="upload--form form" v-on:submit.prevent="checkPostcode">
-        <input
-          required
-          class="upload--form-input input"
-          placeholder="Enter your postcode"
-          v-model="uploadForm.inputPostcode"
-          pattern="^([A-Z][A-HJ-Y]?[0-9][A-Z0-9]? ?[0-9][A-Z]{2}|GIR ?0A{2})$"
-        />
-        <button class="btn">List this book</button>
-      </form>
-      <p class="list--subtext" v-if="this.listHasBeenClicked && this.loading">Loading</p>
-      <section v-if="this.listHasBeenClicked && !this.loading && !this.error">
-        <p class="list--subtext">Done! Your book is now live</p>
+      <p class="list--subtext" v-if="this.uploadHasBeenClicked && this.loading">Loading</p>
+      <section class="list" v-if="this.bookToSell.title">
+        <h4 class="list--title h4">{{ this.bookToSell.title }}</h4>
+        <p class="list--info">{{ this.bookToSell.authors[0] }}</p>
+        <img class="imgPreview" :src="this.bookToSell.imageLinks.thumbnail" />
+        <p class="list--subtext">
+          Please enter the postcode where this book will be available to collect
+          from in UPPERCASE
+        </p>
+        <form class="upload--form form" v-on:submit.prevent="checkPostcode">
+          <input
+            required
+            class="upload--form-input input"
+            placeholder="Enter your postcode"
+            v-model="uploadForm.inputPostcode"
+            pattern="^([A-Z][A-HJ-Y]?[0-9][A-Z0-9]? ?[0-9][A-Z]{2}|GIR ?0A{2})$"
+          />
+          <button class="upload--form-btn btn">List this book</button>
+        </form>
+
+        <section class="list--conditionals">
+          <p class="list--subtext" v-if="this.listHasBeenClicked && this.loading">Loading</p>
+        </section>
+
+        <section v-if="this.listHasBeenClicked && !this.loading && !this.error">
+          <p class="list--subtext">Done! Your book is now live</p>
+        </section>
+        <section v-else-if="this.listHasBeenClicked && this.error">
+          <p class="list--subtext">Something went wrong in listing your book</p>
+        </section>
       </section>
-      <section v-else-if="this.listHasBeenClicked && this.error">
-        <p class="list--subtext">Something went wrong in listing your book</p>
+      <section v-if="this.uploadHasBeenClicked && this.error">
+        <p class="list--subtext">Sorry, we can't find this book!</p>
       </section>
-    </section>
-    <section v-if="this.uploadHasBeenClicked && this.error">
-      <p class="list--subtext">Sorry, we can't find this book!</p>
     </section>
   </main>
 </template>
@@ -263,9 +267,16 @@ export default {
   padding-bottom: 20px;
 }
 
+.bookshelves {
+  margin: 0 auto;
+}
+
 .upload {
   border-top: 1px solid var(--pink-color);
   margin: 1rem 0 4rem 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 .upload--info li {
@@ -278,6 +289,10 @@ export default {
   margin: 8px 0;
 }
 
+.list {
+  margin-top: 4rem;
+}
+
 .list--info {
   text-transform: uppercase;
 }
@@ -286,9 +301,20 @@ export default {
   font-size: 0.9rem;
   line-height: 1.4rem;
 }
+
 @media (min-width: 425px) {
-  .upload {
-    margin-bottom: 6rem;
+  .list {
+    margin-top: 6rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .userStatus {
+    margin: 1rem 0;
+  }
+
+  .list {
+    margin-top: 8rem;
   }
 }
 </style>

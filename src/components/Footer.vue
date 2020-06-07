@@ -6,16 +6,12 @@
 
 <script>
 export default {
-  name: "Footer",
+  name: "Footer"
 };
 </script>
 
 <style>
 .footer {
-  position: relative;
-  left: 0px;
-  bottom: 0px;
-  height: 40px;
-  width: 100%;
+  margin: 6rem 0 3rem 0;
 }
 </style>

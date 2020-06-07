@@ -1,18 +1,19 @@
 // src/components/SignIn.vue
 <template>
-  <div>
+  <section class="main">
     <div class="formcontainer">
-      <input v-model="form.username" class="input" placeholder="Enter your email address" />
+      <input v-model="form.username" required class="input" placeholder="Enter your email address" />
       <input
+        required
         type="password"
         v-model="form.password"
         class="input"
         placeholder="Enter your password"
       />
-      <button v-on:click="signIn" class="btn">Sign In</button>
-      <button v-on:click="forgotPasswordFlow" class="btn">Forgot your password?</button>
+      <button v-on:click="signIn" class="signIn--btn btn">Sign in</button>
+      <button v-on:click="forgotPasswordFlow" class="signIn--btn btn">Forgot my password</button>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -52,13 +53,18 @@ export default {
 };
 </script>
 
-<style>
-.input {
-  outline-color: black;
+<style scoped>
+.formcontainer {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+@media (min-width: 425px) {
 }
 
-.formcontainer {
-  display: flex;
-  flex-direction: row;
+@media (min-width: 768px) {
+  .btn {
+    width: 70%;
+  }
 }
 </style>

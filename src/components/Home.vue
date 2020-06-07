@@ -52,12 +52,22 @@ export default {
 .searchBar {
   border-top: 1px solid var(--pink-color);
   border-bottom: 1px solid var(--pink-color);
-  padding-bottom: 20px;
+  padding-bottom: 40px;
 }
 
 @media (min-width: 425px) {
   .searchBar {
-    padding: 10px 0 30px 0;
+    padding: 10px 0 50px 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .searchBar {
+    padding: 20px 0 100px 0;
+  }
+
+  .searchBar--form-btn {
+    margin-top: 0.5rem;
   }
 }
 </style>

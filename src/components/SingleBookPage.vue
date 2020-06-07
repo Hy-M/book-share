@@ -4,8 +4,6 @@
     <h3 class="singleBook--title book--title">{{singleBook.volumeInfo.title}}</h3>
     <p class="singleBook--info book--author">{{singleBook.volumeInfo.authors[0]}}</p>
     <p class="singleBook--info book--subText">distance</p>
-    <p>Goodreads rating via api</p>
-
     <p class="singleBook--description book--description">{{singleBook.volumeInfo.description}}</p>
     <p class="singleBook--info book--subText">Published in {{singleBook.volumeInfo.publishedDate}}</p>
     <button class="singleBook--btn btn">I want this book</button>
@@ -62,6 +60,15 @@ export default {
 @media (min-width: 425px) {
   .singleBook {
     margin-top: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .singleBook {
+    margin-top: 2rem;
+  }
+  .book--subText {
+    margin: 1.2rem 0;
   }
 }
 </style>

@@ -1,36 +1,29 @@
 // src/components/Home.vue
 <template>
-  <div>
-    <h1>Forgot Password</h1>
-    <h2>
+  <section class="main">
+    <h3 class="h3">
       {{
-        formState === "forgotPassword"
-          ? "forgotPassword"
-          : "forgotPasswordSubmit"
+      formState === "forgotPassword"
+      ? "I've forgotten my password"
+      : "I've forgotten my password"
       }}
-    </h2>
+    </h3>
     <div class="formcontainer" v-if="formState === 'forgotPassword'">
-      <input v-model="form.username" class="input" placeholder="Email:" />
-      <button v-on:click="forgotPassword" class="button">Verify Email</button>
+      <input v-model="form.username" class="input" required placeholder="Enter your email address" />
+      <button v-on:click="forgotPassword" class="btn">Verify email</button>
     </div>
-    <div class="formcontainer" v-if="formState === 'forgotPasswordSubmit'">
-      <input v-model="form.username" class="input" placeholder="Email:" />
-      <input
-        v-model="form.authCode"
-        class="input"
-        placeholder="Confirmation Code"
-      />
+    <div class="formcontainer main" v-if="formState === 'forgotPasswordSubmit'">
+      <input v-model="form.username" class="input" placeholder="Enter your email address" />
+      <input v-model="form.authCode" class="input" placeholder="Enter your confirmation code" />
       <input
         type="password"
         v-model="form.newPassword"
         class="input"
-        placeholder="New Password"
+        placeholder="Enter your new password"
       />
-      <button v-on:click="forgotPasswordSubmit" class="button">
-        Reset Password
-      </button>
+      <button v-on:click="forgotPasswordSubmit" class="btn">Reset password</button>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -45,8 +38,8 @@ export default {
       formState: "forgotPassword",
       form: {
         username: "",
-        newPassword: "",
-      },
+        newPassword: ""
+      }
     };
   },
   methods: {
@@ -71,36 +64,10 @@ export default {
         console.log("error submitting new password", err);
         alert(err.message);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style>
-.formcontainer {
-  display: flex;
-  flex-direction: column;
-  width: 500px;
-  margin: 0 auto;
-}
-.input {
-  margin-bottom: 7px;
-  height: 38px;
-  border: none;
-  outline: none;
-  border-bottom: 2px solid #ddd;
-  font-size: 20px;
-}
-.button {
-  height: 45px;
-  border: none;
-  outline: none;
-  background-color: #dddddd;
-  margin-top: 8px;
-  cursor: pointer;
-  font-size: 18px;
-}
-.button:hover {
-  opacity: 0.7;
-}
 </style>

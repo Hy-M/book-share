@@ -13,7 +13,7 @@
         <a>Profile</a>
       </router-link>
       <router-link tag="p" to="/auth" v-if="!signedIn">
-        <a>Sign in</a>
+        <a>Sign up/in</a>
       </router-link>
     </div>
     <router-view></router-view>
@@ -101,6 +101,7 @@ export default {
   box-shadow: 1px 1px 3px var(--grey-color);
   outline-color: var(--pink-color);
   font-size: 1rem;
+  margin: 0.5rem 0;
 }
 
 .h3 {
@@ -119,6 +120,8 @@ export default {
   text-shadow: none;
   width: 95%;
   outline-color: var(--pink-color);
+  margin: 0.5rem 0;
+  font-size: 1rem;
 }
 
 .form {
@@ -147,6 +150,7 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+  flex-wrap: wrap;
 }
 
 #nav a {
@@ -176,9 +180,21 @@ export default {
     height: 300px;
     width: 250px;
   }
+}
 
-  .book--description {
-    line-height: 1.4rem;
+@media (min-width: 768px) {
+  .main {
+    width: 75%;
+  }
+
+  .btn {
+    padding: 8px 0;
+    margin: 1rem 0;
+  }
+
+  .input {
+    padding: 15px;
+    margin: 1rem 0;
   }
 }
 </style>
