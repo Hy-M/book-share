@@ -1,39 +1,62 @@
 <template>
-  <form
-    id="fs-frm"
-    name="simple-contact-form"
-    accept-charset="utf-8"
-    action="https://formspree.io/YOUR_EMAIL_HERE"
-    method="post"
-  >
-    <fieldset id="fs-frm-inputs">
-      <label for="full-name">Full Name</label>
-      <input type="text" name="name" id="full-name" placeholder="First and Last" required />
-      <label for="email-address">Email Address</label>
-      <input
-        type="email"
-        name="_replyto"
-        id="email-address"
-        placeholder="email@domain.tld"
-        required
-      />
-      <label for="message">Message</label>
-      <textarea
-        rows="5"
-        name="message"
-        id="message"
-        placeholder="Aenean lacinia bibendum nulla sed consectetur. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Donec ullamcorper nulla non metus auctor fringilla nullam quis risus."
-        required
-      ></textarea>
-      <input type="hidden" name="_subject" id="email-subject" value="Contact Form Submission" />
-    </fieldset>
-    <input type="submit" value="Submit" />
-  </form>
+  <div>
+    <input v-model="recipient" placeholder="recipient" />
+    <input v-model="sender" placeholder="sender" />
+    <input v-model="subject" placeholder="subject" />
+    <input v-model="text" placeholder="text" />
+    <!-- <input value={email.recipient}
+            onChange={e => this.setState({ email: { ...email, recipient: e.target.value } })} />
+          <div style={spacer} />
+          <label> Sender </label>
+          <br />
+          <input value={email.sender}
+            onChange={e => this.setState({ email: { ...email, sender: e.target.value } })} />
+          <div style={spacer} />
+          <label> Subject </label>
+          <br />
+          <input value={email.subject}
+            onChange={e => this.setState({ email: { ...email, subject: e.target.value } })} />
+          <div style={spacer} />
+          <label> Message </label>
+          <br />
+          <textarea rows={3} value={email.text} style={textArea}
+            onChange={e => this.setState({ email: { ...email, text: e.target.value } })} />
+          <div style={spacer} /> -->
+    <button v-on:click="sendEmail">Send Email</button>
+  </div>
 </template>
 
 <script>
 export default {
-  name: "Email"
+  name: "Email",
+  data() {
+    return {
+      sender: "",
+      recipient: "",
+      subject: "",
+      text: "",
+    };
+  },
+  props: {
+    // stringProp: String,
+  },
+  methods: {
+    sendEmail() {
+      let email = {
+        sender: this.sender,
+        recipient: this.recipient,
+        subject: this.subject,
+        text: this.text,
+      };
+      fetch(
+        `http://127.0.0.1:4000/send-email?recipient=${email.recipient}&sender=${email.sender}&topic=${email.subject}&text=${email.text}`
+      ) //query string url
+        .catch((err) => console.error(err));
+    },
+  },
+  mounted() {
+    // console.log(this.stringProp);
+  },
 };
 </script>
 

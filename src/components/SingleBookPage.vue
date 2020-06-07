@@ -1,13 +1,24 @@
 <template>
   <main class="singleBook main">
-    <img class="singleBook--img imgLarge" :src="singleBook.volumeInfo.imageLinks.thumbnail" />
-    <h3 class="singleBook--title book--title">{{singleBook.volumeInfo.title}}</h3>
-    <p class="singleBook--info book--author">{{singleBook.volumeInfo.authors[0]}}</p>
+    <img
+      class="singleBook--img imgLarge"
+      :src="singleBook.volumeInfo.imageLinks.thumbnail"
+    />
+    <h3 class="singleBook--title book--title">
+      {{ singleBook.volumeInfo.title }}
+    </h3>
+    <p class="singleBook--info book--author">
+      {{ singleBook.volumeInfo.authors[0] }}
+    </p>
     <p class="singleBook--info book--subText">distance</p>
     <p>Goodreads rating via api</p>
 
-    <p class="singleBook--description">{{singleBook.volumeInfo.description}}</p>
-    <p class="singleBook--info book--subText">Published in {{singleBook.volumeInfo.publishedDate}}</p>
+    <p class="singleBook--description">
+      {{ singleBook.volumeInfo.description }}
+    </p>
+    <p class="singleBook--info book--subText">
+      Published in {{ singleBook.volumeInfo.publishedDate }}
+    </p>
     <button class="singleBook--btn btn">I want this book</button>
     <button class="singleBook--btn btn">Ask the owner a question</button>
     <Email />
@@ -22,20 +33,28 @@ import Email from "./Email";
 
 export default {
   components: {
-    Email
+    Email,
   },
   mounted() {
     this.fetchBookByTitle();
+    this.fetchEmailDetails();
   },
   data() {
     return {
-      singleBook: {}
+      singleBook: {},
+      userEmail: "",
     };
   },
   methods: {
+    fetchEmailDetails() {
+      let User = this.$route.params.user;
+      api.getUser(User).then((data) => {
+        this.userEmail = data.Email;
+      });
+    },
     fetchBookByTitle() {
       let book_title = this.$route.params.book_title;
-      api.getBookByTitle(book_title).then(book => {
+      api.getBookByTitle(book_title).then((book) => {
         this.singleBook = book.items[0];
       });
     },
@@ -48,9 +67,9 @@ export default {
           console.log(data);
           return data;
         })
-        .catch(err => console.log(err, "< err"));
-    }
-  }
+        .catch((err) => console.log(err, "< err"));
+    },
+  },
 };
 </script>
 
