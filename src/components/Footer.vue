@@ -14,4 +14,10 @@ export default {
 .footer {
   margin: 6rem 0 3rem 0;
 }
+
+@media (min-width: 768px) {
+  .footer {
+    margin-top: 8rem;
+  }
+}
 </style>
