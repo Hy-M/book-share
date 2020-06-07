@@ -286,4 +286,9 @@ export default {
   font-size: 0.9rem;
   line-height: 1.4rem;
 }
+@media (min-width: 425px) {
+  .upload {
+    margin-bottom: 6rem;
+  }
+}
 </style>
