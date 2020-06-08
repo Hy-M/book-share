@@ -3,7 +3,7 @@
     <input v-model="recipient" placeholder="recipient" />
     <input v-model="sender" placeholder="sender" />
     <input v-model="subject" placeholder="subject" />
-    <input v-model="text" placeholder="text" />
+    <textarea v-model="text" placeholder="text"></textarea>
     <!-- <input value={email.recipient}
             onChange={e => this.setState({ email: { ...email, recipient: e.target.value } })} />
           <div style={spacer} />
@@ -48,8 +48,9 @@ export default {
         subject: this.subject,
         text: this.text,
       };
+      console.log(email);
       fetch(
-        `http://127.0.0.1:4000/send-email?recipient=${email.recipient}&sender=${email.sender}&topic=${email.subject}&text=${email.text}`
+        `http://127.0.0.1:3000/send-email?recipient=${email.recipient}&sender=${email.sender}&topic=${email.subject}&text=${email.text}`
       ) //query string url
         .catch((err) => console.error(err));
     },
