@@ -70,4 +70,11 @@ export default {
     margin-top: 0.5rem;
   }
 }
+
+@media (min-width: 1024px) {
+  .searchBar {
+    width: 30%;
+    border: none;
+  }
+}
 </style>

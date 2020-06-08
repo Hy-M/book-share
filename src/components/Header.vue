@@ -21,4 +21,10 @@ export default {
     margin: -2.5rem 0 -3rem 0;
   }
 }
+
+@media (min-width: 1024px) {
+  .header--logo {
+    height: 400px;
+  }
+}
 </style>

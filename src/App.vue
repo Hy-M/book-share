@@ -107,6 +107,7 @@ export default {
 .h3 {
   color: var(--brown-color);
   line-height: 1.7rem;
+  font-size: 1.6rem;
 }
 
 .h4 {
@@ -195,6 +196,41 @@ export default {
   .input {
     padding: 15px;
     margin: 1rem 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main {
+    width: 80%;
+  }
+
+  #nav {
+    justify-content: center;
+  }
+
+  #nav a {
+    margin: 0 1rem;
+    font-size: 1.3rem;
+  }
+
+  .input {
+    font-size: 1.1rem;
+    padding: 18px;
+  }
+
+  .btn {
+    font-size: 1.1rem;
+    padding: 10px 0;
+  }
+
+  .imgPreview {
+    height: 300px;
+    width: 250px;
+  }
+
+  .imgLarge {
+    height: 400px;
+    width: 350px;
   }
 }
 </style>

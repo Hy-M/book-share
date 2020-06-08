@@ -118,18 +118,43 @@ export default {
 }
 
 @media (min-width: 768px) {
-  .availableBooks {
-    width: 50%;
+  .availableBooks--all {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .availableBooks--book {
+    justify-content: space-between;
   }
 
   .book--title {
     font-size: 1.5rem;
     line-height: 2rem;
+    margin-top: 1rem;
+  }
+
+  .book--subText {
+    margin: 1rem 0;
   }
 
   .book--description {
     font-size: 1.1rem;
     line-height: 1.8rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .availableBooks--all {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .book--author {
+    font-size: 1.1rem;
+    margin-top: 1rem;
+  }
+
+  .book--description {
+    margin-top: 2rem;
   }
 }
 </style>

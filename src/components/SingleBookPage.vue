@@ -6,8 +6,10 @@
     <p class="singleBook--info book--subText">distance</p>
     <p class="singleBook--description book--description">{{singleBook.volumeInfo.description}}</p>
     <p class="singleBook--info book--subText">Published in {{singleBook.volumeInfo.publishedDate}}</p>
-    <button class="singleBook--btn btn">I want this book</button>
-    <button class="singleBook--btn btn">Ask the owner a question</button>
+    <section class="cta">
+      <button class="singleBook--btn btn">I want this book</button>
+      <button class="singleBook--btn btn">Ask the owner a question</button>
+    </section>
   </main>
 </template>
 
@@ -67,8 +69,19 @@ export default {
   .singleBook {
     margin-top: 2rem;
   }
-  .book--subText {
-    margin: 1.2rem 0;
+}
+
+@media (min-width: 1024px) {
+  .main {
+    width: 50%;
+  }
+  .singleBook--btn {
+    width: 40%;
+  }
+
+  .cta {
+    display: flex;
+    justify-content: space-evenly;
   }
 }
 </style>
