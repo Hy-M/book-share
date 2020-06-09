@@ -45,12 +45,11 @@ export default {
       let email = {
         sender: this.sender,
         recipient: this.recipient,
-        subject: this.subject,
+        topic: this.subject,
         text: this.text,
       };
-      console.log(email);
       fetch(
-        `http://127.0.0.1:3000/send-email?recipient=${email.recipient}&sender=${email.sender}&topic=${email.subject}&text=${email.text}`
+        `http://127.0.0.1:3000/send-email?recipient=${email.recipient}&sender=${email.sender}&topic=${email.topic}&text=${email.text}`
       ) //query string url
         .catch((err) => console.error(err));
     },

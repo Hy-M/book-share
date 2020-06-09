@@ -13,11 +13,12 @@ app.get("/", (req, res) => {
 });
 
 app.get("/send-email", (req, res) => {
-  const { recipient, sender, subject, text } = req.query;
+  const { recipient, sender, topic, text } = req.query;
+  console.log(req.query);
   const msg = {
     to: recipient,
     from: sender,
-    subject: subject,
+    subject: topic,
     text: text,
   };
   sgMail
@@ -26,7 +27,14 @@ app.get("/send-email", (req, res) => {
       console.log("emails sent successfully!");
     })
     .catch((error) => {
-      console.log(error);
+      //Log friendly error
+      console.error(error.toString());
+
+      //Extract error msg
+      const { message, code, response } = error;
+
+      //Extract response msg
+      const { headers, body } = response;
     });
 });
 
