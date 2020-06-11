@@ -14,6 +14,10 @@
       <CarouselComponent :images="this.purchasedBooksImages" />
       <h4 class="h4">Books i'm giving away</h4>
       <p class="list--subtext" v-if="this.loading">Loading</p>
+      <p
+        class="list--subtext"
+        v-if="!this.sellingBooks.length && !this.loading"
+      >You haven't sold any books yet</p>
       <CarouselComponent :images="this.sellingBooksImages" />
     </section>
 
@@ -144,7 +148,7 @@ export default {
       api
         .getPurchasedBooks(this.username)
         .then(books => {
-          if (books.Purchased.length) {
+          if (books.Purchased) {
             this.error = false;
             this.purchasedBooks = books.Purchased;
             this.fetchUsersBooksImages(
@@ -165,14 +169,17 @@ export default {
       api
         .getSellingBooks(this.username)
         .then(books => {
-          console.log(books, "selling books");
-          this.loading = false;
-          this.error = false;
-          this.sellingBooks = books.Selling;
-          this.fetchUsersBooksImages(
-            this.sellingBooks,
-            this.sellingBooksImages
-          );
+          if (books.Selling) {
+            this.loading = false;
+            this.error = false;
+            this.sellingBooks = books.Selling;
+            this.fetchUsersBooksImages(
+              this.sellingBooks,
+              this.sellingBooksImages
+            );
+          } else {
+            this.loading = false;
+          }
         })
         .catch(err => {
           this.error = true;
