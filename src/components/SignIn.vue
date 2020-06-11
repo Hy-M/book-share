@@ -1,7 +1,8 @@
 // src/components/SignIn.vue
 <template>
   <section class="main">
-    <div class="formcontainer">
+    <h3 class="h3">Sign in</h3>
+    <form class="formcontainer">
       <input v-model="form.username" required class="input" placeholder="Enter your email address" />
       <input
         required
@@ -12,7 +13,7 @@
       />
       <button v-on:click="signIn" class="signIn--btn btn">Sign in</button>
       <button v-on:click="forgotPasswordFlow" class="signIn--btn btn">Forgot my password</button>
-    </div>
+    </form>
   </section>
 </template>
 
@@ -37,7 +38,7 @@ export default {
         AmplifyEventBus.$emit("authState", "signedIn");
         this.$router.push("Profile");
       } catch (err) {
-        console.log("error signing in", err);
+        console.log(err, "err in signIn");
         // alert(err.message);
       }
     },
@@ -45,7 +46,7 @@ export default {
       try {
         this.$router.push("ForgotPassword");
       } catch (err) {
-        console.log("error", err);
+        console.log(err, "err in forgotPasswordFlow");
         alert(err.message);
       }
     }
