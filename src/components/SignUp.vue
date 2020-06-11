@@ -2,16 +2,16 @@
 <template>
   <section class="main">
     <h3 class="h3">{{ formState === "signUp" ? "Sign up" : "Confirm sign up" }}</h3>
-    <div class="formcontainer" v-if="formState === 'signUp'">
+    <form class="formcontainer" v-if="formState === 'signUp'">
       <input v-model="form.username" class="input" placeholder="Enter your email address" />
       <input type="password" v-model="form.password" class="input" placeholder="Create a password" />
       <button v-on:click="signUp" class="btn">Sign up</button>
-    </div>
-    <div class="formcontainer" v-if="formState === 'confirmSignUp'">
+    </form>
+    <form class="formcontainer" v-if="formState === 'confirmSignUp'">
       <input v-model="form.authCode" class="input" placeholder="Enter confirmation code" />
       <button v-on:click="confirmSignUp" class="btn">Confirm sign up</button>
       <button v-on:click="resendConfirmationCode" class="btn">Resend confirmation code</button>
-    </div>
+    </form>
   </section>
 </template>
 
@@ -42,7 +42,7 @@ export default {
         });
         this.formState = "confirmSignUp";
       } catch (err) {
-        console.log("error signing up ", err);
+        console.log(err, "err in SignUp");
         alert(err.message);
       }
     },
@@ -53,7 +53,7 @@ export default {
         alert("successfully signed up! Sign in to view the app.");
         this.toggle();
       } catch (err) {
-        console.log("error confirming signing up ", err);
+        console.log(err, "err in confirmSignUp");
         alert(err.message);
       }
     },
@@ -63,7 +63,7 @@ export default {
         await Auth.resendSignUp(username);
         console.log("code resent successfully");
       } catch (err) {
-        console.log("error resending code ", err);
+        console.log(err, "err in resendConfirmationCode");
         alert(err.message);
       }
     }
