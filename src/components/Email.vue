@@ -4,24 +4,6 @@
     <input v-model="sender" placeholder="sender" />
     <input v-model="subject" placeholder="subject" />
     <textarea v-model="text" placeholder="text"></textarea>
-    <!-- <input value={email.recipient}
-            onChange={e => this.setState({ email: { ...email, recipient: e.target.value } })} />
-          <div style={spacer} />
-          <label> Sender </label>
-          <br />
-          <input value={email.sender}
-            onChange={e => this.setState({ email: { ...email, sender: e.target.value } })} />
-          <div style={spacer} />
-          <label> Subject </label>
-          <br />
-          <input value={email.subject}
-            onChange={e => this.setState({ email: { ...email, subject: e.target.value } })} />
-          <div style={spacer} />
-          <label> Message </label>
-          <br />
-          <textarea rows={3} value={email.text} style={textArea}
-            onChange={e => this.setState({ email: { ...email, text: e.target.value } })} />
-          <div style={spacer} /> -->
     <button v-on:click="sendEmail">Send Email</button>
   </div>
 </template>
@@ -48,6 +30,7 @@ export default {
         topic: this.subject,
         text: this.text,
       };
+      b;
       fetch(
         `http://127.0.0.1:3000/send-email?recipient=${email.recipient}&sender=${email.sender}&topic=${email.topic}&text=${email.text}`
       ) //query string url
