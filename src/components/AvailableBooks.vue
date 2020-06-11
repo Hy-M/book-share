@@ -3,7 +3,7 @@
     <main class="availableBooks main">
       <h3 class="availableBooks--h3 h3">Browse books for sharing near you</h3>
       <p v-if="this.loading">Loading</p>
-      <section class="availableBooks--all">
+      <section v-if="this.availableBooks.length >= 1" class="availableBooks--all">
         <div
           class="availableBooks--book"
           v-for="(book, index) of availableBooks"
@@ -23,6 +23,9 @@
           <p class="availableBooks--book-info book--subText">distance</p>
         </div>
       </section>
+      <section v-else-if="!this.loading && this.error">
+        <p>Sorry, we can't find any available books right now.</p>
+      </section>
     </main>
   </div>
 </template>
@@ -35,7 +38,8 @@ export default {
   data() {
     return {
       availableBooks: [],
-      loading: true
+      loading: true,
+      error: false
     };
   },
   methods: {
@@ -46,32 +50,46 @@ export default {
       //   });
     },
     fetchAllSellingBooks() {
-      api.getAllSellingBooks().then(allBooks => {
-        let availableBookTitles = [];
-        for (let user of allBooks.body) {
-          if (user.Selling) {
-            availableBookTitles.push({
-              user: user.User,
-              titles: [...user.Selling]
-            });
+      api
+        .getAllSellingBooks()
+        .then(allBooks => {
+          let availableBookTitles = [];
+          for (let user of allBooks.body) {
+            if (user.Selling) {
+              availableBookTitles.push({
+                user: user.User,
+                titles: [...user.Selling]
+              });
+            }
           }
-        }
 
-        this.fetchBookByTitle(availableBookTitles);
-      });
+          this.fetchBookByTitle(availableBookTitles);
+        })
+        .catch(err => {
+          console.log(err, "err in fetchALlSellingBooks");
+          this.loading = false;
+          this.error = true;
+        });
     },
     fetchBookByTitle(availableBookTitles) {
       for (let user of availableBookTitles) {
         for (let title of user.titles) {
-          api.getBookByTitle(title).then(book => {
-            this.availableBooks.push({
-              user: user.user,
-              bookDetails: book.items[0]
+          api
+            .getBookByTitle(title)
+            .then(book => {
+              this.availableBooks.push({
+                user: user.user,
+                bookDetails: book.items[0]
+              });
+              this.loading = false;
+            })
+            .catch(err => {
+              console.log(err, "err in fetchBookByTitle");
+              this.loading = false;
+              this.error = true;
             });
-          });
         }
       }
-      this.loading = false;
     }
   },
   mounted() {
