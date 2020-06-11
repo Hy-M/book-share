@@ -3,7 +3,11 @@
     <main class="availableBooks main">
       <h3 class="availableBooks--h3 h3">Browse books for sharing near you</h3>
       <section class="availableBooks--all">
-        <div class="availableBooks--book" v-for="book of availableBooks" v-bind:key="book.user">
+        <div
+          class="availableBooks--book"
+          v-for="(book, index) of availableBooks"
+          v-bind:key="index"
+        >
           <router-link :to="`/browse/${book.user}/${book.bookDetails.volumeInfo.title}`">
             <img
               class="availableBooks--book-img imgPreview"
@@ -40,28 +44,30 @@ export default {
       //   });
     },
     fetchAllSellingBooks() {
-      api.getAllSellingBooks().then(book => {
+      api.getAllSellingBooks().then(allBooks => {
         let availableBookTitles = [];
-        while (availableBookTitles.length < 3) {
-          let randomNum = Math.floor(Math.random() * book.body.length);
-          if (book.body[randomNum].Selling) {
+        for (let user of allBooks.body) {
+          if (user.Selling) {
             availableBookTitles.push({
-              user: book.body[randomNum].User,
-              title: book.body[randomNum].Selling[0]
+              user: user.User,
+              titles: [...user.Selling]
             });
           }
         }
+
         this.fetchBookByTitle(availableBookTitles);
       });
     },
     fetchBookByTitle(availableBookTitles) {
-      for (let item of availableBookTitles) {
-        api.getBookByTitle(item.title).then(book => {
-          this.availableBooks.push({
-            user: item.user,
-            bookDetails: book.items[0]
+      for (let user of availableBookTitles) {
+        for (let title of user.titles) {
+          api.getBookByTitle(title).then(book => {
+            this.availableBooks.push({
+              user: user.user,
+              bookDetails: book.items[0]
+            });
           });
-        });
+        }
       }
     }
   },
