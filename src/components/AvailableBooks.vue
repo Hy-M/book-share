@@ -2,6 +2,7 @@
   <div>
     <main class="availableBooks main">
       <h3 class="availableBooks--h3 h3">Browse books for sharing near you</h3>
+      <p v-if="this.loading">Loading</p>
       <section class="availableBooks--all">
         <div
           class="availableBooks--book"
@@ -33,7 +34,8 @@ import * as api from "../api.js";
 export default {
   data() {
     return {
-      availableBooks: []
+      availableBooks: [],
+      loading: true
     };
   },
   methods: {
@@ -69,6 +71,7 @@ export default {
           });
         }
       }
+      this.loading = false;
     }
   },
   mounted() {
