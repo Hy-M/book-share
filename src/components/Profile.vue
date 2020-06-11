@@ -7,6 +7,10 @@
     <section class="bookshelves">
       <h4 class="h4">My bookshelf</h4>
       <p class="list--subtext" v-if="this.loading">Loading</p>
+      <p
+        class="list--subtext"
+        v-if="!this.purchasedBooks.length && !this.loading"
+      >You haven't purchased any books yet</p>
       <CarouselComponent :images="this.purchasedBooksImages" />
       <h4 class="h4">Books i'm giving away</h4>
       <p class="list--subtext" v-if="this.loading">Loading</p>
@@ -66,7 +70,7 @@
           <p class="list--subtext">Something went wrong in listing your book</p>
         </section>
       </section>
-      <section v-if="this.uploadHasBeenClicked && this.error">
+      <section v-if="this.uploadHasBeenClicked && this.error && !this.loading">
         <p class="list--subtext">Sorry, we can't find this book!</p>
       </section>
     </section>
@@ -112,7 +116,7 @@ export default {
         this.user = user;
       })
       .catch(err => {
-        console.log(err, "<-error getting user data");
+        console.log(err, "err in currentAuthenticatedUser");
       });
   },
   methods: {
@@ -126,22 +130,30 @@ export default {
       }
     },
     getUserAttributes() {
-      Auth.currentUserInfo().then(currentUser => {
-        this.username = currentUser.username;
-        this.fetchPurchasedBooks();
-        this.fetchSellingBooks();
-      });
+      Auth.currentUserInfo()
+        .then(currentUser => {
+          this.username = currentUser.username;
+          this.fetchPurchasedBooks();
+          this.fetchSellingBooks();
+        })
+        .catch(err => {
+          console.log(err, "err in getUserAttributes");
+        });
     },
     fetchPurchasedBooks() {
       api
         .getPurchasedBooks(this.username)
         .then(books => {
-          this.error = false;
-          this.purchasedBooks = books.Purchased;
-          this.fetchUsersBooksImages(
-            this.purchasedBooks,
-            this.purchasedBooksImages
-          );
+          if (books.Purchased.length) {
+            this.error = false;
+            this.purchasedBooks = books.Purchased;
+            this.fetchUsersBooksImages(
+              this.purchasedBooks,
+              this.purchasedBooksImages
+            );
+          } else {
+            this.loading = false;
+          }
         })
         .catch(err => {
           this.error = true;
@@ -153,6 +165,7 @@ export default {
       api
         .getSellingBooks(this.username)
         .then(books => {
+          console.log(books, "selling books");
           this.loading = false;
           this.error = false;
           this.sellingBooks = books.Selling;
