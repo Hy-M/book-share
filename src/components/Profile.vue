@@ -4,21 +4,31 @@
       <p class="userStatus--status">Hello, {{ this.user.attributes.email }}</p>
       <button v-on:click="signOut" class="user--btn btn">Log out</button>
     </section>
-    <section class="bookshelves">
+    <section class="bookshelves" id="Purchased">
       <h4 class="h4">My bookshelf</h4>
       <p class="list--subtext" v-if="this.loading">Loading</p>
       <p
         class="list--subtext"
         v-if="!this.purchasedBooks.length && !this.loading"
       >You haven't purchased any books yet</p>
-      <CarouselComponent :images="this.purchasedBooksImages" />
+      <CarouselComponent
+        :images="this.purchasedBooksImages"
+        :username="this.username"
+        status="Purchased"
+      />
+    </section>
+    <section class="bookshelves" id="Selling">
       <h4 class="h4">Books i'm giving away</h4>
       <p class="list--subtext" v-if="this.loading">Loading</p>
       <p
         class="list--subtext"
         v-if="!this.sellingBooks.length && !this.loading"
       >You haven't sold any books yet</p>
-      <CarouselComponent :images="this.sellingBooksImages" />
+      <CarouselComponent
+        :images="this.sellingBooksImages"
+        :username="this.username"
+        status="Selling"
+      />
     </section>
 
     <section class="upload">
@@ -203,7 +213,7 @@ export default {
             ) {
               collectionImages.push({
                 img: bookDetails.items[0].volumeInfo.imageLinks.thumbnail,
-                id: bookDetails.items[0].id
+                title: bookDetails.items[0].volumeInfo.title
               });
             }
           })
