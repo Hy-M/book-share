@@ -1,10 +1,41 @@
 <template>
-  <div>
-    <input v-model="recipient" placeholder="recipient" />
-    <input v-model="sender" placeholder="sender" />
-    <input v-model="subject" placeholder="subject" />
-    <textarea v-model="text" placeholder="text"></textarea>
-    <button v-on:click="sendEmail">Send Email</button>
+  <div id="sendEmail">
+    <form id="Email" method="POST" @submit.prevent="sendEmail">
+      <input
+        type="text"
+        class="input"
+        name="recipient"
+        v-model="recipient"
+        placeholder="recipient"
+      />
+      <input
+        type="text"
+        class="input"
+        name="sender"
+        v-model="sender"
+        placeholder="sender"
+      />
+      <input
+        type="text"
+        class="input"
+        name="subject"
+        v-model="subject"
+        placeholder="subject"
+      />
+      <textarea
+        type="text"
+        class="input"
+        name="text"
+        v-model="text"
+        placeholder="text"
+      ></textarea>
+      <input type="submit" value="Submit" />
+      <!-- <a v-bind:href="`mailto:${recipient}`">{{ recipient }}</a> -->
+      <!-- <a v-bind:href="'mailto:' + email.recipient" -->
+      <!-- >{{ recipient }} -->
+      <!-- <button v-on:click="sendEmail" id="sendEmail">Send Email</button> -->
+      <!-- </a> -->
+    </form>
   </div>
 </template>
 
@@ -30,11 +61,12 @@ export default {
         topic: this.subject,
         text: this.text,
       };
-      b;
-      fetch(
-        `http://127.0.0.1:3000/send-email?recipient=${email.recipient}&sender=${email.sender}&topic=${email.topic}&text=${email.text}`
-      ) //query string url
-        .catch((err) => console.error(err));
+      window.location.href = `mailto:${email.recipient}?subject=${email.topic}&body=${email.text}`;
+      console.log(email);
+      //   fetch(
+      //     `http://127.0.0.1:3000/send-email?recipient=${email.recipient}&sender=${email.sender}&topic=${email.topic}&text=${email.text}`
+      //   ) //query string url
+      //     .catch((err) => console.error(err));
     },
   },
   mounted() {

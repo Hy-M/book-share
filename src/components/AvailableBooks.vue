@@ -65,6 +65,7 @@ export default {
             if (user.Selling) {
               availableBookTitles.push({
                 user: user.User,
+                email: user.Email,
                 titles: [...user.Selling],
               });
             }
@@ -86,6 +87,7 @@ export default {
             .then((book) => {
               this.availableBooks.push({
                 user: user.user,
+                email: user.email,
                 bookDetails: book.items[0],
               });
               this.loading = false;
