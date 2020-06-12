@@ -10,8 +10,11 @@
     :paginationColor="'var(--grey-color)'"
     :paginationActiveColor="'#d65a85'"
   >
-    <slide v-for="image in images" :key="image">
-      <img class="imgPreview" :src="image" />
+    <slide v-for="obj in images" :key="obj.id">
+      <img class="imgPreview" :src="obj.img" />
+      <button class="carousel--delBtn btn" v-on:click="deleteBook">
+        <i class="fas fa-trash"></i>
+      </button>
     </slide>
   </carousel>
 </template>
@@ -49,8 +52,17 @@ export default {
       ]
     };
   },
+  methods: {
+    deleteBook(e) {
+      console.log(e, "e");
+    }
+  },
   mounted() {}
 };
 </script>
 
-<style></style>
+<style scoped>
+.carousel--delBtn {
+  color: var(--brown-color);
+}
+</style>

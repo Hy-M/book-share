@@ -195,13 +195,16 @@ export default {
             this.loading = false;
             this.error = false;
             if (
-              !collectionImages.includes(
-                bookDetails.items[0].volumeInfo.imageLinks.thumbnail
-              )
+              !collectionImages.filter(
+                obj =>
+                  obj.img ===
+                  bookDetails.items[0].volumeInfo.imageLinks.thumbnail
+              ).length
             ) {
-              collectionImages.push(
-                bookDetails.items[0].volumeInfo.imageLinks.thumbnail
-              );
+              collectionImages.push({
+                img: bookDetails.items[0].volumeInfo.imageLinks.thumbnail,
+                id: bookDetails.items[0].id
+              });
             }
           })
           .catch(err => {
