@@ -27,34 +27,32 @@ export default {
   components: { Carousel, Slide },
   props: {
     images: {
-      type: String,
+      type: Array
     },
     username: {
-      type: String,
+      type: String
     },
     status: {
-      type: String,
-    },
+      type: String
+    }
   },
   data() {
     return {};
   },
   methods: {
     deleteBook(e) {
-      console.log(this.status, "status");
       let bookToDelete = e.target.parentElement.id;
-      console.log(bookToDelete, "<--book to delete");
       api
         .deleteFromCollection(this.username, bookToDelete, this.status)
-        .then((data) => {
+        .then(data => {
           console.log(data);
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(err => {
+          console.log(err, "err in deleteBook");
         });
-    },
+    }
   },
-  mounted() {},
+  mounted() {}
 };
 </script>
 
