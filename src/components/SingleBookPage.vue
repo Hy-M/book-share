@@ -19,9 +19,14 @@
     <p class="singleBook--info book--subText">
       Published in {{ singleBook.volumeInfo.publishedDate }}
     </p>
-    <button class="singleBook--btn btn">I want this book</button>
-    <button class="singleBook--btn btn">Ask the owner a question</button>
-    <Email :userEmail="userEmail" />
+    <button class="singleBook--btn btn" v-on:click="isVisible = !isVisible">
+      Contact seller
+    </button>
+    <Email
+      v-if="isVisible"
+      :userEmail="this.userEmail"
+      :bookTitle="this.singleBook.volumeInfo.title"
+    />
   </main>
 </template>
 
@@ -43,6 +48,7 @@ export default {
     return {
       singleBook: {},
       userEmail: "",
+      isVisible: false,
     };
   },
   methods: {

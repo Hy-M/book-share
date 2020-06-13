@@ -1,27 +1,7 @@
 <template>
   <div id="sendEmail">
     <form id="Email" method="POST" @submit.prevent="sendEmail">
-      <input
-        type="text"
-        class="input"
-        name="recipient"
-        v-model="recipient"
-        placeholder="recipient"
-      />
-      <input
-        type="text"
-        class="input"
-        name="sender"
-        v-model="sender"
-        placeholder="sender"
-      />
-      <input
-        type="text"
-        class="input"
-        name="subject"
-        v-model="subject"
-        placeholder="subject"
-      />
+      <p>Your message to {{ this.userEmail }}</p>
       <textarea
         type="text"
         class="input"
@@ -29,12 +9,7 @@
         v-model="text"
         placeholder="text"
       ></textarea>
-      <input type="submit" value="Submit" />
-      <!-- <a v-bind:href="`mailto:${recipient}`">{{ recipient }}</a> -->
-      <!-- <a v-bind:href="'mailto:' + email.recipient" -->
-      <!-- >{{ recipient }} -->
-      <!-- <button v-on:click="sendEmail" id="sendEmail">Send Email</button> -->
-      <!-- </a> -->
+      <input type="submit" value="Open Email" />
     </form>
   </div>
 </template>
@@ -55,11 +30,10 @@ export default {
   },
   methods: {
     sendEmail() {
-      console.log(this.userEmail);
       let email = {
         sender: this.sender,
-        recipient: this.recipient,
-        topic: this.subject,
+        recipient: this.userEmail,
+        topic: `RE: A potential buyer replied to your book listing: ${this.bookTitle}`,
         text: this.text,
       };
       window.location.href = `mailto:${email.recipient}?subject=${email.topic}&body=${email.text}`;
@@ -70,7 +44,9 @@ export default {
       //     .catch((err) => console.error(err));
     },
   },
-  mounted() {},
+  mounted() {
+    console.log(this.userEmail);
+  },
 };
 </script>
 
