@@ -21,7 +21,7 @@
     </p>
     <button class="singleBook--btn btn">I want this book</button>
     <button class="singleBook--btn btn">Ask the owner a question</button>
-    <Email />
+    <Email :userEmail="userEmail" />
   </main>
 </template>
 

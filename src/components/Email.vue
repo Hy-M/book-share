@@ -51,10 +51,11 @@ export default {
     };
   },
   props: {
-    // stringProp: String,
+    userEmail: String,
   },
   methods: {
     sendEmail() {
+      console.log(this.userEmail);
       let email = {
         sender: this.sender,
         recipient: this.recipient,
@@ -69,9 +70,7 @@ export default {
       //     .catch((err) => console.error(err));
     },
   },
-  mounted() {
-    // console.log(this.stringProp);
-  },
+  mounted() {},
 };
 </script>
 
