@@ -37,16 +37,9 @@ export default {
         text: this.text,
       };
       window.location.href = `mailto:${email.recipient}?subject=${email.topic}&body=${email.text}`;
-      console.log(email);
-      //   fetch(
-      //     `http://127.0.0.1:3000/send-email?recipient=${email.recipient}&sender=${email.sender}&topic=${email.topic}&text=${email.text}`
-      //   ) //query string url
-      //     .catch((err) => console.error(err));
     },
   },
-  mounted() {
-    console.log(this.userEmail);
-  },
+  mounted() {},
 };
 </script>
 

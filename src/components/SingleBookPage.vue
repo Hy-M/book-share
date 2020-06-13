@@ -20,7 +20,7 @@
       Published in {{ singleBook.volumeInfo.publishedDate }}
     </p>
     <button class="singleBook--btn btn" v-on:click="isVisible = !isVisible">
-      Contact seller
+      {{ !this.isVisible ? "Contact Seller" : "Hide Contact Info" }}
     </button>
     <Email
       v-if="isVisible"
