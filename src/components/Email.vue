@@ -27,6 +27,7 @@ export default {
   },
   props: {
     userEmail: String,
+    bookTitle: String,
   },
   methods: {
     sendEmail() {
