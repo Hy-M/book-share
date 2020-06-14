@@ -20,7 +20,7 @@
       Published in {{ singleBook.volumeInfo.publishedDate }}
     </p>
     <button
-      v-if="this.currentUser === this.userEmail"
+      v-if="this.currentUser !== this.userEmail"
       class="singleBook--btn btn"
       v-on:click="isVisible = !isVisible"
     >
