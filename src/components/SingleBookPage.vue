@@ -19,7 +19,11 @@
     <p class="singleBook--info book--subText">
       Published in {{ singleBook.volumeInfo.publishedDate }}
     </p>
-    <button class="singleBook--btn btn" v-on:click="isVisible = !isVisible">
+    <button
+      v-if="this.currentUser === this.userEmail"
+      class="singleBook--btn btn"
+      v-on:click="isVisible = !isVisible"
+    >
       {{ !this.isVisible ? "Contact Seller" : "Hide Contact Info" }}
     </button>
     <Email
@@ -35,6 +39,8 @@ const booksData = require("../data.json");
 const axios = require("axios");
 import * as api from "../api.js";
 import Email from "./Email";
+import { Auth } from "aws-amplify";
+import { AmplifyEventBus } from "aws-amplify-vue";
 
 export default {
   components: {
@@ -46,10 +52,16 @@ export default {
   },
   data() {
     return {
+      currentUser: "",
       singleBook: {},
       userEmail: "",
       isVisible: false,
     };
+  },
+  beforeCreate() {
+    Auth.currentUserInfo().then((user) => {
+      this.currentUser = user.attributes.email;
+    });
   },
   methods: {
     fetchEmailDetails() {

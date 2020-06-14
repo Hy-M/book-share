@@ -75,7 +75,7 @@ const sellingData = require("../sellingData.json");
 export default {
   name: "Profile",
   components: {
-    CarouselComponent
+    CarouselComponent,
   },
   data() {
     return {
@@ -86,22 +86,22 @@ export default {
       uploadForm: {
         inputTitle: null,
         inputAuthor: null,
-        inputPostcode: null
+        inputPostcode: null,
       },
       bookToSell: {},
       purchasedBooks: [],
       purchasedBooksImages: [],
       sellingBooks: [],
-      sellingBooksImages: []
+      sellingBooksImages: [],
     };
   },
   //uses the Auth.current method to return meta data about user or error out if user si not signed in
   beforeCreate() {
     Auth.currentAuthenticatedUser()
-      .then(user => {
+      .then((user) => {
         this.user = user;
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err, "<-error getting user data");
       });
   },
@@ -116,7 +116,7 @@ export default {
       }
     },
     getUserAttributes() {
-      Auth.currentUserInfo().then(currentUser => {
+      Auth.currentUserInfo().then((currentUser) => {
         this.username = currentUser.username;
         this.fetchPurchasedBooks();
         this.fetchSellingBooks();
@@ -125,32 +125,32 @@ export default {
     fetchPurchasedBooks() {
       api
         .getPurchasedBooks(this.username)
-        .then(books => {
+        .then((books) => {
           this.purchasedBooks = books.Purchased;
           this.fetchUsersBooksImages(
             this.purchasedBooks,
             this.purchasedBooksImages
           );
         })
-        .catch(err => console.log(err, "< err in fetchPurchasedBooks"));
+        .catch((err) => console.log(err, "< err in fetchPurchasedBooks"));
     },
     fetchSellingBooks() {
       api
         .getSellingBooks(this.username)
-        .then(books => {
+        .then((books) => {
           this.sellingBooks = books.Selling;
           this.fetchUsersBooksImages(
             this.sellingBooks,
             this.sellingBooksImages
           );
         })
-        .catch(err => console.log(err, "< err in fetchSellingBooks"));
+        .catch((err) => console.log(err, "< err in fetchSellingBooks"));
     },
     fetchUsersBooksImages(collection, collectionImages) {
       for (let book of collection) {
         api
           .getBookByTitle(book)
-          .then(bookDetails => {
+          .then((bookDetails) => {
             if (
               !collectionImages.includes(
                 bookDetails.items[0].volumeInfo.imageLinks.thumbnail
@@ -161,7 +161,7 @@ export default {
               );
             }
           })
-          .catch(err => console.log(err, "< err in fetchUsersBooksImages()"));
+          .catch((err) => console.log(err, "< err in fetchUsersBooksImages()"));
       }
     },
     checkPostcode() {
@@ -177,7 +177,7 @@ export default {
             this.error = true;
           }
         })
-        .catch(err => console.log(err, "< err in checkPostcode"));
+        .catch((err) => console.log(err, "< err in checkPostcode"));
     },
     fetchBookToUpload() {
       let title = this.uploadForm.inputTitle;
@@ -185,7 +185,7 @@ export default {
       this.uploadHasBeenClicked = true;
       api
         .getBookToUpload(title, author)
-        .then(book => {
+        .then((book) => {
           if (book.items[0]) {
             this.error = false;
             this.uploadForm.inputTitle = "";
@@ -196,7 +196,7 @@ export default {
             this.error = true;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.error = true;
           console.log(err, "< err in fetchBookToUpload");
         });
@@ -206,12 +206,12 @@ export default {
       api.updateSellingBooks(this.username, sellingBookArr).then(() => {
         this.fetchSellingBooks();
       });
-    }
+    },
   },
   mounted() {
     this.getUserAttributes();
     // this.fetchUsersBooks();
-  }
+  },
 };
 </script>
 
