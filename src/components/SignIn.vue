@@ -1,8 +1,13 @@
 // src/components/SignIn.vue
 <template>
   <div>
+    <span v-if="err !== null">{{ this.err.message }}</span>
     <div class="formcontainer">
-      <input v-model="form.username" class="input" placeholder="Enter your email address" />
+      <input
+        v-model="form.username"
+        class="input"
+        placeholder="Enter your email address"
+      />
       <input
         type="password"
         v-model="form.password"
@@ -10,7 +15,9 @@
         placeholder="Enter your password"
       />
       <button v-on:click="signIn" class="btn">Sign In</button>
-      <button v-on:click="forgotPasswordFlow" class="btn">Forgot your password?</button>
+      <button v-on:click="forgotPasswordFlow" class="btn">
+        Forgot your password?
+      </button>
     </div>
   </div>
 </template>
@@ -22,10 +29,11 @@ export default {
   name: "SignIn",
   data() {
     return {
+      err: null,
       form: {
         username: "",
-        password: ""
-      }
+        password: "",
+      },
     };
   },
   methods: {
@@ -36,8 +44,8 @@ export default {
         AmplifyEventBus.$emit("authState", "signedIn");
         this.$router.push("Profile");
       } catch (err) {
-        console.log("error signing in", err);
-        // alert(err.message);
+        this.err = err;
+        console.log("error signing in", this.err);
       }
     },
     async forgotPasswordFlow() {
@@ -47,8 +55,8 @@ export default {
         console.log("error", err);
         alert(err.message);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
