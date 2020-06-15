@@ -1,16 +1,37 @@
 // src/components/SignUp.vue
 <template>
   <section class="main">
-    <h3 class="h3">{{ formState === "signUp" ? "Sign up" : "Confirm sign up" }}</h3>
+    <span v-if="err !== null">{{ this.err.error }}</span>
+    <span v-if="notification !== undefined">{{
+      this.notification.notification
+    }}</span>
+     <h3 class="h3">{{ formState === "signUp" ? "Sign up" : "Confirm sign up" }}</h3>
     <form class="formcontainer" v-if="formState === 'signUp'">
-      <input v-model="form.username" class="input" placeholder="Enter your email address" />
-      <input type="password" v-model="form.password" class="input" placeholder="Create a password" />
+      <input
+        v-model="form.username"
+        class="input"
+        placeholder="Enter your email address"
+        required
+      />
+      <input
+        type="password"
+        v-model="form.password"
+        class="input"
+        placeholder="Create a password"
+        required
+      />
       <button v-on:click="signUp" class="btn">Sign up</button>
     </form>
     <form class="formcontainer" v-if="formState === 'confirmSignUp'">
-      <input v-model="form.authCode" class="input" placeholder="Enter confirmation code" />
+      <input
+        v-model="form.authCode"
+        class="input"
+        placeholder="Enter verification code"
+      />
       <button v-on:click="confirmSignUp" class="btn">Confirm sign up</button>
-      <button v-on:click="resendConfirmationCode" class="btn">Resend confirmation code</button>
+      <button v-on:click="resendConfirmationCode" class="btn">
+        Resend verification code
+      </button>
     </form>
   </section>
 </template>
@@ -27,8 +48,10 @@ export default {
       form: {
         username: "",
         password: "",
-        email: ""
-      }
+        email: "",
+      },
+      err: null,
+      notification: undefined,
     };
   },
   methods: {
@@ -38,36 +61,54 @@ export default {
         await Auth.signUp({
           username,
           password,
-          attributes: { email: username }
+          attributes: { email: username },
         });
         this.formState = "confirmSignUp";
       } catch (err) {
-        console.log(err, "err in SignUp");
-        alert(err.message);
+        if (err.code === "InvalidParameterException") {
+          this.err = { error: "Please enter a valid email or password" };
+        } else if (err.code === "UsernameExistsException") {
+          this.err = {
+            error:
+              "An account with the given email already exists. Please Sign in.",
+          };
+        } else {
+          this.err = { error: "An error has occurred. Please try again." };
+        }
       }
     },
     async confirmSignUp() {
       const { username, authCode } = this.form;
       try {
         await Auth.confirmSignUp(username, authCode);
-        alert("successfully signed up! Sign in to view the app.");
+        this.notification = {
+          notification:
+            "You have successfully signed up. Sign in to view the app",
+        };
         this.toggle();
       } catch (err) {
-        console.log(err, "err in confirmSignUp");
-        alert(err.message);
+        if (err.code === "CodeMismatchException") {
+          this.err = {
+            error: "Invalid verification code provided, please try again.",
+          };
+        }
       }
     },
     async resendConfirmationCode() {
       const { username } = this.form;
       try {
         await Auth.resendSignUp(username);
-        console.log("code resent successfully");
+        this.notification = {
+          notification: "A new verification code has been sent to your email.",
+        };
       } catch (err) {
-        console.log(err, "err in resendConfirmationCode");
-        alert(err.message);
+        this.err = {
+          error:
+            "An error has occurred. Please try resending the verification code.",
+        };
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

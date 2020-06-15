@@ -9,13 +9,23 @@
       <p class="singleBook--description book--description">{{singleBook.volumeInfo.description}}</p>
       <p class="singleBook--info book--subText">Published in {{singleBook.volumeInfo.publishedDate}}</p>
       <section class="cta">
-        <button class="singleBook--btn btn">I want this book</button>
-        <button class="singleBook--btn btn">Ask the owner a question</button>
+        <button
+      v-if="this.currentUser !== this.userEmail"
+      class="singleBook--btn btn"
+      v-on:click="isVisible = !isVisible"
+    >
+      {{ !this.isVisible ? "Contact Seller" : "Hide Contact Info" }}
+    </button>
       </section>
     </section>
     <section v-else-if="!this.loading && this.error">
       <p>Sorry, we can't find this book right now.</p>
     </section>
+     <Email
+      v-if="isVisible"
+      :userEmail="this.userEmail"
+      :bookTitle="this.singleBook.volumeInfo.title"
+    />
   </main>
 </template>
 
@@ -23,19 +33,40 @@
 const booksData = require("../data.json");
 const axios = require("axios");
 import * as api from "../api.js";
+import Email from "./Email";
+import { Auth } from "aws-amplify";
+import { AmplifyEventBus } from "aws-amplify-vue";
 
 export default {
+  components: {
+    Email,
+  },
   mounted() {
     this.fetchBookByTitle();
+    this.fetchEmailDetails();
   },
   data() {
     return {
+      currentUser: "",
       singleBook: {},
+      userEmail: "",
+      isVisible: false,
       loading: true,
       error: false
     };
   },
+  beforeCreate() {
+    Auth.currentUserInfo().then((user) => {
+      this.currentUser = user.attributes.email;
+    });
+  },
   methods: {
+    fetchEmailDetails() {
+      let User = this.$route.params.user;
+      api.getUser(User).then((data) => {
+        this.userEmail = data.Email;
+      });
+    },
     fetchBookByTitle() {
       let book_title = this.$route.params.book_title;
       api
@@ -59,9 +90,9 @@ export default {
           console.log(data);
           return data;
         })
-        .catch(err => console.log(err, "< err"));
-    }
-  }
+        .catch((err) => console.log(err, "< err"));
+    },
+  },
 };
 </script>
 

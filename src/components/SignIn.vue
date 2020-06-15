@@ -2,8 +2,13 @@
 <template>
   <section class="main">
     <h3 class="h3">Sign in</h3>
+    <span v-if="err !== null">{{ this.err.error }}</span>
     <form class="formcontainer">
-      <input v-model="form.username" required class="input" placeholder="Enter your email address" />
+      <input
+        v-model="form.username"
+        class="input"
+        placeholder="Enter your email address"
+      />
       <input
         required
         type="password"
@@ -24,10 +29,11 @@ export default {
   name: "SignIn",
   data() {
     return {
+      err: null,
       form: {
         username: "",
-        password: ""
-      }
+        password: "",
+      },
     };
   },
   methods: {
@@ -38,8 +44,19 @@ export default {
         AmplifyEventBus.$emit("authState", "signedIn");
         this.$router.push("Profile");
       } catch (err) {
-        console.log(err, "err in signIn");
-        // alert(err.message);
+        if (err.code === "UserNotConfirmedException") {
+          this.err = { error: "Please enter a valid email" };
+        } else if (err.code === "NotAuthorizedException") {
+          // The error happens when the incorrect password is provided
+          this.err = { error: "Sorry, that email or password is incorrect." };
+        } else if (err.code === "UserNotFoundException") {
+          // The error happens when the supplied username/email does not exist in the Cognito user pool
+          this.err = {
+            error: "Sorry, we cannot find an account with that e-mail address",
+          };
+        } else {
+          this.err = { error: "An error has occurred. Please try again." };
+        }
       }
     },
     async forgotPasswordFlow() {
@@ -49,8 +66,8 @@ export default {
         console.log(err, "err in forgotPasswordFlow");
         alert(err.message);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

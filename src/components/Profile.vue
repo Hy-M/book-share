@@ -102,7 +102,7 @@ const sellingData = require("../sellingData.json");
 export default {
   name: "Profile",
   components: {
-    CarouselComponent
+    CarouselComponent,
   },
   data() {
     return {
@@ -113,7 +113,7 @@ export default {
       uploadForm: {
         inputTitle: null,
         inputAuthor: null,
-        inputPostcode: null
+        inputPostcode: null,
       },
       bookToSell: {},
       purchasedBooks: [],
@@ -126,7 +126,7 @@ export default {
   },
   beforeCreate() {
     Auth.currentAuthenticatedUser()
-      .then(user => {
+      .then((user) => {
         this.user = user;
       })
       .catch(err => {
@@ -252,7 +252,7 @@ export default {
       this.loading = true;
       api
         .getBookToUpload(title, author)
-        .then(book => {
+        .then((book) => {
           if (book.items[0]) {
             this.error = false;
             this.loading = false;
@@ -264,7 +264,7 @@ export default {
             this.error = true;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.error = true;
           this.loading = false;
           console.log(err, "< err in fetchBookToUpload");

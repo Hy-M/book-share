@@ -5,6 +5,8 @@ node_modules
 # local env files
 .env.local
 .env.*.local
+sendgrid.env
+
 
 # Log files
 npm-debug.log*
@@ -34,4 +36,4 @@ awsconfiguration.json
 amplifyconfiguration.json
 amplify-build-config.json
 amplify-gradle-config.json
-amplifyxc.config
+amplifyxc.configsendgrid.env

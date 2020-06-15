@@ -14,12 +14,12 @@
               class="availableBooks--book-img imgPreview"
               :src="book.bookDetails.volumeInfo.imageLinks.smallThumbnail"
             />
-
             <h4 class="availableBooks--book-h4 book--title">{{ book.bookDetails.volumeInfo.title }}</h4>
           </router-link>
           <p
             class="availableBooks--book-info book--author"
           >{{book.bookDetails.volumeInfo.authors[0]}}</p>
+
           <p class="availableBooks--book-info book--subText">distance</p>
         </div>
       </section>
@@ -58,7 +58,8 @@ export default {
             if (user.Selling) {
               availableBookTitles.push({
                 user: user.User,
-                titles: [...user.Selling]
+                email: user.Email,
+                titles: [...user.Selling],
               });
             }
           }
@@ -76,25 +77,26 @@ export default {
         for (let title of user.titles) {
           api
             .getBookByTitle(title)
-            .then(book => {
+            .then((book) => {
               this.availableBooks.push({
                 user: user.user,
-                bookDetails: book.items[0]
+                email: user.email,
+                bookDetails: book.items[0],
               });
               this.loading = false;
             })
-            .catch(err => {
+            .catch((err) => {
               console.log(err, "err in fetchBookByTitle");
               this.loading = false;
               this.error = true;
             });
         }
       }
-    }
+    },
   },
   mounted() {
     this.fetchAllSellingBooks();
-  }
+  },
 };
 </script>
 
