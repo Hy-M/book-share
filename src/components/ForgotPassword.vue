@@ -2,14 +2,16 @@
 <template>
   <div>
     <span v-if="err !== null">{{ this.err.error }}</span>
-    <h2>
+  <section class="main">
+    <h3 class="h3">
       {{
-        formState === "forgotPassword"
-          ? "forgotPassword"
-          : "forgotPasswordSubmit"
+      formState === "forgotPassword"
+      ? "I've forgotten my password"
+      : "I've forgotten my password"
       }}
-    </h2>
+    </h3>
     <div class="formcontainer" v-if="formState === 'forgotPassword'">
+
       <input
         v-model="form.username"
         class="input"
@@ -38,11 +40,9 @@
         placeholder="New Password"
         required
       />
-      <button v-on:click="forgotPasswordSubmit" class="button">
-        Reset Password
-      </button>
+      <button v-on:click="forgotPasswordSubmit" class="btn">Reset password</button>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -125,36 +125,10 @@ export default {
           }
         }
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style>
-.formcontainer {
-  display: flex;
-  flex-direction: column;
-  width: 500px;
-  margin: 0 auto;
-}
-.input {
-  margin-bottom: 7px;
-  height: 38px;
-  border: none;
-  outline: none;
-  border-bottom: 2px solid #ddd;
-  font-size: 20px;
-}
-.button {
-  height: 45px;
-  border: none;
-  outline: none;
-  background-color: #dddddd;
-  margin-top: 8px;
-  cursor: pointer;
-  font-size: 18px;
-}
-.button:hover {
-  opacity: 0.7;
-}
 </style>

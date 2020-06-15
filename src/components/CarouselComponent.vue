@@ -2,55 +2,62 @@
   <carousel
     :perPageCustom="[
       [320, 1],
-      [768, 3],
-      [1024, 4],
+      [768, 2],
+      [1024, 3],
     ]"
     :autoplay="true"
     :autoplayHoverPause="true"
     :paginationColor="'var(--grey-color)'"
     :paginationActiveColor="'#d65a85'"
   >
-    <slide v-for="image in images" :key="image">
-      <img class="imgPreview" :src="image" />
+    <slide v-for="obj in images" :key="obj.title" :id="obj.title">
+      <img class="imgPreview" :src="obj.img" />
+      <button class="carousel--delBtn btn" v-on:click="deleteBook">
+        <i class="fas fa-trash"></i>
+      </button>
     </slide>
   </carousel>
 </template>
 
 <script>
 import { Carousel, Slide } from "vue-carousel";
+import * as api from "../api.js";
+
 export default {
   components: { Carousel, Slide },
   props: {
     images: {
-      type: Array,
+      type: Array
     },
+    username: {
+      type: String
+    },
+    status: {
+      type: String
+    }
   },
   data() {
-    return {
-      slides: [
-        {
-          imgUrl:
-            "https://marketplace.canva.com/EADanktU9AE/1/0/251w/canva-green-beach-photo-book-cover-o2wPCwYqW2w.jpg",
-          id: "1",
-          title: "The sun in his eyes",
-        },
-        {
-          imgUrl:
-            "https://marketplace.canva.com/EADaiDo2aSo/1/0/251w/canva-yellow-lemon-children-book-cover-Fb1rBcVIu2U.jpg",
-          id: "2",
-          title: "The happy lemon",
-        },
-        {
-          imgUrl:
-            "https://external-preview.redd.it/Y7aBLF2UAb8iDEl4v9nXSn_-RB7BolZFjneuOhAu1f0.jpg?auto=webp&s=0423b4b424bf8d4ffc6a857e4258bc49bd97098a",
-          id: "3",
-          title: "The great gatsby",
-        },
-      ],
-    };
+    return {};
   },
-  mounted() {},
+  methods: {
+    deleteBook(e) {
+      let bookToDelete = e.target.parentElement.id;
+      api
+        .deleteFromCollection(this.username, bookToDelete, this.status)
+        .then(data => {
+          console.log(data);
+        })
+        .catch(err => {
+          console.log(err, "err in deleteBook");
+        });
+    }
+  },
+  mounted() {}
 };
 </script>
 
-<style></style>
+<style scoped>
+.carousel--delBtn {
+  color: var(--brown-color);
+}
+</style>

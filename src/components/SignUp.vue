@@ -1,12 +1,12 @@
 // src/components/SignUp.vue
 <template>
-  <div>
+  <section class="main">
     <span v-if="err !== null">{{ this.err.error }}</span>
     <span v-if="notification !== undefined">{{
       this.notification.notification
     }}</span>
-    <h2>{{ formState === "signUp" ? "Sign Up" : "Confirm Sign Up" }}</h2>
-    <div class="formcontainer" v-if="formState === 'signUp'">
+     <h3 class="h3">{{ formState === "signUp" ? "Sign up" : "Confirm sign up" }}</h3>
+    <form class="formcontainer" v-if="formState === 'signUp'">
       <input
         v-model="form.username"
         class="input"
@@ -21,8 +21,8 @@
         required
       />
       <button v-on:click="signUp" class="btn">Sign up</button>
-    </div>
-    <div class="formcontainer" v-if="formState === 'confirmSignUp'">
+    </form>
+    <form class="formcontainer" v-if="formState === 'confirmSignUp'">
       <input
         v-model="form.authCode"
         class="input"
@@ -32,8 +32,8 @@
       <button v-on:click="resendConfirmationCode" class="btn">
         Resend verification code
       </button>
-    </div>
-  </div>
+    </form>
+  </section>
 </template>
 
 <script>
@@ -112,31 +112,14 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .formcontainer {
-  display: flex;
-  flex-direction: column;
-  width: 500px;
-  margin: 0 auto;
+  align-items: center;
 }
-.input {
-  margin-bottom: 7px;
-  height: 38px;
-  border: none;
-  outline: none;
-  border-bottom: 2px solid #ddd;
-  font-size: 20px;
+
+@media (min-width: 425px) {
 }
-.button {
-  height: 45px;
-  border: none;
-  outline: none;
-  background-color: #dddddd;
-  margin-top: 8px;
-  cursor: pointer;
-  font-size: 18px;
-}
-.button:hover {
-  opacity: 0.7;
+
+@media (min-width: 768px) {
 }
 </style>

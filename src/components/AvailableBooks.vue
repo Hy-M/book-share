@@ -3,30 +3,23 @@
     <main class="availableBooks main">
       <h3 class="availableBooks--h3 h3">Browse books for sharing near you</h3>
       <p v-if="this.loading">Loading</p>
-      <section
-        v-if="this.availableBooks.length >= 1"
-        class="availableBooks--all"
-      >
+      <section v-if="this.availableBooks.length >= 1" class="availableBooks--all">
         <div
           class="availableBooks--book"
           v-for="(book, index) of availableBooks"
           v-bind:key="index"
         >
-          <router-link
-            :to="`/browse/${book.user}/${book.bookDetails.volumeInfo.title}`"
-          >
+          <router-link :to="`/browse/${book.user}/${book.bookDetails.volumeInfo.title}`">
             <img
               class="availableBooks--book-img imgPreview"
               :src="book.bookDetails.volumeInfo.imageLinks.smallThumbnail"
             />
-
-            <h4 class="availableBooks--book-h4 book--title">
-              {{ book.bookDetails.volumeInfo.title }}
-            </h4>
+            <h4 class="availableBooks--book-h4 book--title">{{ book.bookDetails.volumeInfo.title }}</h4>
           </router-link>
-          <p class="availableBooks--book-info book--author">
-            {{ book.bookDetails.volumeInfo.authors[0] }}
-          </p>
+          <p
+            class="availableBooks--book-info book--author"
+          >{{book.bookDetails.volumeInfo.authors[0]}}</p>
+
           <p class="availableBooks--book-info book--subText">distance</p>
         </div>
       </section>
@@ -46,7 +39,7 @@ export default {
     return {
       availableBooks: [],
       loading: true,
-      error: false,
+      error: false
     };
   },
   methods: {
@@ -59,7 +52,7 @@ export default {
     fetchAllSellingBooks() {
       api
         .getAllSellingBooks()
-        .then((allBooks) => {
+        .then(allBooks => {
           let availableBookTitles = [];
           for (let user of allBooks.body) {
             if (user.Selling) {
@@ -73,7 +66,7 @@ export default {
 
           this.fetchBookByTitle(availableBookTitles);
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err, "err in fetchALlSellingBooks");
           this.loading = false;
           this.error = true;

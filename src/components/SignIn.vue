@@ -1,25 +1,25 @@
 // src/components/SignIn.vue
 <template>
-  <div>
+  <section class="main">
+    <h3 class="h3">Sign in</h3>
     <span v-if="err !== null">{{ this.err.error }}</span>
-    <div class="formcontainer">
+    <form class="formcontainer">
       <input
         v-model="form.username"
         class="input"
         placeholder="Enter your email address"
       />
       <input
+        required
         type="password"
         v-model="form.password"
         class="input"
         placeholder="Enter your password"
       />
-      <button v-on:click="signIn" class="btn">Sign In</button>
-      <button v-on:click="forgotPasswordFlow" class="btn">
-        Forgot your password?
-      </button>
-    </div>
-  </div>
+      <button v-on:click="signIn" class="signIn--btn btn">Sign in</button>
+      <button v-on:click="forgotPasswordFlow" class="signIn--btn btn">Forgot my password</button>
+    </form>
+  </section>
 </template>
 
 <script>
@@ -63,7 +63,7 @@ export default {
       try {
         this.$router.push("ForgotPassword");
       } catch (err) {
-        console.log("error", err);
+        console.log(err, "err in forgotPasswordFlow");
         alert(err.message);
       }
     },
@@ -71,13 +71,18 @@ export default {
 };
 </script>
 
-<style>
-.input {
-  outline-color: black;
+<style scoped>
+.formcontainer {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+@media (min-width: 425px) {
 }
 
-.formcontainer {
-  display: flex;
-  flex-direction: row;
+@media (min-width: 768px) {
+  .btn {
+    width: 70%;
+  }
 }
 </style>

@@ -13,7 +13,7 @@
         <a>Profile</a>
       </router-link>
       <router-link tag="p" to="/auth" v-if="!signedIn">
-        <a>Sign in</a>
+        <a>Sign up/in</a>
       </router-link>
     </div>
     <router-view></router-view>
@@ -91,6 +91,7 @@ export default {
   width: 95%;
   margin: 0 auto;
 }
+
 .btn {
   border-radius: 8px;
   padding: 4px 0;
@@ -99,11 +100,14 @@ export default {
   border: 1px solid var(--pink-color);
   box-shadow: 1px 1px 3px var(--grey-color);
   outline-color: var(--pink-color);
+  font-size: 1rem;
+  margin: 0.5rem 0;
 }
 
 .h3 {
   color: var(--brown-color);
   line-height: 1.7rem;
+  font-size: 1.6rem;
 }
 
 .h4 {
@@ -117,6 +121,8 @@ export default {
   text-shadow: none;
   width: 95%;
   outline-color: var(--pink-color);
+  margin: 0.5rem 0;
+  font-size: 1rem;
 }
 
 .form {
@@ -144,16 +150,87 @@ export default {
   color: var(--brown-color);
   display: flex;
   flex-direction: row;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
 }
 
 #nav a {
   font-weight: bold;
   color: var(--brown-color);
   text-decoration: none;
-  padding: 10px;
 }
 
 #nav a.router-link-exact-active {
   color: var(--pink-color);
+}
+
+@media (min-width: 425px) {
+  #nav a {
+    font-size: 1.1rem;
+  }
+
+  .btn {
+    padding: 6px 0;
+  }
+
+  .input {
+    padding: 12px;
+  }
+
+  .imgLarge {
+    height: 300px;
+    width: 250px;
+  }
+}
+
+@media (min-width: 768px) {
+  .main {
+    width: 75%;
+  }
+
+  .btn {
+    padding: 8px 0;
+    margin: 1rem 0;
+  }
+
+  .input {
+    padding: 15px;
+    margin: 1rem 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main {
+    width: 80%;
+  }
+
+  #nav {
+    justify-content: center;
+  }
+
+  #nav a {
+    margin: 0 1rem;
+    font-size: 1.3rem;
+  }
+
+  .input {
+    font-size: 1.1rem;
+    padding: 18px;
+  }
+
+  .btn {
+    font-size: 1.1rem;
+    padding: 10px 0;
+  }
+
+  .imgPreview {
+    height: 300px;
+    width: 250px;
+  }
+
+  .imgLarge {
+    height: 400px;
+    width: 350px;
+  }
 }
 </style>

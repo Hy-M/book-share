@@ -1,14 +1,34 @@
 <template>
-  <main class="main">
+  <main v-if="this.user.attributes" class="main">
     <section class="userStatus">
       <p class="userStatus--status">Hello, {{ this.user.attributes.email }}</p>
       <button v-on:click="signOut" class="user--btn btn">Log out</button>
     </section>
-    <section class="bookshelves">
+    <section class="bookshelves" id="Purchased">
       <h4 class="h4">My bookshelf</h4>
-      <CarouselComponent :images="this.purchasedBooksImages" />
+      <p class="list--subtext" v-if="this.loading">Loading</p>
+      <p
+        class="list--subtext"
+        v-if="!this.purchasedBooks.length && !this.loading"
+      >You haven't purchased any books yet</p>
+      <CarouselComponent
+        :images="this.purchasedBooksImages"
+        :username="this.username"
+        status="Purchased"
+      />
+    </section>
+    <section class="bookshelves" id="Selling">
       <h4 class="h4">Books i'm giving away</h4>
-      <CarouselComponent :images="this.sellingBooksImages" />
+      <p class="list--subtext" v-if="this.loading">Loading</p>
+      <p
+        class="list--subtext"
+        v-if="!this.sellingBooks.length && !this.loading"
+      >You haven't sold any books yet</p>
+      <CarouselComponent
+        :images="this.sellingBooksImages"
+        :username="this.username"
+        status="Selling"
+      />
     </section>
 
     <section class="upload">
@@ -33,34 +53,41 @@
         />
         <button class="upload--form-btn btn">Find book</button>
       </form>
-    </section>
-    <section class="list" v-if="this.bookToSell.title">
-      <h4 class="list--title h4">{{ this.bookToSell.title }}</h4>
-      <p class="list--info">{{ this.bookToSell.authors[0] }}</p>
-      <img class="imgPreview" :src="this.bookToSell.imageLinks.thumbnail" />
-      <button class="btn" v-on:click="listBook">Confirm</button>
-      <!-- <p class="list--subtext">
-        Please enter the postcode where this book will be available to collect
-        from in UPPERCASE
-      </p>
-      <form class="upload--form form" v-on:submit.prevent="checkPostcode">
-        <input
-          required
-          class="upload--form-input input"
-          placeholder="Enter your postcode"
-          v-model="uploadForm.inputPostcode"
-          pattern="^([A-Z][A-HJ-Y]?[0-9][A-Z0-9]? ?[0-9][A-Z]{2}|GIR ?0A{2})$"
-        />
-        <button class="list--btn btn">List this book</button>
-      </form>-->
-    </section>
-    <section v-if="this.uploadHasBeenClicked && this.error">
-      <p class="list--subtext">Sorry, we can't find this book!</p>
-    </section>
+      <p class="list--subtext" v-if="this.uploadHasBeenClicked && this.loading">Loading</p>
+      <section class="list" v-if="this.bookToSell.title">
+        <h4 class="list--title h4">{{ this.bookToSell.title }}</h4>
+        <p class="list--info">{{ this.bookToSell.authors[0] }}</p>
+        <img class="imgPreview" :src="this.bookToSell.imageLinks.thumbnail" />
+        <p class="list--subtext">
+          Please enter the postcode where this book will be available to collect
+          from in UPPERCASE
+        </p>
+        <form class="upload--form form" v-on:submit.prevent="checkPostcode">
+          <input
+            required
+            class="upload--form-input input"
+            placeholder="Enter your postcode"
+            v-model="uploadForm.inputPostcode"
+            pattern="^([A-Z][A-HJ-Y]?[0-9][A-Z0-9]? ?[0-9][A-Z]{2}|GIR ?0A{2})$"
+          />
+          <button class="upload--form-btn btn">List this book</button>
+        </form>
 
-    <!-- <section v-if="!this.uploadForm.inputPoscode && this.error">
-      <p class="list--subtext">Please enter a valid UK postcode</p>
-    </section>-->
+        <section class="list--conditionals">
+          <p class="list--subtext" v-if="this.listHasBeenClicked && this.loading">Loading</p>
+        </section>
+
+        <section v-if="this.listHasBeenClicked && !this.loading && !this.error">
+          <p class="list--subtext">Done! Your book is now live</p>
+        </section>
+        <section v-else-if="this.listHasBeenClicked && this.error">
+          <p class="list--subtext">Something went wrong in listing your book</p>
+        </section>
+      </section>
+      <section v-if="this.uploadHasBeenClicked && this.error && !this.loading">
+        <p class="list--subtext">Sorry, we can't find this book!</p>
+      </section>
+    </section>
   </main>
 </template>
 
@@ -93,16 +120,17 @@ export default {
       purchasedBooksImages: [],
       sellingBooks: [],
       sellingBooksImages: [],
+      loading: true,
+      listHasBeenClicked: false
     };
   },
-  //uses the Auth.current method to return meta data about user or error out if user si not signed in
   beforeCreate() {
     Auth.currentAuthenticatedUser()
       .then((user) => {
         this.user = user;
       })
-      .catch((err) => {
-        console.log(err, "<-error getting user data");
+      .catch(err => {
+        console.log(err, "err in currentAuthenticatedUser");
       });
   },
   methods: {
@@ -116,55 +144,89 @@ export default {
       }
     },
     getUserAttributes() {
-      Auth.currentUserInfo().then((currentUser) => {
-        this.username = currentUser.username;
-        this.fetchPurchasedBooks();
-        this.fetchSellingBooks();
-      });
+      Auth.currentUserInfo()
+        .then(currentUser => {
+          this.username = currentUser.username;
+          this.fetchPurchasedBooks();
+          this.fetchSellingBooks();
+        })
+        .catch(err => {
+          console.log(err, "err in getUserAttributes");
+        });
     },
     fetchPurchasedBooks() {
       api
         .getPurchasedBooks(this.username)
-        .then((books) => {
-          this.purchasedBooks = books.Purchased;
-          this.fetchUsersBooksImages(
-            this.purchasedBooks,
-            this.purchasedBooksImages
-          );
+        .then(books => {
+          if (books.Purchased) {
+            this.error = false;
+            this.purchasedBooks = books.Purchased;
+            this.fetchUsersBooksImages(
+              this.purchasedBooks,
+              this.purchasedBooksImages
+            );
+          } else {
+            this.loading = false;
+          }
         })
-        .catch((err) => console.log(err, "< err in fetchPurchasedBooks"));
+        .catch(err => {
+          this.error = true;
+          this.loading = false;
+          console.log(err, "< err in fetchPurchasedBooks");
+        });
     },
     fetchSellingBooks() {
       api
         .getSellingBooks(this.username)
-        .then((books) => {
-          this.sellingBooks = books.Selling;
-          this.fetchUsersBooksImages(
-            this.sellingBooks,
-            this.sellingBooksImages
-          );
+        .then(books => {
+          if (books.Selling) {
+            this.loading = false;
+            this.error = false;
+            this.sellingBooks = books.Selling;
+            this.fetchUsersBooksImages(
+              this.sellingBooks,
+              this.sellingBooksImages
+            );
+          } else {
+            this.loading = false;
+          }
         })
-        .catch((err) => console.log(err, "< err in fetchSellingBooks"));
+        .catch(err => {
+          this.error = true;
+          this.loading = false;
+          console.log(err, "< err in fetchSellingBooks");
+        });
     },
     fetchUsersBooksImages(collection, collectionImages) {
       for (let book of collection) {
         api
           .getBookByTitle(book)
-          .then((bookDetails) => {
+          .then(bookDetails => {
+            this.loading = false;
+            this.error = false;
             if (
-              !collectionImages.includes(
-                bookDetails.items[0].volumeInfo.imageLinks.thumbnail
-              )
+              !collectionImages.filter(
+                obj =>
+                  obj.img ===
+                  bookDetails.items[0].volumeInfo.imageLinks.thumbnail
+              ).length
             ) {
-              collectionImages.push(
-                bookDetails.items[0].volumeInfo.imageLinks.thumbnail
-              );
+              collectionImages.push({
+                img: bookDetails.items[0].volumeInfo.imageLinks.thumbnail,
+                title: bookDetails.items[0].volumeInfo.title
+              });
             }
           })
-          .catch((err) => console.log(err, "< err in fetchUsersBooksImages()"));
+          .catch(err => {
+            this.error = true;
+            this.loading = false;
+            console.log(err, "< err in fetchUsersBooksImages()");
+          });
       }
     },
     checkPostcode() {
+      this.loading = true;
+      this.listHasBeenClicked = true;
       return api
         .validatePostcode(this.uploadForm.inputPostcode)
         .then(({ result }) => {
@@ -177,17 +239,23 @@ export default {
             this.error = true;
           }
         })
-        .catch((err) => console.log(err, "< err in checkPostcode"));
+        .catch(err => {
+          this.error = true;
+          this.loading = false;
+          console.log(err, "< err in checkPostcode");
+        });
     },
     fetchBookToUpload() {
       let title = this.uploadForm.inputTitle;
       let author = this.uploadForm.inputAuthor;
       this.uploadHasBeenClicked = true;
+      this.loading = true;
       api
         .getBookToUpload(title, author)
         .then((book) => {
           if (book.items[0]) {
             this.error = false;
+            this.loading = false;
             this.uploadForm.inputTitle = "";
             this.uploadForm.inputAuthor = "";
             this.bookToSell = book.items[0].volumeInfo;
@@ -198,20 +266,30 @@ export default {
         })
         .catch((err) => {
           this.error = true;
+          this.loading = false;
           console.log(err, "< err in fetchBookToUpload");
         });
     },
     listBook() {
       let sellingBookArr = [this.bookToSell.title];
-      api.updateSellingBooks(this.username, sellingBookArr).then(() => {
-        this.fetchSellingBooks();
-      });
-    },
+      api
+        .updateSellingBooks(this.username, sellingBookArr)
+        .then(() => {
+          this.loading = false;
+          this.error = false;
+          this.bookToSell = {};
+          this.fetchSellingBooks();
+        })
+        .catch(err => {
+          this.error = true;
+          this.loading = false;
+          console.log(err, "err in listBook");
+        });
+    }
   },
   mounted() {
     this.getUserAttributes();
-    // this.fetchUsersBooks();
-  },
+  }
 };
 </script>
 
@@ -222,9 +300,16 @@ export default {
   padding-bottom: 20px;
 }
 
+.bookshelves {
+  margin: 0 auto;
+}
+
 .upload {
   border-top: 1px solid var(--pink-color);
   margin: 1rem 0 4rem 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 .upload--info li {
@@ -237,6 +322,10 @@ export default {
   margin: 8px 0;
 }
 
+.list {
+  margin-top: 4rem;
+}
+
 .list--info {
   text-transform: uppercase;
 }
@@ -244,5 +333,21 @@ export default {
 .list--subtext {
   font-size: 0.9rem;
   line-height: 1.4rem;
+}
+
+@media (min-width: 425px) {
+  .list {
+    margin-top: 6rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .userStatus {
+    margin: 1rem 0;
+  }
+
+  .list {
+    margin-top: 8rem;
+  }
 }
 </style>

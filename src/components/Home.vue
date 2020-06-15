@@ -2,10 +2,7 @@
   <div>
     <section class="searchBar main">
       <!-- search dynamoDB to see if anyone is selling a book with the given title -->
-      <form
-        class="searchBar--form form"
-        v-on:submit.prevent="fetchBooksByInput"
-      >
+      <form class="searchBar--form form" v-on:submit.prevent="fetchBooksByInput">
         <input
           class="searchBar--form-input input"
           type="text"
@@ -29,22 +26,22 @@ import * as api from "../api";
 export default {
   name: "home",
   components: {
-    AvailableBooks,
+    AvailableBooks
   },
   props: {},
   data() {
     return {
       searchForm: {
-        input: "",
+        input: ""
       },
-      booksByInput: [],
+      booksByInput: []
     };
   },
   methods: {
     fetchBooksByInput() {
       api.getBooksByInput(this.searchForm.input);
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -55,6 +52,29 @@ export default {
 .searchBar {
   border-top: 1px solid var(--pink-color);
   border-bottom: 1px solid var(--pink-color);
-  padding-bottom: 20px;
+  padding-bottom: 40px;
+}
+
+@media (min-width: 425px) {
+  .searchBar {
+    padding: 10px 0 50px 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .searchBar {
+    padding: 20px 0 100px 0;
+  }
+
+  .searchBar--form-btn {
+    margin-top: 0.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .searchBar {
+    width: 30%;
+    border: none;
+  }
 }
 </style>
