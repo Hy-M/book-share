@@ -1,17 +1,15 @@
 // src/components/Home.vue
 <template>
-  <div>
-    <span v-if="err !== null">{{ this.err.error }}</span>
   <section class="main">
     <h3 class="h3">
       {{
-      formState === "forgotPassword"
-      ? "I've forgotten my password"
-      : "I've forgotten my password"
+        formState === "forgotPassword"
+          ? "I've forgotten my password"
+          : "I've forgotten my password"
       }}
     </h3>
-    <div class="formcontainer" v-if="formState === 'forgotPassword'">
-
+    <span v-if="err !== null">{{ this.err.error }}</span>
+    <form class="formcontainer" v-if="formState === 'forgotPassword'">
       <input
         v-model="form.username"
         class="input"
@@ -19,8 +17,8 @@
         required
       />
       <button v-on:click="forgotPassword" class="button">Verify Email</button>
-    </div>
-    <div class="formcontainer" v-if="formState === 'forgotPasswordSubmit'">
+    </form>
+    <form class="formcontainer" v-if="formState === 'forgotPasswordSubmit'">
       <input
         v-model="form.username"
         class="input"
@@ -40,8 +38,10 @@
         placeholder="New Password"
         required
       />
-      <button v-on:click="forgotPasswordSubmit" class="btn">Reset password</button>
-    </div>
+      <button v-on:click="forgotPasswordSubmit" class="btn">
+        Reset password
+      </button>
+    </form>
   </section>
 </template>
 
@@ -125,10 +125,9 @@ export default {
           }
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style>
-</style>
+<style></style>
