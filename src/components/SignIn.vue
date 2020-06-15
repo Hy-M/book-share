@@ -17,7 +17,9 @@
         placeholder="Enter your password"
       />
       <button v-on:click="signIn" class="signIn--btn btn">Sign in</button>
-      <button v-on:click="forgotPasswordFlow" class="signIn--btn btn">Forgot my password</button>
+      <button v-on:click="forgotPasswordFlow" class="signIn--btn btn">
+        Forgot my password
+      </button>
     </form>
   </section>
 </template>
@@ -42,7 +44,7 @@ export default {
       try {
         await Auth.signIn(username, password);
         AmplifyEventBus.$emit("authState", "signedIn");
-        this.$router.push("Profile");
+        this.$router.push("/profile");
       } catch (err) {
         if (err.code === "UserNotConfirmedException") {
           this.err = { error: "Please enter a valid email" };
