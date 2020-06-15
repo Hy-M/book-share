@@ -7,9 +7,9 @@
         class="input"
         name="text"
         v-model="text"
-        placeholder="text"
+        placeholder="Enter your message to the seller"
       ></textarea>
-      <input type="submit" value="Open Email" />
+      <button class="btn" type="submit">Open email</button>
     </form>
   </div>
 </template>
@@ -22,12 +22,12 @@ export default {
       sender: "",
       recipient: "",
       subject: "",
-      text: "",
+      text: ""
     };
   },
   props: {
     userEmail: String,
-    bookTitle: String,
+    bookTitle: String
   },
   methods: {
     sendEmail() {
@@ -35,12 +35,12 @@ export default {
         sender: this.sender,
         recipient: this.userEmail,
         topic: `RE: A potential buyer replied to your book listing: ${this.bookTitle}`,
-        text: this.text,
+        text: this.text
       };
       window.location.href = `mailto:${email.recipient}?subject=${email.topic}&body=${email.text}`;
-    },
+    }
   },
-  mounted() {},
+  mounted() {}
 };
 </script>
 
