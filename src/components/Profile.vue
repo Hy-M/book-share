@@ -4,7 +4,7 @@
       <p class="userStatus--status">Hello, {{ this.user.attributes.email }}</p>
       <button v-on:click="signOut" class="user--btn btn">Log out</button>
     </section>
-    <section class="bookshelves" id="Purchased">
+    <!-- <section class="bookshelves" id="Purchased">
       <h4 class="h4">My bookshelf</h4>
       <p class="list--subtext" v-if="this.loading">Loading</p>
       <p
@@ -16,9 +16,9 @@
         :username="this.username"
         status="Purchased"
       />
-    </section>
+    </section>-->
     <section class="bookshelves" id="Selling">
-      <h4 class="h4">Books i'm giving away</h4>
+      <h4 class="h4">Books you're giving away</h4>
       <p class="list--subtext" v-if="this.loading">Loading</p>
       <p
         class="list--subtext"
@@ -102,7 +102,7 @@ const sellingData = require("../sellingData.json");
 export default {
   name: "Profile",
   components: {
-    CarouselComponent,
+    CarouselComponent
   },
   data() {
     return {
@@ -113,7 +113,7 @@ export default {
       uploadForm: {
         inputTitle: null,
         inputAuthor: null,
-        inputPostcode: null,
+        inputPostcode: null
       },
       bookToSell: {},
       purchasedBooks: [],
@@ -126,7 +126,7 @@ export default {
   },
   beforeCreate() {
     Auth.currentAuthenticatedUser()
-      .then((user) => {
+      .then(user => {
         this.user = user;
       })
       .catch(err => {
@@ -252,7 +252,7 @@ export default {
       this.loading = true;
       api
         .getBookToUpload(title, author)
-        .then((book) => {
+        .then(book => {
           if (book.items[0]) {
             this.error = false;
             this.loading = false;
@@ -264,7 +264,7 @@ export default {
             this.error = true;
           }
         })
-        .catch((err) => {
+        .catch(err => {
           this.error = true;
           this.loading = false;
           console.log(err, "< err in fetchBookToUpload");
