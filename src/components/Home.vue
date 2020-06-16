@@ -29,22 +29,41 @@ import * as api from "../api";
 export default {
   name: "home",
   components: {
-    AvailableBooks,
+    AvailableBooks
   },
   props: {},
   data() {
     return {
       searchForm: {
-        input: "",
+        input: ""
       },
-      booksByInput: [],
+      allSellingBooks: [],
+      booksByInput: []
     };
   },
   methods: {
-    fetchBooksByInput() {
-      api.getBooksByInput(this.searchForm.input);
+    fetchAllSellingBooks() {
+      api
+        .getAllSellingBooks()
+        .then(response => {
+          for (let user of response.body) {
+            if (user.Selling) {
+              this.allSellingBooks.push(...user.Selling);
+            }
+          }
+        })
+        .then(() => {
+          this.checkBooksByInput(this.searchForm.input);
+        });
     },
-  },
+    checkBooksByInput(input) {
+      for (let title of this.allSellingBooks) {
+        if (title.toLowerCase().includes(input.toLowerCase())) {
+          this.booksByInput.push(title);
+        }
+      }
+    }
+  }
 };
 </script>
 
