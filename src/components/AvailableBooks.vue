@@ -21,9 +21,6 @@
             <p class="availableBooks--book-info book--subText">distance</p>
           </div>
         </section>
-        <section v-if="!this.searchResults.length">
-          <p>Sorry, we can't find any books that match your search.</p>
-        </section>
       </section>
       <section>
         <h3 class="availableBooks--h3 h3">Browse books for sharing near you</h3>
