@@ -2,10 +2,7 @@
   <div>
     <section class="searchBar main">
       <!-- search dynamoDB to see if anyone is selling a book with the given title -->
-      <form
-        class="searchBar--form form"
-        v-on:submit.prevent="fetchBooksByInput"
-      >
+      <form class="searchBar--form form" v-on:submit.prevent="fetchAllSellingBooks">
         <input
           class="searchBar--form-input input"
           type="text"
@@ -15,7 +12,7 @@
         <button class="searchBar--form-btn btn">Search</button>
       </form>
     </section>
-    <AvailableBooks />
+    <AvailableBooks :searchResults="this.searchResults" />
     <router-link to="/profile">
       <h3 class="availableBooks--h3 h3">Got a spare book lying around?</h3>
     </router-link>
@@ -37,30 +34,60 @@ export default {
       searchForm: {
         input: ""
       },
-      allSellingBooks: [],
-      booksByInput: []
+      booksByInput: [],
+      searchResults: []
     };
   },
   methods: {
     fetchAllSellingBooks() {
-      api
+      this.booksByInput = [];
+      this.searchResults = [];
+      return api
         .getAllSellingBooks()
-        .then(response => {
-          for (let user of response.body) {
+        .then(allBooks => {
+          let availableBookTitles = [];
+          for (let user of allBooks.body) {
             if (user.Selling) {
-              this.allSellingBooks.push(...user.Selling);
+              availableBookTitles.push({
+                user: user.User,
+                email: user.Email,
+                titles: [...user.Selling]
+              });
             }
           }
+
+          this.checkBooksByInput(availableBookTitles);
         })
-        .then(() => {
-          this.checkBooksByInput(this.searchForm.input);
+        .catch(err => {
+          console.log(err, "err in fetchALlSellingBooks");
         });
     },
-    checkBooksByInput(input) {
-      for (let title of this.allSellingBooks) {
-        if (title.toLowerCase().includes(input.toLowerCase())) {
-          this.booksByInput.push(title);
+    checkBooksByInput(availableBookTitles) {
+      for (let obj of availableBookTitles) {
+        for (let title of obj.titles) {
+          if (
+            title.toLowerCase().includes(this.searchForm.input.toLowerCase())
+          ) {
+            this.booksByInput.push({
+              user: obj.user,
+              email: obj.email,
+              title: title
+            });
+          }
         }
+      }
+      this.searchForm.input = "";
+      this.fetchBooksByInputDetails();
+    },
+    fetchBooksByInputDetails() {
+      for (let user of this.booksByInput) {
+        api.getBookByTitle(user.title).then(book => {
+          this.searchResults.push({
+            user: user.user,
+            email: user.email,
+            bookDetails: book.items[0].volumeInfo
+          });
+        });
       }
     }
   }
