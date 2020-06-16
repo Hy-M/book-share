@@ -2,7 +2,10 @@
   <div>
     <section class="searchBar main">
       <!-- search dynamoDB to see if anyone is selling a book with the given title -->
-      <form class="searchBar--form form" v-on:submit.prevent="fetchBooksByInput">
+      <form
+        class="searchBar--form form"
+        v-on:submit.prevent="fetchBooksByInput"
+      >
         <input
           class="searchBar--form-input input"
           type="text"
@@ -26,22 +29,22 @@ import * as api from "../api";
 export default {
   name: "home",
   components: {
-    AvailableBooks
+    AvailableBooks,
   },
   props: {},
   data() {
     return {
       searchForm: {
-        input: ""
+        input: "",
       },
-      booksByInput: []
+      booksByInput: [],
     };
   },
   methods: {
     fetchBooksByInput() {
       api.getBooksByInput(this.searchForm.input);
-    }
-  }
+    },
+  },
 };
 </script>
 

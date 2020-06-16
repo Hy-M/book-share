@@ -101,9 +101,8 @@ export default {
           await Auth.forgotPasswordSubmit(username, authCode, newPassword);
           await Auth.signIn(username, newPassword);
           AmplifyEventBus.$emit("authState", "signedIn");
-          this.$router.push("/profile");
+          this.$router.push("Profile");
         } catch (err) {
-          console.log("error submitting new password", err);
           if (err.code === "UserNotFoundException") {
             // The error happens when the supplied username/email does not exist in the Cognito user pool
             this.err = {
