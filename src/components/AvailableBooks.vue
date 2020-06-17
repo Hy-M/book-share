@@ -28,7 +28,9 @@
             {{ book.bookDetails.volumeInfo.authors[0] }}
           </p>
 
-          <p class="availableBooks--book-info book--subText">distance</p>
+          <p class="availableBooks--book-info book--subText">
+            {{ book.address }}
+          </p>
         </div>
       </section>
       <section v-else-if="!this.loading && this.error">
@@ -66,7 +68,6 @@ export default {
       api
         .getAllSellingBooks()
         .then((allBooks) => {
-          console.log(allBooks, "<--all books");
           let availableBookTitles = [];
           for (let user of allBooks.body) {
             if (user.Selling) {
@@ -74,14 +75,13 @@ export default {
                 user: user.User,
                 email: user.Email,
                 titles: [...user.Selling],
+                address: user.Address,
               });
             }
           }
-
           this.fetchBookByTitle(availableBookTitles);
         })
         .catch((err) => {
-          console.log(err, "err in fetchALlSellingBooks");
           this.loading = false;
           this.error = true;
         });
@@ -95,6 +95,7 @@ export default {
               this.availableBooks.push({
                 user: user.user,
                 email: user.email,
+                address: user.address,
                 bookDetails: book.items[0],
               });
               this.loading = false;

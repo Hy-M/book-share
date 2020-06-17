@@ -36,7 +36,7 @@ export default {
             this.coordinates.longitude
           )
           .then((postcode) => {
-            console.log(postcode, "<--from google maps api");
+            this.postcode = postcode.features[0].text;
             this.getCurrentUser();
             this.noLocation = false;
           });
@@ -45,15 +45,18 @@ export default {
       }
     },
     getCurrentUser() {
-      Auth.currentUserInfo().then((currentUser) => {
-        this.username = currentUser.username;
-        //   return api.updateUserDetails(this.username).then((data) => {
-        //     console.log(data);
-        //   });
-        // })
-        // .catch((err) => {
-        //   console.log(err, "err in getUserAttributes");
-      });
+      Auth.currentUserInfo()
+        .then((currentUser) => {
+          this.username = currentUser.username;
+          return api
+            .updateUserDetails(this.username, this.postcode)
+            .then((data) => {
+              console.log(data);
+            });
+        })
+        .catch((err) => {
+          console.log(err, "err in getUserAttributes");
+        });
     },
   },
   mounted() {

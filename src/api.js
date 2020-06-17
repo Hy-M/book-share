@@ -1,6 +1,7 @@
 import axios from "axios";
 const baseURL =
   "https://9s48615mc2.execute-api.us-east-2.amazonaws.com/production/";
+import * as config from "../config";
 
 export const getUser = (username) => {
   return axios.get(`${baseURL}user/${username}`).then(({ data }) => {
@@ -118,7 +119,7 @@ export const getDistance = (postcode) => {
 export const getPostcodeByCoords = (lat, lng) => {
   return axios
     .get(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&result_type=postal_code&key=${process.env.GOOGLE_API_KEY}`
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?types=postcode&access_token=${config.MAPBOX_API_KEY}`
     )
     .then(({ data }) => {
       console.log(data, "< POSTCODE");
