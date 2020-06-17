@@ -27,14 +27,14 @@ export default {
   components: { Carousel, Slide },
   props: {
     images: {
-      type: Array
+      type: Array,
     },
     username: {
-      type: String
+      type: String,
     },
     status: {
-      type: String
-    }
+      type: String,
+    },
   },
   data() {
     return {};
@@ -44,15 +44,15 @@ export default {
       let bookToDelete = e.target.parentElement.id;
       api
         .deleteFromCollection(this.username, bookToDelete, this.status)
-        .then(data => {
-          console.log(data);
+        .then((data) => {
+          console.log(data, "<---array without deleted book");
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err, "err in deleteBook");
         });
-    }
+    },
   },
-  mounted() {}
+  mounted() {},
 };
 </script>
 
