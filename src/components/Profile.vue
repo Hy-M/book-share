@@ -51,9 +51,10 @@
           placeholder="Enter book author"
           v-model="uploadForm.inputAuthor"
         />
-        <button class="upload--form-btn btn">Find book</button>
+        <button
+          class="upload--form-btn btn"
+        >{{this.uploadHasBeenClicked && this.loading ? "Loading" : "Find this book"}}</button>
       </form>
-      <p class="list--subtext" v-if="this.uploadHasBeenClicked && this.loading">Loading</p>
       <section class="list" v-if="this.bookToSell.title">
         <h4 class="list--title h4">{{ this.bookToSell.title }}</h4>
         <p class="list--info">{{ this.bookToSell.authors[0] }}</p>
@@ -70,22 +71,20 @@
             v-model="uploadForm.inputPostcode"
             pattern="^([A-Z][A-HJ-Y]?[0-9][A-Z0-9]? ?[0-9][A-Z]{2}|GIR ?0A{2})$"
           />
-          <button class="upload--form-btn btn">List this book</button>
+          <button
+            class="upload--form-btn btn"
+          >{{this.listHasBeenClicked && this.loading ? "Loading" : "List this book"}}</button>
         </form>
 
-        <section class="list--conditionals">
-          <p class="list--subtext" v-if="this.listHasBeenClicked && this.loading">Loading</p>
+        <section class="list--conditionals" v-if="this.listHasBeenClicked && this.error">
+          <p class="list--subtext">Something went wrong when listing your book</p>
         </section>
-
-        <section v-if="this.listHasBeenClicked && !this.loading && !this.error">
-          <p class="list--subtext">Done! Your book is now live</p>
+        <section
+          class="list--conditionals"
+          v-if="this.uploadHasBeenClicked && this.error && !this.loading"
+        >
+          <p class="list--subtext">Sorry, we can't find this book!</p>
         </section>
-        <section v-else-if="this.listHasBeenClicked && this.error">
-          <p class="list--subtext">Something went wrong in listing your book</p>
-        </section>
-      </section>
-      <section v-if="this.uploadHasBeenClicked && this.error && !this.loading">
-        <p class="list--subtext">Sorry, we can't find this book!</p>
       </section>
     </section>
   </main>
@@ -123,6 +122,7 @@ export default {
       loading: true,
       listHasBeenClicked: false,
       deletedBooks: [],
+      success: false,
       componentKey: 0
     };
   },
@@ -279,6 +279,7 @@ export default {
         .then(() => {
           this.loading = false;
           this.error = false;
+          this.success = true;
           this.bookToSell = {};
           this.fetchSellingBooks();
         })
@@ -361,6 +362,10 @@ export default {
 
 .list {
   margin-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
 .list--info {
@@ -372,6 +377,9 @@ export default {
   line-height: 1.4rem;
 }
 
+.list--conditionals {
+  margin-top: 4rem;
+}
 @media (min-width: 425px) {
   .list {
     margin-top: 6rem;
@@ -385,6 +393,19 @@ export default {
 
   .list {
     margin-top: 8rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .upload {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+  .upload--form {
+    width: 70%;
+    margin: 0 auto;
   }
 }
 </style>
