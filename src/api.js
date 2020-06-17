@@ -115,6 +115,17 @@ export const getDistance = (postcode) => {
   });
 };
 
+export const getPostcodeByCoords = (lat, lng) => {
+  return axios
+    .get(
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&result_type=postal_code&key=${process.env.GOOGLE_API_KEY}`
+    )
+    .then(({ data }) => {
+      console.log(data, "< POSTCODE");
+      return data;
+    });
+};
+
 // Database tree schema
 /*{
    "User": {

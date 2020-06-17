@@ -66,6 +66,7 @@ export default {
       api
         .getAllSellingBooks()
         .then((allBooks) => {
+          console.log(allBooks, "<--all books");
           let availableBookTitles = [];
           for (let user of allBooks.body) {
             if (user.Selling) {

@@ -8,6 +8,7 @@ import VueLocation from "vue-browser-geolocation";
 import App from "./App";
 import router from "./router";
 import config from "./aws-exports";
+require("dotenv").config();
 
 Amplify.configure(config);
 Vue.use(VueRouter);
