@@ -11,7 +11,6 @@
     </p>
     <h4 class="h4">Why share books?</h4>
     <p class="book--description">To save money, paper and share the goodness of a gripping book.</p>
-    <h4 class="h4">Frequently asked questions!</h4>
   </main>
 </template>
 

@@ -4,11 +4,7 @@
     <h3 class="h3">Sign in</h3>
     <span v-if="err !== null">{{ this.err.error }}</span>
     <form class="formcontainer">
-      <input
-        v-model="form.username"
-        class="input"
-        placeholder="Enter your email address"
-      />
+      <input v-model="form.username" class="input" placeholder="Enter your email address" />
       <input
         required
         type="password"
@@ -17,9 +13,7 @@
         placeholder="Enter your password"
       />
       <button v-on:click="signIn" class="signIn--btn btn">Sign in</button>
-      <button v-on:click="forgotPasswordFlow" class="signIn--btn btn">
-        Forgot my password
-      </button>
+      <button v-on:click="forgotPasswordFlow" class="signIn--btn btn">Forgot my password</button>
     </form>
   </section>
 </template>
@@ -34,8 +28,8 @@ export default {
       err: null,
       form: {
         username: "",
-        password: "",
-      },
+        password: ""
+      }
     };
   },
   methods: {
@@ -54,7 +48,7 @@ export default {
         } else if (err.code === "UserNotFoundException") {
           // The error happens when the supplied username/email does not exist in the Cognito user pool
           this.err = {
-            error: "Sorry, we cannot find an account with that e-mail address",
+            error: "Sorry, we cannot find an account with that e-mail address"
           };
         } else {
           this.err = { error: "An error has occurred. Please try again." };
@@ -68,8 +62,8 @@ export default {
         console.log(err, "err in forgotPasswordFlow");
         alert(err.message);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -85,6 +79,12 @@ export default {
 @media (min-width: 768px) {
   .btn {
     width: 70%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main {
+    width: 100%;
   }
 }
 </style>
