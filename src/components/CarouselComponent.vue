@@ -29,28 +29,25 @@ export default {
     images: {
       type: Array
     },
-    username: {
-      type: String
-    },
-    status: {
-      type: String
+    deleteBook: {
+      type: Function
     }
   },
   data() {
     return {};
   },
   methods: {
-    deleteBook(e) {
-      let bookToDelete = e.target.parentElement.id;
-      api
-        .deleteFromCollection(this.username, bookToDelete, this.status)
-        .then(data => {
-          console.log(data);
-        })
-        .catch(err => {
-          console.log(err, "err in deleteBook");
-        });
-    }
+    // deleteBook(e) {
+    //   let bookToDelete = e.target.parentElement.id;
+    //   api
+    //     .deleteFromCollection(this.username, bookToDelete, this.status)
+    //     .then(data => {
+    //       console.log(data);
+    //     })
+    //     .catch(err => {
+    //       console.log(err, "err in deleteBook");
+    //     });
+    // }
   },
   mounted() {}
 };

@@ -26,8 +26,8 @@
       >You haven't sold any books yet</p>
       <CarouselComponent
         :images="this.sellingBooksImages"
-        :username="this.username"
-        status="Selling"
+        :deleteBook="this.deleteBook"
+        :key="this.componentKey"
       />
     </section>
 
@@ -121,7 +121,9 @@ export default {
       sellingBooks: [],
       sellingBooksImages: [],
       loading: true,
-      listHasBeenClicked: false
+      listHasBeenClicked: false,
+      deletedBooks: [],
+      componentKey: 0
     };
   },
   beforeCreate() {
@@ -147,7 +149,7 @@ export default {
       Auth.currentUserInfo()
         .then(currentUser => {
           this.username = currentUser.username;
-          this.fetchPurchasedBooks();
+          // this.fetchPurchasedBooks();
           this.fetchSellingBooks();
         })
         .catch(err => {
@@ -250,7 +252,7 @@ export default {
       let author = this.uploadForm.inputAuthor;
       this.uploadHasBeenClicked = true;
       this.loading = true;
-      api
+      return api
         .getBookToUpload(title, author)
         .then(book => {
           if (book.items[0]) {
@@ -272,7 +274,7 @@ export default {
     },
     listBook() {
       let sellingBookArr = [this.bookToSell.title];
-      api
+      return api
         .updateSellingBooks(this.username, sellingBookArr)
         .then(() => {
           this.loading = false;
@@ -284,6 +286,41 @@ export default {
           this.error = true;
           this.loading = false;
           console.log(err, "err in listBook");
+        });
+    },
+    deleteBook(e) {
+      let bookToDelete = e.target.parentElement.id;
+      console.log(bookToDelete, "booktoDelete");
+      let longer;
+      let shorter;
+
+      for (let title of this.sellingBooks) {
+        if (title.toLowerCase() === bookToDelete.toLowerCase()) {
+          return this.removeBookFromDb(title);
+        }
+
+        if (title.length > bookToDelete) {
+          longer = title;
+          shorter = bookToDelete;
+        } else {
+          longer = bookToDelete;
+          shorter = title;
+        }
+
+        if (longer.includes(shorter)) {
+          return this.removeBookFromDb(title);
+        }
+      }
+    },
+    removeBookFromDb(bookTitle) {
+      return api
+        .deleteFromCollection(this.username, bookTitle, "Selling")
+        .then(data => {
+          console.log("deleted.");
+          this.componentKey++;
+        })
+        .catch(err => {
+          console.log(err, "err in deleteBook");
         });
     }
   },
