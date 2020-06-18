@@ -109,11 +109,15 @@ export const validatePostcode = (postcode) => {
     .catch((err) => console.log(err, "< err in validatePostcode"));
 };
 
-export const getDistance = (postcode) => {
-  return axios.get(`${postcode}`).then(({ data }) => {
-    console.log(data, "< data distance");
-    return data;
-  });
+export const getDistance = (srcLat, srcLng, desLat, desLng) => {
+  return axios
+    .get(
+      `https://api.mapbox.com/directions-matrix/v1/mapbox/driving/${srcLng},${srcLat};${desLng},${desLat}?approaches=curb;curb;curb&access_token=${config.MAPBOX_API_KEY}`
+    )
+    .then(({ data }) => {
+      console.log(data, "< data distance");
+      return data;
+    });
 };
 
 export const getPostcodeByCoords = (lat, lng) => {

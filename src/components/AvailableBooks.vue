@@ -58,6 +58,7 @@ export default {
   },
   methods: {
     calculateDistance() {
+      // from users location to details from the book
       // let postcode = this.availableBooks[0].postcode;
       // console.log(postcode);
       //   api.getPostcode(postcode).then((result) => {

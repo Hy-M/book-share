@@ -281,13 +281,18 @@ export default {
     },
     listBook(validatedPostcode) {
       let sellingBookArr = [this.bookToSell.title];
-      api
+      return api
         .updateSellingBooks(this.username, sellingBookArr)
         .then(() => {
           this.loading = false;
           this.error = false;
           this.bookToSell = {};
           this.fetchSellingBooks();
+          return api
+            .updateUserDetails(this.username, validatedPostcode)
+            .then((data) => {
+              console.log(data, "<--user details with validated postcode");
+            });
         })
         .catch((err) => {
           this.error = true;
