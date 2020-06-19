@@ -27,10 +27,10 @@
           <p class="availableBooks--book-info book--author">
             {{ book.bookDetails.volumeInfo.authors[0] }}
           </p>
-
+          <!-- 
           <p class="availableBooks--book-info book--subText">
-            {{ book.address }}
-          </p>
+            {{ book.distance }}
+          </p> -->
         </div>
       </section>
       <section v-else-if="!this.loading && this.error">
@@ -71,22 +71,26 @@ export default {
           latitude: coordinates.lat,
           longitude: coordinates.lng,
         };
+        console.log(this.srcCoordinates, "<--srcCoordinates after location");
       } catch (error) {
         console.log(error);
       }
     },
     async calculateDistance(postcode) {
-      if (postcode !== undefined) {
-        const formattedPostcode = postcode.replace(/\s/g, "");
-        console.log(formattedPostcode, "<--postcode");
-        await api.getCoordsByPostcode(formattedPostcode).then((coordinates) => {
-          let Latitude = coordinates.features[0].geometry.coordinates[1];
-          let Longitude = coordinates.features[0].geometry.coordinates[0];
-          console.log(Latitude);
-          console.log(Longitude);
-          console.log(this.srcCoordinates.latitude);
-          console.log(this.srcCoordinates.longitude);
-          return api
+      const formattedPostcode = postcode.replace(/\s/g, "");
+      console.log(formattedPostcode, "<--formattedPostcode");
+      await api.getCoordsByPostcode(formattedPostcode).then((coordinates) => {
+        let Latitude = coordinates.features[0].geometry.coordinates[1];
+        let Longitude = coordinates.features[0].geometry.coordinates[0];
+        console.log(Latitude, "<---desLatitude");
+        console.log(Longitude, "<---desLongitude");
+        console.log(this.srcCoordinates.latitude, "<--- srcLatitude");
+        console.log(this.srcCoordinates.longitude, "<--- srcLongitude");
+        if (
+          this.srcCoordinates.latitude !== Latitude ||
+          this.srcCoordinates.longitude !== Longitude
+        ) {
+          api
             .getDistance(
               this.srcCoordinates.latitude,
               this.srcCoordinates.longitude,
@@ -94,14 +98,11 @@ export default {
               Longitude
             )
             .then((distance) => {
+              console.log("helllooooo");
               console.log(distance, "<--distance");
             });
-          // this.desCoordinates = {
-          //   desLat: Latitude,
-          //   desLng: Longitude,
-          // };
-        });
-      }
+        }
+      });
     },
     fetchAllSellingBooks() {
       api
@@ -131,11 +132,14 @@ export default {
           api
             .getBookByTitle(title)
             .then((book) => {
-              let distance = this.calculateDistance(user.address);
+              if (user.address) {
+                console.log(user.address, "<-- user address");
+                this.calculateDistance(user.address);
+              }
               this.availableBooks.push({
                 user: user.user,
                 email: user.email,
-                address: distance,
+                // address: distance,
                 bookDetails: book.items[0],
               });
               this.loading = false;

@@ -103,7 +103,6 @@ export const validatePostcode = (postcode) => {
   return axios
     .get(`https://api.postcodes.io/postcodes/${postcode}/validate`)
     .then(({ data }) => {
-      console.log(data, "<---data");
       return data;
     })
     .catch((err) => console.log(err, "< err in validatePostcode"));
@@ -112,12 +111,12 @@ export const validatePostcode = (postcode) => {
 export const getDistance = (srcLat, srcLng, desLat, desLng) => {
   return axios
     .get(
-      `https://api.distancematrix.ai/distancematrix?origins=${srcLat},${srcLng}&destinations=${desLat},${desLng}&key=${config.DISTANCEMATRIX_API_KEY}`
+      `https://api.distancematrix.ai/maps/api/distancematrix/json?origins=${srcLat},${srcLng}&destinations=${desLat},${desLng}&key=${config.DISTANCEMATRIX_API_KEY}`
     )
     .then(({ data }) => {
-      console.log(data, "< data distance");
       return data;
-    });
+    })
+    .catch((err) => console.log(err, "< err in getDistance"));
 };
 
 export const getPostcodeByCoords = (lat, lng) => {
@@ -126,9 +125,9 @@ export const getPostcodeByCoords = (lat, lng) => {
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?types=postcode&access_token=${config.MAPBOX_API_KEY}`
     )
     .then(({ data }) => {
-      console.log(data, "< POSTCODE");
       return data;
-    });
+    })
+    .catch((err) => console.log(err, "< err in getPostcodeByCoords"));
 };
 
 export const getCoordsByPostcode = (postcode) => {
@@ -137,9 +136,9 @@ export const getCoordsByPostcode = (postcode) => {
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${postcode}.json?types=postcode&access_token=${config.MAPBOX_API_KEY}`
     )
     .then(({ data }) => {
-      console.log(data, "< lat, long");
       return data;
-    });
+    })
+    .catch((err) => console.log(err, "< err in getCoordsByPostcode"));
 };
 
 // Database tree schema
