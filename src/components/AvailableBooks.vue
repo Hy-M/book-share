@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Location />
+    <!-- <Location /> -->
     <main class="availableBooks main">
       <h3 class="availableBooks--h3 h3">Browse books for sharing near you</h3>
       <p v-if="this.loading">Loading</p>
@@ -43,7 +43,7 @@
 <script>
 const booksData = require("../data.json");
 import * as api from "../api.js";
-import Location from "./Location";
+// import Location from "./Location";
 
 export default {
   data() {
@@ -51,29 +51,56 @@ export default {
       availableBooks: [],
       loading: true,
       error: false,
-      coordinates: {},
+      desCoordinates: {},
+      srcDesCoordinates: {},
     };
   },
   components: {
-    Location,
+    // Location,
+  },
+  beforeMount() {
+    this.getLocation();
   },
   methods: {
-    calculateDistance(postcode) {
+    async getLocation() {
+      try {
+        const coordinates = await this.$getLocation({
+          enableHighAccuracy: true,
+        });
+        this.srcCoordinates = {
+          latitude: coordinates.lat,
+          longitude: coordinates.lng,
+        };
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async calculateDistance(postcode) {
       if (postcode !== undefined) {
         const formattedPostcode = postcode.replace(/\s/g, "");
-        return api
-          .getCoordsByPostcode(formattedPostcode)
-          .then((coordinates) => {
-            this.coordinates = {
-              desLat: coordinates.features[0].geometry.coordinates[1],
-              desLng: coordinates.features[0].geometry.coordinates[0],
-            };
-            console.log(this.coordinates);
-
-            // return api.getDistance().then((distance) => {
-            //   console.log(distance, "<--distance");
-            // });
-          });
+        console.log(formattedPostcode, "<--postcode");
+        await api.getCoordsByPostcode(formattedPostcode).then((coordinates) => {
+          let Latitude = coordinates.features[0].geometry.coordinates[1];
+          let Longitude = coordinates.features[0].geometry.coordinates[0];
+          console.log(Latitude);
+          console.log(Longitude);
+          console.log(this.srcCoordinates.latitude);
+          console.log(this.srcCoordinates.longitude);
+          return api
+            .getDistance(
+              this.srcCoordinates.latitude,
+              this.srcCoordinates.longitude,
+              Latitude,
+              Longitude
+            )
+            .then((distance) => {
+              console.log(distance, "<--distance");
+            });
+          // this.desCoordinates = {
+          //   desLat: Latitude,
+          //   desLng: Longitude,
+          // };
+        });
       }
     },
     fetchAllSellingBooks() {
@@ -125,6 +152,9 @@ export default {
   mounted() {
     this.fetchAllSellingBooks();
   },
+};
+global.getVueObject = (obj) => {
+  return JSON.parse(JSON.stringify(obj));
 };
 </script>
 
@@ -215,3 +245,10 @@ export default {
   }
 }
 </style>
+<!---
+// console.log(this.desCoordinates.getdesLat(), "<--des coordinates"); //
+console.log(this.srcCoordinates, "<--src coords"); // return api //
+.getDistance( // this.srcCoordinates.latitude, // this.srcCoordinates.longitude,
+// this.desCoordinates.latitude, // this.desCoordinates.longitude // ) //
+.then((distance) => { // console.log(distance, "<--distance"); // });
+-->
