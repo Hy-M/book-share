@@ -112,7 +112,7 @@ export const validatePostcode = (postcode) => {
 export const getDistance = (srcLat, srcLng, desLat, desLng) => {
   return axios
     .get(
-      `https://api.mapbox.com/directions-matrix/v1/mapbox/driving/${srcLng},${srcLat};${desLng},${desLat}?approaches=curb;curb;curb&access_token=${config.MAPBOX_API_KEY}`
+      `https://api.distancematrix.ai/distancematrix?origins=${srcLat},${srcLng}&destinations=${desLat},${desLng}&key=${config.DISTANCEMATRIX_API_KEY}`
     )
     .then(({ data }) => {
       console.log(data, "< data distance");
@@ -127,6 +127,17 @@ export const getPostcodeByCoords = (lat, lng) => {
     )
     .then(({ data }) => {
       console.log(data, "< POSTCODE");
+      return data;
+    });
+};
+
+export const getCoordsByPostcode = (postcode) => {
+  return axios
+    .get(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${postcode}.json?types=postcode&access_token=${config.MAPBOX_API_KEY}`
+    )
+    .then(({ data }) => {
+      console.log(data, "< lat, long");
       return data;
     });
 };

@@ -48,11 +48,7 @@ export default {
       Auth.currentUserInfo()
         .then((currentUser) => {
           this.username = currentUser.username;
-          return api
-            .updateUserDetails(this.username, this.postcode)
-            .then((data) => {
-              console.log(data);
-            });
+          api.updateUserDetails(this.username, this.postcode);
         })
         .catch((err) => {
           console.log(err, "err in getUserAttributes");

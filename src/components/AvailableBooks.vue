@@ -51,19 +51,30 @@ export default {
       availableBooks: [],
       loading: true,
       error: false,
+      coordinates: {},
     };
   },
   components: {
     Location,
   },
   methods: {
-    calculateDistance() {
-      // from users location to details from the book
-      // let postcode = this.availableBooks[0].postcode;
-      // console.log(postcode);
-      //   api.getPostcode(postcode).then((result) => {
-      //     console.log(result, "< result");
-      //   });
+    calculateDistance(postcode) {
+      if (postcode !== undefined) {
+        const formattedPostcode = postcode.replace(/\s/g, "");
+        return api
+          .getCoordsByPostcode(formattedPostcode)
+          .then((coordinates) => {
+            this.coordinates = {
+              desLat: coordinates.features[0].geometry.coordinates[1],
+              desLng: coordinates.features[0].geometry.coordinates[0],
+            };
+            console.log(this.coordinates);
+
+            // return api.getDistance().then((distance) => {
+            //   console.log(distance, "<--distance");
+            // });
+          });
+      }
     },
     fetchAllSellingBooks() {
       api
@@ -93,10 +104,11 @@ export default {
           api
             .getBookByTitle(title)
             .then((book) => {
+              let distance = this.calculateDistance(user.address);
               this.availableBooks.push({
                 user: user.user,
                 email: user.email,
-                address: user.address,
+                address: distance,
                 bookDetails: book.items[0],
               });
               this.loading = false;
@@ -112,7 +124,6 @@ export default {
   },
   mounted() {
     this.fetchAllSellingBooks();
-    this.calculateDistance();
   },
 };
 </script>
