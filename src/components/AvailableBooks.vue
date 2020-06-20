@@ -76,16 +76,16 @@ export default {
         console.log(error);
       }
     },
-    async calculateDistance(postcode) {
+    calculateDistance(postcode) {
       const formattedPostcode = postcode.replace(/\s/g, "");
       console.log(formattedPostcode, "<--formattedPostcode");
-      await api.getCoordsByPostcode(formattedPostcode).then((coordinates) => {
+      api.getCoordsByPostcode(formattedPostcode).then((coordinates) => {
         let Latitude = coordinates.features[0].geometry.coordinates[1];
         let Longitude = coordinates.features[0].geometry.coordinates[0];
-        console.log(Latitude, "<---desLatitude");
-        console.log(Longitude, "<---desLongitude");
-        console.log(this.srcCoordinates.latitude, "<--- srcLatitude");
-        console.log(this.srcCoordinates.longitude, "<--- srcLongitude");
+        // console.log(Latitude, "<---desLatitude");
+        // console.log(Longitude, "<---desLongitude");
+        // console.log(this.srcCoordinates.longitude, "<--- srcLongitude");
+        // console.log(this.srcCoordinates.latitude, "<--- srcLatitude");
         if (
           this.srcCoordinates.latitude !== Latitude ||
           this.srcCoordinates.longitude !== Longitude
@@ -97,9 +97,10 @@ export default {
               Latitude,
               Longitude
             )
-            .then((distance) => {
-              console.log("helllooooo");
-              console.log(distance, "<--distance");
+            .then((result) => {
+              let distance = result.rows[0].elements[0].distance.text;
+              console.log(distance, "<---distance");
+              return distance;
             });
         }
       });
@@ -133,9 +134,9 @@ export default {
             .getBookByTitle(title)
             .then((book) => {
               if (user.address) {
-                console.log(user.address, "<-- user address");
                 this.calculateDistance(user.address);
               }
+
               this.availableBooks.push({
                 user: user.user,
                 email: user.email,
