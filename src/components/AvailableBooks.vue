@@ -84,7 +84,7 @@ export default {
         .getAllSellingBooks()
         .then(allBooks => {
           let availableBookTitles = [];
-          if (availableBookTitles.length >= 1) {
+          if (allBooks.body.length >= 1) {
             for (let user of allBooks.body) {
               if (user.Selling) {
                 availableBookTitles.push({
