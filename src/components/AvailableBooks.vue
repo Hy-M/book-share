@@ -47,7 +47,7 @@
             <p class="availableBooks--book-info book--subText">distance</p>
           </div>
         </section>
-        <section v-else-if="!this.loading && this.error">
+        <section v-else-if="!this.loading && !this.error && !this.availableBooks.length">
           <p>Sorry, we can't find any available books right now.</p>
         </section>
       </section>
@@ -84,17 +84,22 @@ export default {
         .getAllSellingBooks()
         .then(allBooks => {
           let availableBookTitles = [];
-          for (let user of allBooks.body) {
-            if (user.Selling) {
-              availableBookTitles.push({
-                user: user.User,
-                email: user.Email,
-                titles: [...user.Selling]
-              });
+          if (availableBookTitles.length >= 1) {
+            for (let user of allBooks.body) {
+              if (user.Selling) {
+                availableBookTitles.push({
+                  user: user.User,
+                  email: user.Email,
+                  titles: [...user.Selling]
+                });
+              }
             }
-          }
 
-          this.fetchBookByTitle(availableBookTitles);
+            this.fetchBookByTitle(availableBookTitles);
+          } else {
+            this.loading = false;
+            this.error = false;
+          }
         })
         .catch(err => {
           console.log(err, "err in fetchALlSellingBooks");
