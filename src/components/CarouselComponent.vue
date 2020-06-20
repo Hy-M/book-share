@@ -1,5 +1,6 @@
 <template>
   <carousel
+    v-if="this.deleted && this.forceUpdate()"
     :perPageCustom="[
       [320, 1],
       [768, 2],
@@ -31,23 +32,18 @@ export default {
     },
     deleteBook: {
       type: Function
+    },
+    deleted: {
+      type: Boolean
     }
   },
   data() {
     return {};
   },
   methods: {
-    // deleteBook(e) {
-    //   let bookToDelete = e.target.parentElement.id;
-    //   api
-    //     .deleteFromCollection(this.username, bookToDelete, this.status)
-    //     .then(data => {
-    //       console.log(data);
-    //     })
-    //     .catch(err => {
-    //       console.log(err, "err in deleteBook");
-    //     });
-    // }
+    forceUpdate() {
+      this.$forceUpdate();
+    }
   },
   mounted() {}
 };

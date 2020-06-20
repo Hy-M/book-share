@@ -27,7 +27,7 @@
       <CarouselComponent
         :images="this.sellingBooksImages"
         :deleteBook="this.deleteBook"
-        :key="this.componentKey"
+        :deleted="this.deleted"
       />
     </section>
 
@@ -123,7 +123,7 @@ export default {
       listHasBeenClicked: false,
       deletedBooks: [],
       success: false,
-      componentKey: 0
+      deleted: false
     };
   },
   beforeCreate() {
@@ -318,7 +318,7 @@ export default {
         .deleteFromCollection(this.username, bookTitle, "Selling")
         .then(data => {
           console.log("deleted.");
-          this.componentKey++;
+          this.deleted = true;
         })
         .catch(err => {
           console.log(err, "err in deleteBook");
