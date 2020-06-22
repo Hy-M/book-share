@@ -27,10 +27,10 @@
           <p class="availableBooks--book-info book--author">
             {{ book.bookDetails.volumeInfo.authors[0] }}
           </p>
-          <!-- 
+
           <p class="availableBooks--book-info book--subText">
             {{ book.distance }}
-          </p> -->
+          </p>
         </div>
       </section>
       <section v-else-if="!this.loading && this.error">
@@ -53,6 +53,8 @@ export default {
       error: false,
       desCoordinates: {},
       srcDesCoordinates: {},
+      distance: "",
+      userDistances: [],
     };
   },
   components: {
@@ -71,39 +73,9 @@ export default {
           latitude: coordinates.lat,
           longitude: coordinates.lng,
         };
-        console.log(this.srcCoordinates, "<--srcCoordinates after location");
       } catch (error) {
         console.log(error);
       }
-    },
-    calculateDistance(postcode) {
-      const formattedPostcode = postcode.replace(/\s/g, "");
-      console.log(formattedPostcode, "<--formattedPostcode");
-      api.getCoordsByPostcode(formattedPostcode).then((coordinates) => {
-        let Latitude = coordinates.features[0].geometry.coordinates[1];
-        let Longitude = coordinates.features[0].geometry.coordinates[0];
-        // console.log(Latitude, "<---desLatitude");
-        // console.log(Longitude, "<---desLongitude");
-        // console.log(this.srcCoordinates.longitude, "<--- srcLongitude");
-        // console.log(this.srcCoordinates.latitude, "<--- srcLatitude");
-        if (
-          this.srcCoordinates.latitude !== Latitude ||
-          this.srcCoordinates.longitude !== Longitude
-        ) {
-          api
-            .getDistance(
-              this.srcCoordinates.latitude,
-              this.srcCoordinates.longitude,
-              Latitude,
-              Longitude
-            )
-            .then((result) => {
-              let distance = result.rows[0].elements[0].distance.text;
-              console.log(distance, "<---distance");
-              return distance;
-            });
-        }
-      });
     },
     fetchAllSellingBooks() {
       api
@@ -134,9 +106,12 @@ export default {
             .getBookByTitle(title)
             .then((book) => {
               if (user.address) {
-                this.calculateDistance(user.address);
+                this.calculateDistance(
+                  user.address,
+                  book.items[0].volumeInfo.title,
+                  user.user
+                );
               }
-
               this.availableBooks.push({
                 user: user.user,
                 email: user.email,
@@ -153,13 +128,47 @@ export default {
         }
       }
     },
+    calculateDistance(postcode, title, username) {
+      const formattedPostcode = postcode.replace(/\s/g, "");
+      api.getCoordsByPostcode(formattedPostcode).then((coordinates) => {
+        let Latitude = coordinates.features[0].geometry.coordinates[1];
+        let Longitude = coordinates.features[0].geometry.coordinates[0];
+        Object.assign(this.desCoordinates, {
+          Latitude,
+          Longitude,
+          formattedPostcode,
+          title,
+          username,
+        });
+        console.log(this.desCoordinates, "<--descoords");
+      });
+      api
+        .getDistance(
+          this.srcCoordinates.latitude,
+          this.srcCoordinates.longitude,
+          this.desCoordinates.Latitude,
+          this.desCoordinates.Longitude
+        )
+        .then((result) => {
+          let distance = result.rows[0].elements[0].distance.text;
+          this.desCoordinates["distance"] = distance;
+          this.availableBooks.forEach((bookObj) => {
+            if (
+              this.desCoordinates.title ===
+                bookObj.bookDetails.volumeInfo.title &&
+              this.desCoordinates.username === bookObj.user
+            ) {
+              bookObj["distance"] = this.desCoordinates.distance;
+            }
+          });
+          console.log(this.availableBooks);
+        });
+    },
   },
+
   mounted() {
     this.fetchAllSellingBooks();
   },
-};
-global.getVueObject = (obj) => {
-  return JSON.parse(JSON.stringify(obj));
 };
 </script>
 
