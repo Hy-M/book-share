@@ -53,11 +53,7 @@ export default {
       srcDesCoordinates: {},
       distance: "",
       userDistances: [],
-      currentDistance: "",
     };
-  },
-  beforeMount() {
-    this.getLocation();
   },
   methods: {
     async getLocation() {
@@ -146,6 +142,7 @@ export default {
   },
 
   mounted() {
+    this.getLocation();
     this.fetchAllSellingBooks();
   },
 };
