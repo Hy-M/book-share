@@ -55,10 +55,13 @@ export default {
       userDistances: [],
     };
   },
+  beforeMount() {
+    this.getLocation();
+  },
   methods: {
-    async getLocation() {
+    getLocation() {
       try {
-        const coordinates = await this.$getLocation({
+        const coordinates = this.$getLocation({
           enableHighAccuracy: true,
         });
         this.srcCoordinates = {
@@ -142,7 +145,6 @@ export default {
   },
 
   mounted() {
-    this.getLocation();
     this.fetchAllSellingBooks();
   },
 };
