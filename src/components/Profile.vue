@@ -4,19 +4,6 @@
       <p class="userStatus--status">Hello, {{ this.user.attributes.email }}</p>
       <button v-on:click="signOut" class="user--btn btn">Log out</button>
     </section>
-    <!-- <section class="bookshelves" id="Purchased">
-      <h4 class="h4">My bookshelf</h4>
-      <p class="list--subtext" v-if="this.loading">Loading</p>
-      <p
-        class="list--subtext"
-        v-if="!this.purchasedBooks.length && !this.loading"
-      >You haven't purchased any books yet</p>
-      <CarouselComponent
-        :images="this.purchasedBooksImages"
-        :username="this.username"
-        status="Purchased"
-      />
-    </section>-->
     <section class="bookshelves" id="Selling">
       <h4 class="h4">Books you're giving away</h4>
       <p class="list--subtext" v-if="this.loading">Loading</p>
@@ -32,7 +19,6 @@
         status="Selling"
       />
     </section>
-
     <section class="upload">
       <h3 class="h3">Shook - share your old books!</h3>
       <ol class="upload--info">
@@ -62,11 +48,15 @@
         <h4 class="list--title h4">{{ this.bookToSell.title }}</h4>
         <p class="list--info">{{ this.bookToSell.authors[0] }}</p>
         <img class="imgPreview" :src="this.bookToSell.imageLinks.thumbnail" />
-        <p class="list--subtext">
+        <p v-if="!noLocation" class="list--subtext">
           Please enter the postcode where this book will be available to collect
           from in UPPERCASE
         </p>
-        <form class="upload--form form" v-on:submit.prevent="checkPostcode">
+        <form
+          class="upload--form form"
+          v-on:submit.prevent="checkPostcode"
+          v-if="noLocation"
+        >
           <input
             required
             class="upload--form-input input"
@@ -74,6 +64,13 @@
             v-model="uploadForm.inputPostcode"
             pattern="^([A-Z][A-HJ-Y]?[0-9][A-Z0-9]? ?[0-9][A-Z]{2}|GIR ?0A{2})$"
           />
+          <button class="upload--form-btn btn">List this book</button>
+        </form>
+        <form
+          class="upload--form form"
+          v-on:submit.prevent="checkPostcode"
+          v-if="!noLocation"
+        >
           <button class="upload--form-btn btn">List this book</button>
         </form>
 
@@ -85,7 +82,6 @@
             Loading
           </p>
         </section>
-
         <section v-if="this.listHasBeenClicked && !this.loading && !this.error">
           <p class="list--subtext">Done! Your book is now live</p>
         </section>
@@ -116,6 +112,8 @@ export default {
   data() {
     return {
       user: {},
+      noLocation: true,
+      postcode: "",
       username: "",
       uploadHasBeenClicked: false,
       error: false,
@@ -132,6 +130,9 @@ export default {
       loading: true,
       listHasBeenClicked: false,
     };
+  },
+  beforeMount() {
+    this.getLocation();
   },
   beforeCreate() {
     Auth.currentAuthenticatedUser()
@@ -150,6 +151,33 @@ export default {
         this.$router.push("Home");
       } catch (error) {
         console.log("error signing out: ", error);
+      }
+    },
+    async getLocation() {
+      try {
+        const coordinates = await this.$getLocation({
+          enableHighAccuracy: true,
+        });
+        this.coordinates = {
+          latitude: coordinates.lat,
+          longitude: coordinates.lng,
+        };
+        return api
+          .getPostcodeByCoords(
+            this.coordinates.latitude,
+            this.coordinates.longitude
+          )
+          .then((postcode) => {
+            this.postcode = postcode.features[0].text;
+            this.noLocation = false;
+            return api
+              .updateUserDetails(this.user.username, this.postcode)
+              .then((data) => {
+                console.log(data, "<--user details with validated postcode");
+              });
+          });
+      } catch (error) {
+        this.noLocation = true;
       }
     },
     getUserAttributes() {
@@ -236,12 +264,15 @@ export default {
     checkPostcode() {
       this.loading = true;
       this.listHasBeenClicked = true;
+      let finalPostcode = this.postcode
+        ? this.postcode
+        : this.uploadForm.inputPostcode;
       return api
-        .validatePostcode(this.uploadForm.inputPostcode)
+        .validatePostcode(finalPostcode)
         .then(({ result }) => {
           if (result) {
             this.error = false;
-            this.listBook(this.uploadForm.inputPostcode);
+            this.listBook(finalPostcode);
             this.uploadForm.inputPostcode = null;
           } else {
             this.uploadForm.inputPostcode = null;

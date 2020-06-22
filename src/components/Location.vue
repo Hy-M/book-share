@@ -1,8 +1,4 @@
-<template v-if="noLocation">
-  <h2 class="text-center">
-    Enable geolocation to see available books near you
-  </h2>
-</template>
+<template v-if="noLocation"> </template>
 
 <script>
 import * as api from "../api";
