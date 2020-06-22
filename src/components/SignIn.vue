@@ -3,7 +3,8 @@
   <section class="main">
     <h3 class="h3">Sign in</h3>
     <span v-if="err !== null">{{ this.err.error }}</span>
-    <form class="formcontainer">
+    <span v-if="this.signInHasBeenClicked && this.loading">Loading</span>
+    <form class="formcontainer" v-on:submit.prevent="signIn">
       <input v-model="form.username" class="input" placeholder="Enter your email address" />
       <input
         required
@@ -12,9 +13,9 @@
         class="input"
         placeholder="Enter your password"
       />
-      <button v-on:click="signIn" class="signIn--btn btn">Sign in</button>
-      <button v-on:click="forgotPasswordFlow" class="signIn--btn btn">Forgot my password</button>
+      <button class="signIn--btn btn">Sign in</button>
     </form>
+    <button v-on:click="forgotPasswordFlow" class="signIn--btn btn">Forgot my password</button>
   </section>
 </template>
 
@@ -29,15 +30,23 @@ export default {
       form: {
         username: "",
         password: ""
-      }
+      },
+      signInHasBeenClicked: false,
+      loading: false,
+      successfulSignIn: false
     };
   },
   methods: {
     async signIn() {
       const { username, password } = this.form;
+      this.signInHasBeenClicked = true;
+      this.loading = true;
       try {
         await Auth.signIn(username, password);
         AmplifyEventBus.$emit("authState", "signedIn");
+        this.successfulSignIn = true;
+        this.loading = false;
+        this.signInHasBeenClicked = false;
         this.$router.push("/profile");
       } catch (err) {
         if (err.code === "UserNotConfirmedException") {
