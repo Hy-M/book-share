@@ -73,12 +73,6 @@ export default {
     };
   },
   methods: {
-    calculateDistance() {
-      let postcode = this.availableBooks[0].postcode;
-      //   api.getPostcode(postcode).then((result) => {
-      //     console.log(result, "< result");
-      //   });
-    },
     fetchAllSellingBooks() {
       api
         .getAllSellingBooks()

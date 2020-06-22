@@ -277,7 +277,6 @@ export default {
       this.deleteHasBeenClicked = true;
       this.loading = true;
       let bookToDelete = e.target.parentElement.id;
-      console.log(bookToDelete, "booktoDelete");
       let longer;
       let shorter;
 

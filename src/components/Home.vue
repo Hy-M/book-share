@@ -1,7 +1,6 @@
 <template>
   <div>
     <section class="searchBar main">
-      <!-- search dynamoDB to see if anyone is selling a book with the given title -->
       <form class="searchBar--form form" v-on:submit.prevent="fetchAllSellingBooks">
         <input
           class="searchBar--form-input input"
