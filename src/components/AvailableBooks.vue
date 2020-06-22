@@ -119,7 +119,6 @@ export default {
                       Latitude,
                       Longitude,
                     });
-                    console.log(this.desCoordinates, "<--descoords");
                   })
                   .then(() => {
                     return api.getDistance(
@@ -137,7 +136,6 @@ export default {
                       address: distance,
                       bookDetails: book.items[0],
                     });
-                    console.log(this.availableBooks, "<--avaialblke books");
                   });
               }
               this.loading = false;
@@ -149,57 +147,6 @@ export default {
             });
         }
       }
-    },
-    calculateDistance(postcode, title, username) {
-      const formattedPostcode = postcode.replace(/\s/g, "");
-      api
-        .getCoordsByPostcode(formattedPostcode)
-        .then((coordinates) => {
-          let Latitude = coordinates.features[0].geometry.coordinates[1];
-          let Longitude = coordinates.features[0].geometry.coordinates[0];
-          Object.assign(this.desCoordinates, {
-            Latitude,
-            Longitude,
-          });
-          console.log(this.desCoordinates, "<--descoords");
-        })
-        .then(() => {
-          return api
-            .getDistance(
-              this.srcCoordinates.latitude,
-              this.srcCoordinates.longitude,
-              this.desCoordinates.Latitude,
-              this.desCoordinates.Longitude
-            )
-            .then((result) => {
-              let distance = result.rows[0].elements[0].distance.text;
-              console.log(distance, "<---distance");
-              this.currentDistance = distance;
-              return distance;
-              // this.desCoordinates["distance"] = distance;
-              // this.userDistances.push(distance);
-              // this.userDistances.push({
-              //   distance,
-              //   title: this.desCoordinates.title,
-              //   username: this.desCoordinates.username,
-              //   postcode: this.desCoordinates.formattedPostcode,
-              // });
-              // console.log(this.desCoordinates, "<--full");
-              // this.userDistances.forEach((userObj) => {
-              //   console.log(userObj);
-              // });
-              // this.availableBooks.forEach((bookObj) => {
-              //   if (
-              //     this.desCoordinates.title ===
-              //       bookObj.bookDetails.volumeInfo.title &&
-              //     this.desCoordinates.username === bookObj.user
-              //   ) {
-              //     bookObj["distance"] = this.desCoordinates.distance;
-              //   }
-              // });
-              // console.log(this.availableBooks);
-            });
-        });
     },
   },
 
