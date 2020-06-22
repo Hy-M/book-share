@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <Location /> -->
     <main class="availableBooks main">
       <h3 class="availableBooks--h3 h3">Browse books for sharing near you</h3>
       <p v-if="this.loading">Loading</p>
@@ -43,7 +42,6 @@
 <script>
 const booksData = require("../data.json");
 import * as api from "../api.js";
-// import Location from "./Location";
 
 export default {
   data() {
@@ -57,9 +55,6 @@ export default {
       userDistances: [],
       currentDistance: "",
     };
-  },
-  components: {
-    // Location,
   },
   beforeMount() {
     this.getLocation();
