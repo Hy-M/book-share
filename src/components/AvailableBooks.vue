@@ -29,7 +29,7 @@
           </p>
 
           <p class="availableBooks--book-info book--subText">
-            {{ book.distance }}
+            {{ book.address }}
           </p>
         </div>
       </section>
@@ -55,6 +55,7 @@ export default {
       srcDesCoordinates: {},
       distance: "",
       userDistances: [],
+      currentDistance: "",
     };
   },
   components: {
@@ -106,18 +107,39 @@ export default {
             .getBookByTitle(title)
             .then((book) => {
               if (user.address) {
-                this.calculateDistance(
-                  user.address,
-                  book.items[0].volumeInfo.title,
-                  user.user
-                );
+                const formattedPostcode = user.address.replace(/\s/g, "");
+                api
+                  .getCoordsByPostcode(formattedPostcode)
+                  .then((coordinates) => {
+                    let Latitude =
+                      coordinates.features[0].geometry.coordinates[1];
+                    let Longitude =
+                      coordinates.features[0].geometry.coordinates[0];
+                    Object.assign(this.desCoordinates, {
+                      Latitude,
+                      Longitude,
+                    });
+                    console.log(this.desCoordinates, "<--descoords");
+                  })
+                  .then(() => {
+                    return api.getDistance(
+                      this.srcCoordinates.latitude,
+                      this.srcCoordinates.longitude,
+                      this.desCoordinates.Latitude,
+                      this.desCoordinates.Longitude
+                    );
+                  })
+                  .then((result) => {
+                    let distance = result.rows[0].elements[0].distance.text;
+                    this.availableBooks.push({
+                      user: user.user,
+                      email: user.email,
+                      address: distance,
+                      bookDetails: book.items[0],
+                    });
+                    console.log(this.availableBooks, "<--avaialblke books");
+                  });
               }
-              this.availableBooks.push({
-                user: user.user,
-                email: user.email,
-                // address: distance,
-                bookDetails: book.items[0],
-              });
               this.loading = false;
             })
             .catch((err) => {
@@ -130,38 +152,53 @@ export default {
     },
     calculateDistance(postcode, title, username) {
       const formattedPostcode = postcode.replace(/\s/g, "");
-      api.getCoordsByPostcode(formattedPostcode).then((coordinates) => {
-        let Latitude = coordinates.features[0].geometry.coordinates[1];
-        let Longitude = coordinates.features[0].geometry.coordinates[0];
-        Object.assign(this.desCoordinates, {
-          Latitude,
-          Longitude,
-          formattedPostcode,
-          title,
-          username,
-        });
-        console.log(this.desCoordinates, "<--descoords");
-      });
       api
-        .getDistance(
-          this.srcCoordinates.latitude,
-          this.srcCoordinates.longitude,
-          this.desCoordinates.Latitude,
-          this.desCoordinates.Longitude
-        )
-        .then((result) => {
-          let distance = result.rows[0].elements[0].distance.text;
-          this.desCoordinates["distance"] = distance;
-          this.availableBooks.forEach((bookObj) => {
-            if (
-              this.desCoordinates.title ===
-                bookObj.bookDetails.volumeInfo.title &&
-              this.desCoordinates.username === bookObj.user
-            ) {
-              bookObj["distance"] = this.desCoordinates.distance;
-            }
+        .getCoordsByPostcode(formattedPostcode)
+        .then((coordinates) => {
+          let Latitude = coordinates.features[0].geometry.coordinates[1];
+          let Longitude = coordinates.features[0].geometry.coordinates[0];
+          Object.assign(this.desCoordinates, {
+            Latitude,
+            Longitude,
           });
-          console.log(this.availableBooks);
+          console.log(this.desCoordinates, "<--descoords");
+        })
+        .then(() => {
+          return api
+            .getDistance(
+              this.srcCoordinates.latitude,
+              this.srcCoordinates.longitude,
+              this.desCoordinates.Latitude,
+              this.desCoordinates.Longitude
+            )
+            .then((result) => {
+              let distance = result.rows[0].elements[0].distance.text;
+              console.log(distance, "<---distance");
+              this.currentDistance = distance;
+              return distance;
+              // this.desCoordinates["distance"] = distance;
+              // this.userDistances.push(distance);
+              // this.userDistances.push({
+              //   distance,
+              //   title: this.desCoordinates.title,
+              //   username: this.desCoordinates.username,
+              //   postcode: this.desCoordinates.formattedPostcode,
+              // });
+              // console.log(this.desCoordinates, "<--full");
+              // this.userDistances.forEach((userObj) => {
+              //   console.log(userObj);
+              // });
+              // this.availableBooks.forEach((bookObj) => {
+              //   if (
+              //     this.desCoordinates.title ===
+              //       bookObj.bookDetails.volumeInfo.title &&
+              //     this.desCoordinates.username === bookObj.user
+              //   ) {
+              //     bookObj["distance"] = this.desCoordinates.distance;
+              //   }
+              // });
+              // console.log(this.availableBooks);
+            });
         });
     },
   },
