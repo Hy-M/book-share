@@ -48,7 +48,7 @@
         <h4 class="list--title h4">{{ this.bookToSell.title }}</h4>
         <p class="list--info">{{ this.bookToSell.authors[0] }}</p>
         <img class="imgPreview" :src="this.bookToSell.imageLinks.thumbnail" />
-        <p v-if="!noLocation" class="list--subtext">
+        <p v-if="noLocation" class="list--subtext">
           Please enter the postcode where this book will be available to collect
           from in UPPERCASE
         </p>
@@ -170,11 +170,6 @@ export default {
           .then((postcode) => {
             this.postcode = postcode.features[0].text;
             this.noLocation = false;
-            return api
-              .updateUserDetails(this.user.username, this.postcode)
-              .then((data) => {
-                console.log(data, "<--user details with validated postcode");
-              });
           });
       } catch (error) {
         this.noLocation = true;
