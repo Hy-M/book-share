@@ -1,6 +1,5 @@
 <template>
   <carousel
-    v-if="this.deleted && this.forceUpdate()"
     :perPageCustom="[
       [320, 1],
       [768, 2],
@@ -32,19 +31,12 @@ export default {
     },
     deleteBook: {
       type: Function
-    },
-    deleted: {
-      type: Boolean
     }
   },
   data() {
     return {};
   },
-  methods: {
-    forceUpdate() {
-      this.$forceUpdate();
-    }
-  },
+  methods: {},
   mounted() {}
 };
 </script>

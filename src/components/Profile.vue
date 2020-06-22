@@ -4,31 +4,15 @@
       <p class="userStatus--status">Hello, {{ this.user.attributes.email }}</p>
       <button v-on:click="signOut" class="user--btn btn">Log out</button>
     </section>
-    <!-- <section class="bookshelves" id="Purchased">
-      <h4 class="h4">My bookshelf</h4>
-      <p class="list--subtext" v-if="this.loading">Loading</p>
-      <p
-        class="list--subtext"
-        v-if="!this.purchasedBooks.length && !this.loading"
-      >You haven't purchased any books yet</p>
-      <CarouselComponent
-        :images="this.purchasedBooksImages"
-        :username="this.username"
-        status="Purchased"
-      />
-    </section>-->
     <section class="bookshelves" id="Selling">
       <h4 class="h4">Books you're giving away</h4>
-      <p class="list--subtext" v-if="this.loading">Loading</p>
+      <p class="list--subtext" v-if="!this.deleteHasBeenClicked &&this.loading">Loading</p>
       <p
         class="list--subtext"
         v-if="!this.sellingBooks.length && !this.loading"
-      >You haven't sold any books yet</p>
-      <CarouselComponent
-        :images="this.sellingBooksImages"
-        :deleteBook="this.deleteBook"
-        :deleted="this.deleted"
-      />
+      >You aren't selling any books yet</p>
+      <p class="list--subtext" v-if="this.deleteHasBeenClicked && this.loading">Deleting</p>
+      <CarouselComponent :images="this.sellingBooksImages" :deleteBook="this.deleteBook" />
     </section>
 
     <section class="upload">
@@ -123,7 +107,7 @@ export default {
       listHasBeenClicked: false,
       deletedBooks: [],
       success: false,
-      deleted: false
+      deleteHasBeenClicked: false
     };
   },
   beforeCreate() {
@@ -178,7 +162,7 @@ export default {
         });
     },
     fetchSellingBooks() {
-      api
+      return api
         .getSellingBooks(this.username)
         .then(books => {
           if (books.Selling) {
@@ -290,6 +274,8 @@ export default {
         });
     },
     deleteBook(e) {
+      this.deleteHasBeenClicked = true;
+      this.loading = true;
       let bookToDelete = e.target.parentElement.id;
       console.log(bookToDelete, "booktoDelete");
       let longer;
@@ -313,12 +299,16 @@ export default {
         }
       }
     },
+
     removeBookFromDb(bookTitle) {
       return api
         .deleteFromCollection(this.username, bookTitle, "Selling")
         .then(data => {
-          console.log("deleted.");
-          this.deleted = true;
+          this.loading = false;
+          this.deleteHasBeenClicked = false;
+          this.sellingBooksImages = this.sellingBooksImages.filter(
+            obj => obj.title !== bookTitle
+          );
         })
         .catch(err => {
           console.log(err, "err in deleteBook");
