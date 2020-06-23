@@ -55,9 +55,6 @@ export default {
       userDistances: [],
     };
   },
-  props: {
-    currentUser: String,
-  },
   beforeMount() {
     this.getLocation();
   },
