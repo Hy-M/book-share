@@ -1,48 +1,56 @@
 // src/components/Home.vue
 <template>
-  <section class="main">
-    <h3 class="h3">
-      {{
+  <main class="main">
+    <section>
+      <h3 class="h3">
+        {{
         formState === "forgotPassword"
-          ? "I've forgotten my password"
-          : "I've forgotten my password"
-      }}
-    </h3>
-    <span v-if="err !== null">{{ this.err.error }}</span>
-    <form class="formcontainer" v-if="formState === 'forgotPassword'">
-      <input
-        v-model="form.username"
-        class="input"
-        placeholder="Email:"
-        required
-      />
-      <button v-on:click="forgotPassword" class="button">Verify Email</button>
-    </form>
-    <form class="formcontainer" v-if="formState === 'forgotPasswordSubmit'">
-      <input
-        v-model="form.username"
-        class="input"
-        placeholder="Email:"
-        required
-      />
-      <input
-        v-model="form.authCode"
-        class="input"
-        placeholder="Confirmation Code"
-        required
-      />
-      <input
-        type="password"
-        v-model="form.newPassword"
-        class="input"
-        placeholder="New Password"
-        required
-      />
-      <button v-on:click="forgotPasswordSubmit" class="btn">
-        Reset password
-      </button>
-    </form>
-  </section>
+        ? "I've forgotten my password"
+        : "I've forgotten my password"
+        }}
+      </h3>
+      <span v-if="err !== null">{{ this.err.error }}</span>
+      <form
+        class="formcontainer"
+        v-if="formState === 'forgotPassword'"
+        v-on:submit.prevent="forgotPassword"
+      >
+        <input
+          v-model="form.username"
+          class="input"
+          placeholder="Enter your email address"
+          required
+        />
+        <button class="btn">Verify email</button>
+      </form>
+      <form
+        class="formcontainer"
+        v-if="formState === 'forgotPasswordSubmit'"
+        v-on:submit.prevent="this.forgotPasswordSubmit"
+      >
+        <input
+          v-model="form.username"
+          class="input"
+          placeholder="Enter your email address"
+          required
+        />
+        <input
+          v-model="form.authCode"
+          class="input"
+          placeholder="Enter your confirmation code"
+          required
+        />
+        <input
+          type="password"
+          v-model="form.newPassword"
+          class="input"
+          placeholder="New Password"
+          required
+        />
+        <button class="btn">Reset password</button>
+      </form>
+    </section>
+  </main>
 </template>
 
 <script>
@@ -57,10 +65,10 @@ export default {
       formState: "forgotPassword",
       form: {
         username: "",
-        newPassword: "",
+        newPassword: ""
       },
       err: null,
-      notifcation: undefined,
+      notifcation: undefined
     };
   },
   methods: {
@@ -75,8 +83,7 @@ export default {
           if (err.code === "UserNotFoundException") {
             // The error happens when the supplied username/email does not exist in the Cognito user pool
             this.err = {
-              error:
-                "Sorry, we cannot find an account with that e-mail address",
+              error: "Sorry, we cannot find an account with that e-mail address"
             };
           }
         }
@@ -106,27 +113,32 @@ export default {
           if (err.code === "UserNotFoundException") {
             // The error happens when the supplied username/email does not exist in the Cognito user pool
             this.err = {
-              error:
-                "Sorry, we cannot find an account with that e-mail address",
+              error: "Sorry, we cannot find an account with that e-mail address"
             };
           } else if (err.code === "InvalidParameterException") {
             this.err = { error: "Please enter a valid email or password" };
           } else if (err.code === "CodeMismatchException") {
             this.err = {
-              error: "Invalid verification code provided, please try again.",
+              error: "Invalid verification code provided, please try again."
             };
           } else if (err.code === "LimitExceededException") {
             this.err = {
-              error: "Attempt limit exceeded. Please try again later.",
+              error: "Attempt limit exceeded. Please try again later."
             };
           } else {
             this.err = { error: "An error has occurred. Please try again." };
           }
         }
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
-<style></style>
+<style scoped>
+@media (min-width: 1024px) {
+  .main {
+    width: 25%;
+  }
+}
+</style>

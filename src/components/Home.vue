@@ -1,11 +1,7 @@
 <template>
   <div>
     <section class="searchBar main">
-      <!-- search dynamoDB to see if anyone is selling a book with the given title -->
-      <form
-        class="searchBar--form form"
-        v-on:submit.prevent="fetchAllSellingBooks"
-      >
+      <form class="searchBar--form form" v-on:submit.prevent="fetchAllSellingBooks">
         <input
           class="searchBar--form-input input"
           type="text"
@@ -15,6 +11,11 @@
         <button class="searchBar--form-btn btn">Search</button>
       </form>
     </section>
+    <p v-if="this.searchHasBeenClicked && this.loading">Loading</p>
+    <p v-if="this.searchHasBeenClicked && this.error">Sorry, something went wrong.</p>
+    <p
+      v-if="this.searchHasBeenClicked && !this.loading && !this.searchResults.length"
+    >We can't find any books matching your search.</p>
     <AvailableBooks :searchResults="this.searchResults" />
     <router-link to="/profile">
       <h3 class="availableBooks--h3 h3">Got a spare book lying around?</h3>
@@ -34,15 +35,20 @@ export default {
   props: {},
   data() {
     return {
+      loading: false,
+      error: false,
       searchForm: {
         input: "",
       },
       booksByInput: [],
       searchResults: [],
+      searchHasBeenClicked: false
     };
   },
   methods: {
     fetchAllSellingBooks() {
+      this.searchHasBeenClicked = true;
+      this.loading = true;
       this.booksByInput = [];
       this.searchResults = [];
       return api
@@ -58,11 +64,17 @@ export default {
               });
             }
           }
-
+          this.error = false;
+          if (!availableBookTitles.length) {
+            this.loading = false;
+            this.error = true;
+          }
           this.checkBooksByInput(availableBookTitles);
         })
         .catch((err) => {
           console.log(err, "err in fetchALlSellingBooks");
+          this.loading = false;
+          this.error = true;
         });
     },
     checkBooksByInput(availableBookTitles) {
@@ -79,18 +91,34 @@ export default {
           }
         }
       }
+
       this.searchForm.input = "";
+      if (!this.booksByInput.length) {
+        this.loading = false;
+        this.error = false;
+      }
       this.fetchBooksByInputDetails();
     },
     fetchBooksByInputDetails() {
       for (let user of this.booksByInput) {
-        api.getBookByTitle(user.title).then((book) => {
-          this.searchResults.push({
-            user: user.user,
-            email: user.email,
-            bookDetails: book.items[0].volumeInfo,
+        api
+          .getBookByTitle(user.title)
+          .then(book => {
+            this.searchResults.push({
+              user: user.user,
+              email: user.email,
+              bookDetails: book.items[0].volumeInfo
+            });
+          })
+          .then(() => {
+            this.loading = false;
+            this.error = false;
+          })
+          .catch(err => {
+            console.log(err, "< err in fetchBooksByInputDetails");
+            this.loading = false;
+            this.error = true;
           });
-        });
       }
     },
   },

@@ -10,18 +10,16 @@
       <p class="singleBook--info book--subText">Published in {{singleBook.volumeInfo.publishedDate}}</p>
       <section class="cta">
         <button
-      v-if="this.currentUser !== this.userEmail"
-      class="singleBook--btn btn"
-      v-on:click="isVisible = !isVisible"
-    >
-      {{ !this.isVisible ? "Contact Seller" : "Hide Contact Info" }}
-    </button>
+          v-if="this.currentUser !== this.userEmail"
+          class="singleBook--btn btn"
+          v-on:click="isVisible = !isVisible"
+        >{{ !this.isVisible ? "Contact Seller" : "Hide Contact Info" }}</button>
       </section>
     </section>
     <section v-else-if="!this.loading && this.error">
       <p>Sorry, we can't find this book right now.</p>
     </section>
-     <Email
+    <Email
       v-if="isVisible"
       :userEmail="this.userEmail"
       :bookTitle="this.singleBook.volumeInfo.title"
@@ -39,7 +37,7 @@ import { AmplifyEventBus } from "aws-amplify-vue";
 
 export default {
   components: {
-    Email,
+    Email
   },
   mounted() {
     this.fetchBookByTitle();
@@ -56,14 +54,14 @@ export default {
     };
   },
   beforeCreate() {
-    Auth.currentUserInfo().then((user) => {
+    Auth.currentUserInfo().then(user => {
       this.currentUser = user.attributes.email;
     });
   },
   methods: {
     fetchEmailDetails() {
       let User = this.$route.params.user;
-      api.getUser(User).then((data) => {
+      api.getUser(User).then(data => {
         this.userEmail = data.Email;
       });
     },
@@ -80,19 +78,8 @@ export default {
           this.error = true;
           this.loading = false;
         });
-    },
-    getGoodreadsReview() {
-      return axios
-        .get(
-          `https://www.goodreads.com/book/title.json?key=MAjR7x0xCuMtoS6C47NnnA&title=Harry+Potter`
-        )
-        .then(({ data }) => {
-          console.log(data);
-          return data;
-        })
-        .catch((err) => console.log(err, "< err"));
-    },
-  },
+    }
+  }
 };
 </script>
 

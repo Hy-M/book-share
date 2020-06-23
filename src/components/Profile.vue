@@ -6,18 +6,13 @@
     </section>
     <section class="bookshelves" id="Selling">
       <h4 class="h4">Books you're giving away</h4>
-      <p class="list--subtext" v-if="this.loading">Loading</p>
+      <p class="list--subtext" v-if="!this.deleteHasBeenClicked &&this.loading">Loading</p>
       <p
         class="list--subtext"
         v-if="!this.sellingBooks.length && !this.loading"
-      >
-        You haven't sold any books yet
-      </p>
-      <CarouselComponent
-        :images="this.sellingBooksImages"
-        :username="this.username"
-        status="Selling"
-      />
+      >You aren't selling any books yet</p>
+      <p class="list--subtext" v-if="this.deleteHasBeenClicked && this.loading">Deleting</p>
+      <CarouselComponent :images="this.sellingBooksImages" :deleteBook="this.deleteBook" />
     </section>
     <section class="upload">
       <h3 class="h3">Shook - share your old books!</h3>
@@ -39,11 +34,10 @@
           placeholder="Enter book author"
           v-model="uploadForm.inputAuthor"
         />
-        <button class="upload--form-btn btn">Find book</button>
+        <button
+          class="upload--form-btn btn"
+        >{{this.uploadHasBeenClicked && this.loading ? "Loading" : "Find this book"}}</button>
       </form>
-      <p class="list--subtext" v-if="this.uploadHasBeenClicked && this.loading">
-        Loading
-      </p>
       <section class="list" v-if="this.bookToSell.title">
         <h4 class="list--title h4">{{ this.bookToSell.title }}</h4>
         <p class="list--info">{{ this.bookToSell.authors[0] }}</p>
@@ -64,7 +58,9 @@
             v-model="uploadForm.inputPostcode"
             pattern="^([A-Z][A-HJ-Y]?[0-9][A-Z0-9]? ?[0-9][A-Z]{2}|GIR ?0A{2})$"
           />
-          <button class="upload--form-btn btn">List this book</button>
+          <button
+            class="upload--form-btn btn"
+          >{{this.listHasBeenClicked && this.loading ? "Loading" : "List this book"}}</button>
         </form>
         <form
           class="upload--form form"
@@ -73,24 +69,15 @@
         >
           <button class="upload--form-btn btn">List this book</button>
         </form>
-
-        <section class="list--conditionals">
-          <p
-            class="list--subtext"
-            v-if="this.listHasBeenClicked && this.loading"
-          >
-            Loading
-          </p>
+        <section class="list--conditionals" v-if="this.listHasBeenClicked && this.error">
+          <p class="list--subtext">Something went wrong when listing your book</p>
         </section>
-        <section v-if="this.listHasBeenClicked && !this.loading && !this.error">
-          <p class="list--subtext">Done! Your book is now live</p>
+        <section
+          class="list--conditionals"
+          v-if="this.uploadHasBeenClicked && this.error && !this.loading"
+        >
+          <p class="list--subtext">Sorry, we can't find this book!</p>
         </section>
-        <section v-else-if="this.listHasBeenClicked && this.error">
-          <p class="list--subtext">Something went wrong in listing your book</p>
-        </section>
-      </section>
-      <section v-if="this.uploadHasBeenClicked && this.error && !this.loading">
-        <p class="list--subtext">Sorry, we can't find this book!</p>
       </section>
     </section>
   </main>
@@ -129,6 +116,9 @@ export default {
       sellingBooksImages: [],
       loading: true,
       listHasBeenClicked: false,
+      deletedBooks: [],
+      success: false,
+      deleteHasBeenClicked: false
     };
   },
   beforeMount() {
@@ -179,7 +169,7 @@ export default {
       Auth.currentUserInfo()
         .then((currentUser) => {
           this.username = currentUser.username;
-          this.fetchPurchasedBooks();
+          // this.fetchPurchasedBooks();
           this.fetchSellingBooks();
         })
         .catch((err) => {
@@ -208,7 +198,7 @@ export default {
         });
     },
     fetchSellingBooks() {
-      api
+      return api
         .getSellingBooks(this.username)
         .then((books) => {
           if (books.Selling) {
@@ -285,7 +275,7 @@ export default {
       let author = this.uploadForm.inputAuthor;
       this.uploadHasBeenClicked = true;
       this.loading = true;
-      api
+      return api
         .getBookToUpload(title, author)
         .then((book) => {
           if (book.items[0]) {
@@ -312,6 +302,7 @@ export default {
         .then(() => {
           this.loading = false;
           this.error = false;
+          this.success = true;
           this.bookToSell = {};
           this.fetchSellingBooks();
           return api.updateUserDetails(this.username, validatedPostcode);
@@ -322,6 +313,46 @@ export default {
           console.log(err, "err in listBook");
         });
     },
+    deleteBook(e) {
+      this.deleteHasBeenClicked = true;
+      this.loading = true;
+      let bookToDelete = e.target.parentElement.id;
+      let longer;
+      let shorter;
+
+      for (let title of this.sellingBooks) {
+        if (title.toLowerCase() === bookToDelete.toLowerCase()) {
+          return this.removeBookFromDb(title);
+        }
+
+        if (title.length > bookToDelete) {
+          longer = title;
+          shorter = bookToDelete;
+        } else {
+          longer = bookToDelete;
+          shorter = title;
+        }
+
+        if (longer.includes(shorter)) {
+          return this.removeBookFromDb(title);
+        }
+      }
+    },
+
+    removeBookFromDb(bookTitle) {
+      return api
+        .deleteFromCollection(this.username, bookTitle, "Selling")
+        .then(data => {
+          this.loading = false;
+          this.deleteHasBeenClicked = false;
+          this.sellingBooksImages = this.sellingBooksImages.filter(
+            obj => obj.title !== bookTitle
+          );
+        })
+        .catch(err => {
+          console.log(err, "err in deleteBook");
+        });
+    }
   },
   mounted() {
     this.getUserAttributes();
@@ -360,6 +391,10 @@ export default {
 
 .list {
   margin-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
 .list--info {
@@ -371,6 +406,9 @@ export default {
   line-height: 1.4rem;
 }
 
+.list--conditionals {
+  margin-top: 4rem;
+}
 @media (min-width: 425px) {
   .list {
     margin-top: 6rem;
@@ -384,6 +422,19 @@ export default {
 
   .list {
     margin-top: 8rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .upload {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+  .upload--form {
+    width: 70%;
+    margin: 0 auto;
   }
 }
 </style>

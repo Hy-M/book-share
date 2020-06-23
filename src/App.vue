@@ -36,23 +36,23 @@ export default {
   name: "app",
   components: {
     Header,
-    Footer,
+    Footer
   },
   data() {
     return {
-      signedIn: false,
+      signedIn: false
     };
   },
   //beforeCreate is a lifecycle  which will listen to the authState event by using AmplifyEventBus
   //if signed in they can view their profile and set signed in to true or if not then redirected to auth so they can sign in
   beforeCreate() {
-    AmplifyEventBus.$on("authState", (info) => {
+    AmplifyEventBus.$on("authState", info => {
       if (info === "signedIn") {
         this.signedIn = true;
-        this.$router.push("Profile").catch((err) => {});
+        this.$router.push("Profile").catch(err => {});
       }
       if (info === "signedOut") {
-        this.$router.push("/").catch((err) => {});
+        this.$router.push("/").catch(err => {});
         this.signedIn = false;
       }
     });
@@ -60,11 +60,11 @@ export default {
     //when app loads we also call auth.currentauthenticated user to check whether or not the user has signed in and set it to true
 
     Auth.currentAuthenticatedUser()
-      .then((user) => {
+      .then(user => {
         this.signedIn = true;
       })
       .catch(() => (this.signedIn = false));
-  },
+  }
 };
 </script>
 
@@ -201,7 +201,7 @@ export default {
 
 @media (min-width: 1024px) {
   .main {
-    width: 80%;
+    width: 60%;
   }
 
   #nav {
@@ -216,11 +216,13 @@ export default {
   .input {
     font-size: 1.1rem;
     padding: 18px;
+    width: 80%;
   }
 
   .btn {
     font-size: 1.1rem;
     padding: 10px 0;
+    width: 30%;
   }
 
   .imgPreview {

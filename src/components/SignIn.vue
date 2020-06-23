@@ -3,12 +3,9 @@
   <section class="main">
     <h3 class="h3">Sign in</h3>
     <span v-if="err !== null">{{ this.err.error }}</span>
-    <form class="formcontainer">
-      <input
-        v-model="form.username"
-        class="input"
-        placeholder="Enter your email address"
-      />
+    <span v-if="this.signInHasBeenClicked && this.loading">Loading</span>
+    <form class="formcontainer" v-on:submit.prevent="signIn">
+      <input v-model="form.username" class="input" placeholder="Enter your email address" />
       <input
         required
         type="password"
@@ -16,11 +13,9 @@
         class="input"
         placeholder="Enter your password"
       />
-      <button v-on:click="signIn" class="signIn--btn btn">Sign in</button>
-      <button v-on:click="forgotPasswordFlow" class="signIn--btn btn">
-        Forgot my password
-      </button>
+      <button class="signIn--btn btn">Sign in</button>
     </form>
+    <button v-on:click="forgotPasswordFlow" class="signIn--btn btn">Forgot my password</button>
   </section>
 </template>
 
@@ -34,16 +29,24 @@ export default {
       err: null,
       form: {
         username: "",
-        password: "",
+        password: ""
       },
+      signInHasBeenClicked: false,
+      loading: false,
+      successfulSignIn: false
     };
   },
   methods: {
     async signIn() {
       const { username, password } = this.form;
+      this.signInHasBeenClicked = true;
+      this.loading = true;
       try {
         await Auth.signIn(username, password);
         AmplifyEventBus.$emit("authState", "signedIn");
+        this.successfulSignIn = true;
+        this.loading = false;
+        this.signInHasBeenClicked = false;
         this.$router.push("/profile");
       } catch (err) {
         if (err.code === "UserNotConfirmedException") {
@@ -54,7 +57,7 @@ export default {
         } else if (err.code === "UserNotFoundException") {
           // The error happens when the supplied username/email does not exist in the Cognito user pool
           this.err = {
-            error: "Sorry, we cannot find an account with that e-mail address",
+            error: "Sorry, we cannot find an account with that e-mail address"
           };
         } else {
           this.err = { error: "An error has occurred. Please try again." };
@@ -68,8 +71,8 @@ export default {
         console.log(err, "err in forgotPasswordFlow");
         alert(err.message);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -85,6 +88,12 @@ export default {
 @media (min-width: 768px) {
   .btn {
     width: 70%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main {
+    width: 100%;
   }
 }
 </style>

@@ -61,7 +61,6 @@ export const deleteFromCollection = (username, bookArray, collection) => {
       data: { [collection]: bookArray },
     })
     .then(({ data }) => {
-      console.log(data, "data in deleteFromCOllection");
       return data;
     })
     .catch((err) => console.log(err, "err in deleteFromCollection"));
