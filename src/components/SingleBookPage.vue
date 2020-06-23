@@ -2,18 +2,33 @@
   <main class="singleBook main">
     <p v-if="this.loading">Loading</p>
     <section v-if="this.singleBook.volumeInfo">
-      <img class="singleBook--img imgLarge" :src="singleBook.volumeInfo.imageLinks.thumbnail" />
-      <h3 class="singleBook--title book--title">{{singleBook.volumeInfo.title}}</h3>
-      <p class="singleBook--info book--author">{{singleBook.volumeInfo.authors[0]}}</p>
-      <p class="singleBook--info book--subText">distance</p>
-      <p class="singleBook--description book--description">{{singleBook.volumeInfo.description}}</p>
-      <p class="singleBook--info book--subText">Published in {{singleBook.volumeInfo.publishedDate}}</p>
+      <img
+        class="singleBook--img imgLarge"
+        :src="singleBook.volumeInfo.imageLinks.thumbnail"
+      />
+      <h3 class="singleBook--title book--title">
+        {{ singleBook.volumeInfo.title }}
+      </h3>
+      <p class="singleBook--info book--author">
+        {{ singleBook.volumeInfo.authors[0] }}
+      </p>
+      <!-- <p class="singleBook--info book--subText">
+       distance
+      </p> -->
+      <p class="singleBook--description book--description">
+        {{ singleBook.volumeInfo.description }}
+      </p>
+      <p class="singleBook--info book--subText">
+        Published in {{ singleBook.volumeInfo.publishedDate }}
+      </p>
       <section class="cta">
         <button
           v-if="this.currentUser !== this.userEmail"
           class="singleBook--btn btn"
           v-on:click="isVisible = !isVisible"
-        >{{ !this.isVisible ? "Contact Seller" : "Hide Contact Info" }}</button>
+        >
+          {{ !this.isVisible ? "Contact Seller" : "Hide Contact Info" }}
+        </button>
       </section>
     </section>
     <section v-else-if="!this.loading && this.error">
@@ -37,7 +52,7 @@ import { AmplifyEventBus } from "aws-amplify-vue";
 
 export default {
   components: {
-    Email
+    Email,
   },
   mounted() {
     this.fetchBookByTitle();
@@ -50,18 +65,18 @@ export default {
       userEmail: "",
       isVisible: false,
       loading: true,
-      error: false
+      error: false,
     };
   },
   beforeCreate() {
-    Auth.currentUserInfo().then(user => {
+    Auth.currentUserInfo().then((user) => {
       this.currentUser = user.attributes.email;
     });
   },
   methods: {
     fetchEmailDetails() {
       let User = this.$route.params.user;
-      api.getUser(User).then(data => {
+      api.getUser(User).then((data) => {
         this.userEmail = data.Email;
       });
     },
@@ -69,17 +84,17 @@ export default {
       let book_title = this.$route.params.book_title;
       api
         .getBookByTitle(book_title)
-        .then(book => {
+        .then((book) => {
           this.singleBook = book.items[0];
           this.loading = false;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err, "err in fetchBookByTitle");
           this.error = true;
           this.loading = false;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

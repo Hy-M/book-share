@@ -9,7 +9,11 @@
             v-for="(book, index) of searchResults"
             v-bind:key="index"
           >
-            <router-link :to="`/browse/${book.user}/${book.bookDetails.title}`">
+            <router-link
+              :to="{
+                path: `/browse/${book.user}/${book.bookDetails.volumeInfo.title}`,
+              }"
+            >
               <img
                 class="availableBooks--book-img imgPreview"
                 :src="book.bookDetails.imageLinks.smallThumbnail"
@@ -23,7 +27,7 @@
             </p>
 
             <p class="availableBooks--book-info book--subText">
-              distance
+              {{ book.address }}
             </p>
           </div>
         </section>
@@ -41,7 +45,9 @@
             v-bind:key="index"
           >
             <router-link
-              :to="`/browse/${book.user}/${book.bookDetails.volumeInfo.title}`"
+              :to="{
+                path: `/browse/${book.user}/${book.bookDetails.volumeInfo.title}`,
+              }"
             >
               <img
                 class="availableBooks--book-img imgPreview"
