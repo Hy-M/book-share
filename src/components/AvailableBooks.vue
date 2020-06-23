@@ -243,10 +243,3 @@ export default {
   }
 }
 </style>
-<!---
-// console.log(this.desCoordinates.getdesLat(), "<--des coordinates"); //
-console.log(this.srcCoordinates, "<--src coords"); // return api //
-.getDistance( // this.srcCoordinates.latitude, // this.srcCoordinates.longitude,
-// this.desCoordinates.latitude, // this.desCoordinates.longitude // ) //
-.then((distance) => { // console.log(distance, "<--distance"); // });
--->
