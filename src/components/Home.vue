@@ -30,7 +30,7 @@ import * as api from "../api";
 export default {
   name: "home",
   components: {
-    AvailableBooks
+    AvailableBooks,
   },
   props: {},
   data() {
@@ -38,7 +38,7 @@ export default {
       loading: false,
       error: false,
       searchForm: {
-        input: ""
+        input: "",
       },
       booksByInput: [],
       searchResults: [],
@@ -53,14 +53,14 @@ export default {
       this.searchResults = [];
       return api
         .getAllSellingBooks()
-        .then(allBooks => {
+        .then((allBooks) => {
           let availableBookTitles = [];
           for (let user of allBooks.body) {
             if (user.Selling) {
               availableBookTitles.push({
                 user: user.User,
                 email: user.Email,
-                titles: [...user.Selling]
+                titles: [...user.Selling],
               });
             }
           }
@@ -71,7 +71,7 @@ export default {
           }
           this.checkBooksByInput(availableBookTitles);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err, "err in fetchALlSellingBooks");
           this.loading = false;
           this.error = true;
@@ -86,7 +86,7 @@ export default {
             this.booksByInput.push({
               user: obj.user,
               email: obj.email,
-              title: title
+              title: title,
             });
           }
         }
@@ -120,8 +120,8 @@ export default {
             this.error = true;
           });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

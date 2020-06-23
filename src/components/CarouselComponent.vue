@@ -27,7 +27,13 @@ export default {
   components: { Carousel, Slide },
   props: {
     images: {
-      type: Array
+      type: Array,
+    },
+    username: {
+      type: String,
+    },
+    status: {
+      type: String,
     },
     deleteBook: {
       type: Function
