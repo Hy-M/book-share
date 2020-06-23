@@ -9,11 +9,7 @@
             v-for="(book, index) of searchResults"
             v-bind:key="index"
           >
-            <router-link
-              :to="{
-                path: `/browse/${book.user}/${book.bookDetails.volumeInfo.title}`
-              }"
-            >
+            <router-link :to="`/browse/${book.user}/${book.bookDetails.title}`">
               <img
                 class="availableBooks--book-img imgPreview"
                 :src="book.bookDetails.volumeInfo.imageLinks.smallThumbnail"
@@ -45,9 +41,7 @@
             v-bind:key="index"
           >
             <router-link
-              :to="{
-                path: `/browse/${book.user}/${book.bookDetails.volumeInfo.title}`
-              }"
+              :to="`/browse/${book.user}/${book.bookDetails.volumeInfo.title}`"
             >
               <img
                 class="availableBooks--book-img imgPreview"
@@ -85,8 +79,8 @@ import * as api from "../api.js";
 export default {
   props: {
     searchResults: {
-      type: Array
-    }
+      type: Array,
+    },
   },
   data() {
     return {
@@ -96,7 +90,7 @@ export default {
       desCoordinates: {},
       srcDesCoordinates: {},
       distance: "",
-      userDistances: []
+      userDistances: [],
     };
   },
   beforeMount() {
@@ -106,11 +100,11 @@ export default {
     getLocation() {
       try {
         const coordinates = this.$getLocation({
-          enableHighAccuracy: true
+          enableHighAccuracy: true,
         });
         this.srcCoordinates = {
           latitude: coordinates.lat,
-          longitude: coordinates.lng
+          longitude: coordinates.lng,
         };
       } catch (error) {
         console.log(error);
@@ -119,7 +113,7 @@ export default {
     fetchAllSellingBooks() {
       api
         .getAllSellingBooks()
-        .then(allBooks => {
+        .then((allBooks) => {
           let availableBookTitles = [];
           if (allBooks.body.length >= 1) {
             for (let user of allBooks.body) {
@@ -128,7 +122,7 @@ export default {
                   user: user.User,
                   email: user.Email,
                   titles: [...user.Selling],
-                  address: user.Address
+                  address: user.Address,
                 });
               }
             }
@@ -139,7 +133,7 @@ export default {
             this.error = false;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.loading = false;
           this.error = true;
         });
@@ -149,19 +143,19 @@ export default {
         for (let title of user.titles) {
           api
             .getBookByTitle(title)
-            .then(book => {
+            .then((book) => {
               if (user.address) {
                 const formattedPostcode = user.address.replace(/\s/g, "");
                 api
                   .getCoordsByPostcode(formattedPostcode)
-                  .then(coordinates => {
+                  .then((coordinates) => {
                     let Latitude =
                       coordinates.features[0].geometry.coordinates[1];
                     let Longitude =
                       coordinates.features[0].geometry.coordinates[0];
                     Object.assign(this.desCoordinates, {
                       Latitude,
-                      Longitude
+                      Longitude,
                     });
                   })
                   .then(() => {
@@ -172,37 +166,38 @@ export default {
                       this.desCoordinates.Longitude
                     );
                   })
-                  .then(result => {
+                  .then((result) => {
                     let distance = result.rows[0].elements[0].distance.text;
+                    console.log(distance, "<--");
                     this.availableBooks.push({
                       user: user.user,
                       email: user.email,
                       address: distance,
-                      bookDetails: book.items[0]
+                      bookDetails: book.items[0],
                     });
                   });
               }
               this.availableBooks.push({
                 user: user.user,
                 email: user.email,
-                bookDetails: book.items[0]
+                bookDetails: book.items[0],
               });
               this.loading = false;
               console.log(this.availableBooks, "line 191");
             })
-            .catch(err => {
+            .catch((err) => {
               console.log(err, "err in fetchBookByTitle");
               this.loading = false;
               this.error = true;
             });
         }
       }
-    }
+    },
   },
 
   mounted() {
     this.fetchAllSellingBooks();
-  }
+  },
 };
 </script>
 
