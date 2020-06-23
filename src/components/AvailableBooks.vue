@@ -174,13 +174,12 @@ export default {
                   })
                   .then((result) => {
                     let distance = result.rows[0].elements[0].distance.text;
-                    if (distance)
-                      this.availableBooks.push({
-                        user: user.user,
-                        email: user.email,
-                        address: distance,
-                        bookDetails: book.items[0],
-                      });
+                    this.availableBooks.push({
+                      user: user.user,
+                      email: user.email,
+                      address: distance,
+                      bookDetails: book.items[0],
+                    });
                   });
               }
               this.availableBooks.push({
