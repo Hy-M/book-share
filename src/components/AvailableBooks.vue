@@ -56,6 +56,9 @@ export default {
       hasDistance: false,
     };
   },
+  props: {
+    currentUser: String,
+  },
   beforeMount() {
     this.getLocation();
   },
@@ -101,7 +104,7 @@ export default {
           api
             .getBookByTitle(title)
             .then((book) => {
-              if (user.address) {
+              if (user.address && user.user !== this.currentUser) {
                 const formattedPostcode = user.address.replace(/\s/g, "");
                 api
                   .getCoordsByPostcode(formattedPostcode)

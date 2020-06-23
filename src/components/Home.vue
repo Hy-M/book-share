@@ -2,7 +2,10 @@
   <div>
     <section class="searchBar main">
       <!-- search dynamoDB to see if anyone is selling a book with the given title -->
-      <form class="searchBar--form form" v-on:submit.prevent="fetchAllSellingBooks">
+      <form
+        class="searchBar--form form"
+        v-on:submit.prevent="fetchAllSellingBooks"
+      >
         <input
           class="searchBar--form-input input"
           type="text"
@@ -12,7 +15,10 @@
         <button class="searchBar--form-btn btn">Search</button>
       </form>
     </section>
-    <AvailableBooks :searchResults="this.searchResults" />
+    <AvailableBooks
+      :searchResults="this.searchResults"
+      :currentUser="this.currentUser"
+    />
     <router-link to="/profile">
       <h3 class="availableBooks--h3 h3">Got a spare book lying around?</h3>
     </router-link>
@@ -26,16 +32,17 @@ import * as api from "../api";
 export default {
   name: "home",
   components: {
-    AvailableBooks
+    AvailableBooks,
   },
   props: {},
   data() {
     return {
       searchForm: {
-        input: ""
+        input: "",
       },
       booksByInput: [],
-      searchResults: []
+      searchResults: [],
+      currentUser: "",
     };
   },
   methods: {
@@ -44,21 +51,21 @@ export default {
       this.searchResults = [];
       return api
         .getAllSellingBooks()
-        .then(allBooks => {
+        .then((allBooks) => {
           let availableBookTitles = [];
           for (let user of allBooks.body) {
             if (user.Selling) {
               availableBookTitles.push({
                 user: user.User,
                 email: user.Email,
-                titles: [...user.Selling]
+                titles: [...user.Selling],
               });
             }
           }
 
           this.checkBooksByInput(availableBookTitles);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err, "err in fetchALlSellingBooks");
         });
     },
@@ -71,7 +78,7 @@ export default {
             this.booksByInput.push({
               user: obj.user,
               email: obj.email,
-              title: title
+              title: title,
             });
           }
         }
@@ -81,16 +88,28 @@ export default {
     },
     fetchBooksByInputDetails() {
       for (let user of this.booksByInput) {
-        api.getBookByTitle(user.title).then(book => {
+        api.getBookByTitle(user.title).then((book) => {
           this.searchResults.push({
             user: user.user,
             email: user.email,
-            bookDetails: book.items[0].volumeInfo
+            bookDetails: book.items[0].volumeInfo,
           });
         });
       }
-    }
-  }
+    },
+    getUserAttributes() {
+      Auth.currentUserInfo()
+        .then((currentUser) => {
+          this.currentUser = currentUser.username;
+        })
+        .catch((err) => {
+          console.log(err, "err in getUserAttributes");
+        });
+    },
+  },
+  mounted() {
+    this.getUserAttributes();
+  },
 };
 </script>
 
