@@ -53,6 +53,7 @@ export default {
       srcDesCoordinates: {},
       distance: "",
       userDistances: [],
+      hasDistance: false,
     };
   },
   beforeMount() {
@@ -132,6 +133,11 @@ export default {
                     });
                   });
               }
+              this.availableBooks.push({
+                user: user.user,
+                email: user.email,
+                bookDetails: book.items[0],
+              });
               this.loading = false;
             })
             .catch((err) => {

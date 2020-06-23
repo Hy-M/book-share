@@ -314,11 +314,7 @@ export default {
           this.error = false;
           this.bookToSell = {};
           this.fetchSellingBooks();
-          return api
-            .updateUserDetails(this.username, validatedPostcode)
-            .then((data) => {
-              console.log(data, "<--user details with validated postcode");
-            });
+          return api.updateUserDetails(this.username, validatedPostcode);
         })
         .catch((err) => {
           this.error = true;
