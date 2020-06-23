@@ -104,7 +104,7 @@ export default {
           api
             .getBookByTitle(title)
             .then((book) => {
-              if (user.address && user.user !== this.currentUser) {
+              if (user.address) {
                 const formattedPostcode = user.address.replace(/\s/g, "");
                 api
                   .getCoordsByPostcode(formattedPostcode)
@@ -128,12 +128,13 @@ export default {
                   })
                   .then((result) => {
                     let distance = result.rows[0].elements[0].distance.text;
-                    this.availableBooks.push({
-                      user: user.user,
-                      email: user.email,
-                      address: distance,
-                      bookDetails: book.items[0],
-                    });
+                    if (distance)
+                      this.availableBooks.push({
+                        user: user.user,
+                        email: user.email,
+                        address: distance,
+                        bookDetails: book.items[0],
+                      });
                   });
               }
               this.availableBooks.push({
