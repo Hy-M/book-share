@@ -15,10 +15,7 @@
         <button class="searchBar--form-btn btn">Search</button>
       </form>
     </section>
-    <AvailableBooks
-      :searchResults="this.searchResults"
-      :currentUser="this.currentUser"
-    />
+    <AvailableBooks :searchResults="this.searchResults" />
     <router-link to="/profile">
       <h3 class="availableBooks--h3 h3">Got a spare book lying around?</h3>
     </router-link>
@@ -42,7 +39,6 @@ export default {
       },
       booksByInput: [],
       searchResults: [],
-      currentUser: "",
     };
   },
   methods: {
@@ -97,18 +93,6 @@ export default {
         });
       }
     },
-    getUserAttributes() {
-      Auth.currentUserInfo()
-        .then((currentUser) => {
-          this.currentUser = currentUser.username;
-        })
-        .catch((err) => {
-          console.log(err, "err in getUserAttributes");
-        });
-    },
-  },
-  mounted() {
-    this.getUserAttributes();
   },
 };
 </script>

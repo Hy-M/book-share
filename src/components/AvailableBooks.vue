@@ -53,7 +53,6 @@ export default {
       srcDesCoordinates: {},
       distance: "",
       userDistances: [],
-      hasDistance: false,
     };
   },
   props: {
@@ -104,7 +103,7 @@ export default {
           api
             .getBookByTitle(title)
             .then((book) => {
-              if (user.address && user.user !== this.currentUser) {
+              if (user.address) {
                 const formattedPostcode = user.address.replace(/\s/g, "");
                 api
                   .getCoordsByPostcode(formattedPostcode)
