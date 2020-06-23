@@ -9,17 +9,19 @@
             v-for="(book, index) of this.searchResults"
             v-bind:key="index"
           >
-            <router-link :to="`/browse/${book.user}/${book.volumeInfo.title}`">
+            <router-link
+              :to="`/browse/${book.user}/${book.bookDetails.volumeInfo.title}`"
+            >
               <img
                 class="availableBooks--book-img imgPreview"
-                :src="book.volumeInfo.imageLinks.smallThumbnail"
+                :src="book.bookDetails.volumeInfo.imageLinks.smallThumbnail"
               />
               <h4 class="availableBooks--book-h4 book--title">
-                {{ book.volumeInfo.title }}
+                {{ book.bookDetails.volumeInfo.title }}
               </h4>
             </router-link>
             <p class="availableBooks--book-info book--author">
-              {{ book.volumeInfo.authors[0] }}
+              {{ book.bookDetails.volumeInfo.authors[0] }}
             </p>
             <!-- 
             <p class="availableBooks--book-info book--subText">

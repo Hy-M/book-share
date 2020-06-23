@@ -1,7 +1,10 @@
 <template>
   <div>
     <section class="searchBar main">
-      <form class="searchBar--form form" v-on:submit.prevent="fetchAllSellingBooks">
+      <form
+        class="searchBar--form form"
+        v-on:submit.prevent="fetchAllSellingBooks"
+      >
         <input
           class="searchBar--form-input input"
           type="text"
@@ -12,10 +15,16 @@
       </form>
     </section>
     <p v-if="this.searchHasBeenClicked && this.loading">Loading</p>
-    <p v-if="this.searchHasBeenClicked && this.error">Sorry, something went wrong.</p>
+    <p v-if="this.searchHasBeenClicked && this.error">
+      Sorry, something went wrong.
+    </p>
     <p
-      v-if="this.searchHasBeenClicked && !this.loading && !this.searchResults.length"
-    >We can't find any books matching your search.</p>
+      v-if="
+        this.searchHasBeenClicked && !this.loading && !this.searchResults.length
+      "
+    >
+      We can't find any books matching your search.
+    </p>
     <AvailableBooks :searchResults="this.searchResults" />
     <router-link to="/profile">
       <h3 class="availableBooks--h3 h3">Got a spare book lying around?</h3>
@@ -30,7 +39,7 @@ import * as api from "../api";
 export default {
   name: "home",
   components: {
-    AvailableBooks,
+    AvailableBooks
   },
   props: {},
   data() {
@@ -38,7 +47,7 @@ export default {
       loading: false,
       error: false,
       searchForm: {
-        input: "",
+        input: ""
       },
       booksByInput: [],
       searchResults: [],
@@ -53,14 +62,14 @@ export default {
       this.searchResults = [];
       return api
         .getAllSellingBooks()
-        .then((allBooks) => {
+        .then(allBooks => {
           let availableBookTitles = [];
           for (let user of allBooks.body) {
             if (user.Selling) {
               availableBookTitles.push({
                 user: user.User,
                 email: user.Email,
-                titles: [...user.Selling],
+                titles: [...user.Selling]
               });
             }
           }
@@ -71,7 +80,7 @@ export default {
           }
           this.checkBooksByInput(availableBookTitles);
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err, "err in fetchALlSellingBooks");
           this.loading = false;
           this.error = true;
@@ -86,7 +95,7 @@ export default {
             this.booksByInput.push({
               user: obj.user,
               email: obj.email,
-              title: title,
+              title: title
             });
           }
         }
@@ -107,7 +116,7 @@ export default {
             this.searchResults.push({
               user: user.user,
               email: user.email,
-              bookDetails: book.items[0].volumeInfo
+              bookDetails: book.items[0]
             });
           })
           .then(() => {
@@ -120,8 +129,8 @@ export default {
             this.error = true;
           });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
