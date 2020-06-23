@@ -6,60 +6,53 @@
         <section class="availableBooks--all">
           <div
             class="availableBooks--book"
-            v-for="(book, index) of this.searchResults"
+            v-for="(book, index) of searchResults"
             v-bind:key="index"
           >
-            <router-link
-              :to="`/browse/${book.user}/${book.bookDetails.volumeInfo.title}`"
-            >
+            <router-link :to="`/browse/${book.user}/${book.bookDetails.volumeInfo.title}`">
               <img
                 class="availableBooks--book-img imgPreview"
                 :src="book.bookDetails.volumeInfo.imageLinks.smallThumbnail"
               />
-              <h4 class="availableBooks--book-h4 book--title">
-                {{ book.bookDetails.volumeInfo.title }}
-              </h4>
+              <h4
+                class="availableBooks--book-h4 book--title"
+              >{{ book.bookDetails.volumeInfo.title }}</h4>
             </router-link>
-            <p class="availableBooks--book-info book--author">
-              {{ book.bookDetails.volumeInfo.authors[0] }}
-            </p>
+            <p
+              class="availableBooks--book-info book--author"
+            >{{ book.bookDetails.volumeInfo.authors[0] }}</p>
             <!-- 
             <p class="availableBooks--book-info book--subText">
               {{ book.address || "Distance unknown" }}
-            </p> -->
+            </p>-->
           </div>
         </section>
       </section>
       <section>
         <h3 class="availableBooks--h3 h3">Browse books for sharing near you</h3>
         <p v-if="this.loading">Loading</p>
-        <section
-          v-if="this.availableBooks.length >= 1"
-          class="availableBooks--all"
-        >
+        <section v-if="this.availableBooks.length >= 1" class="availableBooks--all">
           <div
             class="availableBooks--book"
-            v-for="(book, index) of this.availableBooks"
+            v-for="(book, index) of availableBooks"
             v-bind:key="index"
           >
-            <router-link
-              :to="`/browse/${book.user}/${book.bookDetails.volumeInfo.title}`"
-            >
+            <router-link :to="`/browse/${book.user}/${book.bookDetails.volumeInfo.title}`">
               <img
                 class="availableBooks--book-img imgPreview"
                 :src="book.bookDetails.volumeInfo.imageLinks.smallThumbnail"
               />
-              <h4 class="availableBooks--book-h4 book--title">
-                {{ book.bookDetails.volumeInfo.title }}
-              </h4>
+              <h4
+                class="availableBooks--book-h4 book--title"
+              >{{ book.bookDetails.volumeInfo.title }}</h4>
             </router-link>
-            <p class="availableBooks--book-info book--author">
-              {{ book.bookDetails.volumeInfo.authors[0] }}
-            </p>
+            <p
+              class="availableBooks--book-info book--author"
+            >{{ book.bookDetails.volumeInfo.authors[0] }}</p>
 
-            <p class="availableBooks--book-info book--subText">
-              {{ book.address || "Distance unknown" }}
-            </p>
+            <p
+              class="availableBooks--book-info book--subText"
+            >{{ book.address || "Distance unknown" }}</p>
           </div>
         </section>
         <section
@@ -177,6 +170,9 @@ export default {
                       bookDetails: book.items[0]
                     });
                     this.loading = false;
+                  })
+                  .catch(err => {
+                    console.log(err, "err in getBookByTitle/ getCoordinates");
                   });
               } else {
                 this.availableBooks.push({
