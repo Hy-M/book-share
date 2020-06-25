@@ -21,38 +21,34 @@
             <p
               class="availableBooks--book-info book--author"
             >{{ book.bookDetails.volumeInfo.authors[0] }}</p>
-            <!-- 
-            <p class="availableBooks--book-info book--subText">
-              {{ book.address || "Distance unknown" }}
-            </p>-->
+
+            <p
+              class="availableBooks--book-info book--subText"
+            >Distance: {{ book.distance || "Unknown" }}</p>
           </div>
         </section>
       </section>
-      <section>
+      <!-- <section>
         <h3 class="availableBooks--h3 h3">Browse books for sharing near you</h3>
         <p v-if="this.loading">Loading</p>
-        <section v-if="this.availableBooks.length >= 1" class="availableBooks--all">
+        <section class="availableBooks--all" v-if="this.availableBooks.length >= 1">
           <div
             class="availableBooks--book"
             v-for="(book, index) of availableBooks"
             v-bind:key="index"
           >
-            <router-link :to="`/browse/${book.user}/${book.bookDetails.volumeInfo.title}`">
+            <router-link :to="`/browse/${book.user}/${book.bookDetails.title}`">
               <img
                 class="availableBooks--book-img imgPreview"
-                :src="book.bookDetails.volumeInfo.imageLinks.smallThumbnail"
+                :src="book.bookDetails.imageLinks.smallThumbnail"
               />
-              <h4
-                class="availableBooks--book-h4 book--title"
-              >{{ book.bookDetails.volumeInfo.title }}</h4>
+              <h4 class="availableBooks--book-h4 book--title">{{ book.bookDetails.title }}</h4>
             </router-link>
-            <p
-              class="availableBooks--book-info book--author"
-            >{{ book.bookDetails.volumeInfo.authors[0] }}</p>
+            <p class="availableBooks--book-info book--author">{{ book.bookDetails.authors[0] }}</p>
 
-            <p
+           <p
               class="availableBooks--book-info book--subText"
-            >{{ book.address || "Distance unknown" }}</p>
+            >{{ book.address || "Distance unknown" }}</p> 
           </div>
         </section>
         <section
@@ -62,6 +58,10 @@
         >
           <p>Sorry, we can't find any available books right now.</p>
         </section>
+      </section>-->
+      <h3 class="availableBooks--h3 h3">Browse books for sharing near you</h3>
+      <section v-for="(book, index) of availableBooks" v-bind:key="index">
+        <BooksList :book="book" />
       </section>
     </main>
   </div>
@@ -69,9 +69,13 @@
 
 <script>
 const booksData = require("../data.json");
+import BooksList from "./BooksList";
 import * as api from "../api.js";
 
 export default {
+  components: {
+    BooksList
+  },
   props: {
     searchResults: {
       type: Array
@@ -80,6 +84,7 @@ export default {
   data() {
     return {
       availableBooks: [],
+      availableBookImages: [],
       loading: true,
       error: false,
       desCoordinates: {},
@@ -122,11 +127,14 @@ export default {
               }
             }
 
-            this.fetchBookByTitle(availableBookTitles);
+            return availableBookTitles;
           } else {
             this.loading = false;
-            this.error = false;
+            this.error = true;
           }
+        })
+        .then(availableBookTitles => {
+          this.fetchBookByTitle(availableBookTitles);
         })
         .catch(err => {
           this.loading = false;
@@ -166,8 +174,9 @@ export default {
                     this.availableBooks.push({
                       user: user.user,
                       email: user.email,
-                      address: distance,
-                      bookDetails: book.items[0]
+                      distance: distance,
+                      address: user.address,
+                      bookDetails: book.items[0].volumeInfo
                     });
                     this.loading = false;
                   })
@@ -178,8 +187,9 @@ export default {
                 this.availableBooks.push({
                   user: user.user,
                   email: user.email,
-                  bookDetails: book.items[0],
-                  address: undefined
+                  bookDetails: book.items[0].volumeInfo,
+                  distance: undefined,
+                  address: user.address
                 });
               }
             })
