@@ -6,25 +6,13 @@
     </section>
     <section class="bookshelves" id="Selling">
       <h4 class="h4">Books you're giving away</h4>
-      <p
-        class="list--subtext"
-        v-if="!this.deleteHasBeenClicked && this.loading"
-      >
-        Loading
-      </p>
+      <p class="list--subtext" v-if="!this.deleteHasBeenClicked && this.loading">Loading</p>
       <p
         class="list--subtext"
         v-if="!this.sellingBooks.length && !this.loading"
-      >
-        You aren't selling any books yet
-      </p>
-      <p class="list--subtext" v-if="this.deleteHasBeenClicked && this.loading">
-        Deleting
-      </p>
-      <CarouselComponent
-        :images="this.sellingBooksImages"
-        :deleteBook="this.deleteBook"
-      />
+      >You aren't selling any books yet</p>
+      <p class="list--subtext" v-if="this.deleteHasBeenClicked && this.loading">Deleting</p>
+      <CarouselComponent :images="this.sellingBooksImages" :deleteBook="this.deleteBook" />
     </section>
     <section class="upload">
       <h3 class="h3">Shook - share your old books!</h3>
@@ -48,9 +36,9 @@
         />
         <button class="upload--form-btn btn">
           {{
-            this.uploadHasBeenClicked && this.loading
-              ? "Loading"
-              : "Find this book"
+          this.uploadHasBeenClicked && this.loading
+          ? "Loading"
+          : "Find this book"
           }}
         </button>
       </form>
@@ -62,11 +50,7 @@
           Please enter the postcode where this book will be available to collect
           from in UPPERCASE
         </p>
-        <form
-          class="upload--form form"
-          v-on:submit.prevent="checkPostcode"
-          v-if="noLocation"
-        >
+        <form class="upload--form form" v-on:submit.prevent="checkPostcode" v-if="noLocation">
           <input
             required
             class="upload--form-input input"
@@ -76,26 +60,17 @@
           />
           <button class="upload--form-btn btn">
             {{
-              this.listHasBeenClicked && this.loading
-                ? "Loading"
-                : "List this book"
+            this.listHasBeenClicked && this.loading
+            ? "Loading"
+            : "List this book"
             }}
           </button>
         </form>
-        <form
-          class="upload--form form"
-          v-on:submit.prevent="checkPostcode"
-          v-if="!noLocation"
-        >
+        <form class="upload--form form" v-on:submit.prevent="checkPostcode" v-if="!noLocation">
           <button class="upload--form-btn btn">List this book</button>
         </form>
-        <section
-          class="list--conditionals"
-          v-if="this.listHasBeenClicked && this.error"
-        >
-          <p class="list--subtext">
-            Something went wrong when listing your book
-          </p>
+        <section class="list--conditionals" v-if="this.listHasBeenClicked && this.error">
+          <p class="list--subtext">Something went wrong when listing your book</p>
         </section>
         <section
           class="list--conditionals"
@@ -180,7 +155,6 @@ export default {
           latitude: coordinates.lat,
           longitude: coordinates.lng
         };
-        console.log(this.coordinates, "coordinates");
         return api
           .getPostcodeByCoords(
             this.coordinates.latitude,
@@ -367,7 +341,6 @@ export default {
         }
       }
     },
-
     removeBookFromDb(bookTitle) {
       return api
         .deleteFromCollection(this.username, bookTitle, "Selling")
