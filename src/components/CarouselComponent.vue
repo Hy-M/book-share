@@ -27,13 +27,13 @@ export default {
   components: { Carousel, Slide },
   props: {
     images: {
-      type: Array,
+      type: Array
     },
     username: {
-      type: String,
+      type: String
     },
     status: {
-      type: String,
+      type: String
     },
     deleteBook: {
       type: Function
@@ -42,8 +42,7 @@ export default {
   data() {
     return {};
   },
-  methods: {},
-  mounted() {}
+  methods: {}
 };
 </script>
 
