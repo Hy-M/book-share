@@ -33,7 +33,7 @@
     </section>-->
 
     <div class="availableBooks--book">
-      <router-link :to="`/browse/${book.user}/${book.bookDetails.title}`">
+      <router-link :to="`/browse/${book.user}/${book.distance}/${book.bookDetails.title}`">
         <img
           class="availableBooks--book-img imgPreview"
           :src="this.currentImage || this.defaultImage"

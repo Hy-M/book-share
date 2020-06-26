@@ -5,10 +5,12 @@
       <img class="singleBook--img imgLarge" :src="singleBook.volumeInfo.imageLinks.thumbnail" />
       <h3 class="singleBook--title book--title">{{ singleBook.volumeInfo.title }}</h3>
       <p class="singleBook--info book--author">{{ singleBook.volumeInfo.authors[0] }}</p>
-      <p class="singleBook--description book--description">{{ singleBook.volumeInfo.description }}</p>
       <p
         class="singleBook--info book--subText"
-      >Published in {{ singleBook.volumeInfo.publishedDate }}</p>
+      >Distance from you: {{this.$route.params.distance || "Unknown"}}</p>
+      <p class="singleBook--description book--description">{{ singleBook.volumeInfo.description }}</p>
+      <p class="singleBook--info book--subText">Published: {{ singleBook.volumeInfo.publishedDate }}</p>
+
       <section class="cta">
         <button
           v-if="this.currentUser !== this.userEmail"
