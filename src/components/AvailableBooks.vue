@@ -9,7 +9,9 @@
             v-for="(book, index) of searchResults"
             v-bind:key="index"
           >
-            <router-link :to="`/browse/${book.user}/0/${book.bookDetails.volumeInfo.title}`">
+            <router-link
+              :to="`/browse/${book.user}/${book.distance}/${book.bookDetails.volumeInfo.title}`"
+            >
               <img
                 class="availableBooks--book-img imgPreview"
                 :src="book.bookDetails.volumeInfo.imageLinks.smallThumbnail"
