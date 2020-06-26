@@ -39,7 +39,7 @@ import * as api from "../api";
 export default {
   name: "home",
   components: {
-    AvailableBooks
+    AvailableBooks,
   },
   props: {},
   data() {
@@ -47,14 +47,32 @@ export default {
       loading: false,
       error: false,
       searchForm: {
-        input: ""
+        input: "",
       },
       booksByInput: [],
       searchResults: [],
-      searchHasBeenClicked: false
+      searchHasBeenClicked: false,
+      desCoordinates: {},
+      srcCoordinates: {},
     };
   },
+  beforeMount() {
+    this.getLocation();
+  },
   methods: {
+    async getLocation() {
+      try {
+        const coordinates = await this.$getLocation({
+          enableHighAccuracy: true,
+        });
+        this.srcCoordinates = {
+          latitude: coordinates.lat,
+          longitude: coordinates.lng,
+        };
+      } catch (error) {
+        console.log(error);
+      }
+    },
     fetchAllSellingBooks() {
       this.searchHasBeenClicked = true;
       this.loading = true;
@@ -62,14 +80,15 @@ export default {
       this.searchResults = [];
       return api
         .getAllSellingBooks()
-        .then(allBooks => {
+        .then((allBooks) => {
           let availableBookTitles = [];
           for (let user of allBooks.body) {
             if (user.Selling) {
               availableBookTitles.push({
                 user: user.User,
                 email: user.Email,
-                titles: [...user.Selling]
+                titles: [...user.Selling],
+                address: user.Address,
               });
             }
           }
@@ -80,7 +99,7 @@ export default {
           }
           this.checkBooksByInput(availableBookTitles);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err, "err in fetchALlSellingBooks");
           this.loading = false;
           this.error = true;
@@ -95,7 +114,8 @@ export default {
             this.booksByInput.push({
               user: obj.user,
               email: obj.email,
-              title: title
+              title: title,
+              address: obj.address,
             });
           }
         }
@@ -112,25 +132,65 @@ export default {
       for (let user of this.booksByInput) {
         api
           .getBookByTitle(user.title)
-          .then(book => {
-            this.searchResults.push({
-              user: user.user,
-              email: user.email,
-              bookDetails: book.items[0]
-            });
+          .then((book) => {
+            if (user.address) {
+              const formattedPostcode = user.address.replace(/\s/g, "");
+              api
+                .getCoordsByPostcode(formattedPostcode)
+                .then((coordinates) => {
+                  let Latitude =
+                    coordinates.features[0].geometry.coordinates[1];
+                  let Longitude =
+                    coordinates.features[0].geometry.coordinates[0];
+                  Object.assign(this.desCoordinates, {
+                    Latitude,
+                    Longitude,
+                  });
+                })
+                .then(() => {
+                  return api.getDistance(
+                    this.srcCoordinates.latitude,
+                    this.srcCoordinates.longitude,
+                    this.desCoordinates.Latitude,
+                    this.desCoordinates.Longitude
+                  );
+                })
+                .then((result) => {
+                  let distance = result.rows[0].elements[0].distance.text;
+                  this.searchResults.push({
+                    user: user.user,
+                    email: user.email,
+                    bookDetails: book.items[0],
+                    distance: distance,
+                    address: user.address,
+                  });
+                  this.loading = false;
+                })
+                .catch((err) => {
+                  console.log(err, "err in getBookByTitle/ getCoordinates");
+                });
+            } else {
+              this.searchResults.push({
+                user: user.user,
+                email: user.email,
+                bookDetails: book.items[0],
+                address: user.address,
+                distance: undefined,
+              });
+            }
           })
           .then(() => {
             this.loading = false;
             this.error = false;
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err, "< err in fetchBooksByInputDetails");
             this.loading = false;
             this.error = true;
           });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
