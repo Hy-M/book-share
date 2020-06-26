@@ -9,20 +9,18 @@
             v-for="(book, index) of searchResults"
             v-bind:key="index"
           >
-            <router-link
-              :to="`/browse/${book.user}/${book.bookDetails.volumeInfo.title}`"
-            >
+            <router-link :to="`/browse/${book.user}/0/${book.bookDetails.volumeInfo.title}`">
               <img
                 class="availableBooks--book-img imgPreview"
                 :src="book.bookDetails.volumeInfo.imageLinks.smallThumbnail"
               />
-              <h4 class="availableBooks--book-h4 book--title">
-                {{ book.bookDetails.volumeInfo.title }}
-              </h4>
+              <h4
+                class="availableBooks--book-h4 book--title"
+              >{{ book.bookDetails.volumeInfo.title }}</h4>
             </router-link>
-            <p class="availableBooks--book-info book--author">
-              {{ book.bookDetails.volumeInfo.authors[0] }}
-            </p>
+            <p
+              class="availableBooks--book-info book--author"
+            >{{ book.bookDetails.volumeInfo.authors[0] }}</p>
 
             <!-- <p
               class="availableBooks--book-info book--subText"
@@ -76,12 +74,12 @@ import * as api from "../api.js";
 
 export default {
   components: {
-    BooksList,
+    BooksList
   },
   props: {
     searchResults: {
-      type: Array,
-    },
+      type: Array
+    }
   },
   data() {
     return {
@@ -92,7 +90,7 @@ export default {
       desCoordinates: {},
       srcDesCoordinates: {},
       distance: "",
-      userDistances: [],
+      userDistances: []
     };
   },
   beforeMount() {
@@ -102,11 +100,11 @@ export default {
     async getLocation() {
       try {
         const coordinates = await this.$getLocation({
-          enableHighAccuracy: true,
+          enableHighAccuracy: true
         });
         this.srcCoordinates = {
           latitude: coordinates.lat,
-          longitude: coordinates.lng,
+          longitude: coordinates.lng
         };
       } catch (error) {
         console.log(error);
@@ -115,7 +113,7 @@ export default {
     fetchAllSellingBooks() {
       api
         .getAllSellingBooks()
-        .then((allBooks) => {
+        .then(allBooks => {
           let availableBookTitles = [];
           if (allBooks.body.length >= 1) {
             for (let user of allBooks.body) {
@@ -124,7 +122,7 @@ export default {
                   user: user.User,
                   email: user.Email,
                   titles: [...user.Selling],
-                  address: user.Address,
+                  address: user.Address
                 });
               }
             }
@@ -135,10 +133,10 @@ export default {
             this.error = true;
           }
         })
-        .then((availableBookTitles) => {
+        .then(availableBookTitles => {
           this.fetchBookByTitle(availableBookTitles);
         })
-        .catch((err) => {
+        .catch(err => {
           this.loading = false;
           this.error = true;
         });
@@ -148,19 +146,19 @@ export default {
         for (let title of user.titles) {
           api
             .getBookByTitle(title)
-            .then((book) => {
+            .then(book => {
               if (user.address) {
                 const formattedPostcode = user.address.replace(/\s/g, "");
                 api
                   .getCoordsByPostcode(formattedPostcode)
-                  .then((coordinates) => {
+                  .then(coordinates => {
                     let Latitude =
                       coordinates.features[0].geometry.coordinates[1];
                     let Longitude =
                       coordinates.features[0].geometry.coordinates[0];
                     Object.assign(this.desCoordinates, {
                       Latitude,
-                      Longitude,
+                      Longitude
                     });
                   })
                   .then(() => {
@@ -171,18 +169,18 @@ export default {
                       this.desCoordinates.Longitude
                     );
                   })
-                  .then((result) => {
+                  .then(result => {
                     let distance = result.rows[0].elements[0].distance.text;
                     this.availableBooks.push({
                       user: user.user,
                       email: user.email,
                       distance: distance,
                       address: user.address,
-                      bookDetails: book.items[0].volumeInfo,
+                      bookDetails: book.items[0].volumeInfo
                     });
                     this.loading = false;
                   })
-                  .catch((err) => {
+                  .catch(err => {
                     console.log(err, "err in getBookByTitle/ getCoordinates");
                   });
               } else {
@@ -191,24 +189,24 @@ export default {
                   email: user.email,
                   bookDetails: book.items[0].volumeInfo,
                   distance: undefined,
-                  address: user.address,
+                  address: user.address
                 });
               }
               // console.log(this.availableBooks, "<---data");
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(err, "err in fetchBookByTitle");
               this.loading = false;
               this.error = true;
             });
         }
       }
-    },
+    }
   },
 
   mounted() {
     this.fetchAllSellingBooks();
-  },
+  }
 };
 </script>
 
