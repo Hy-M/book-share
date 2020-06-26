@@ -120,7 +120,7 @@ export const getDistance = (srcLat, srcLng, desLat, desLng) => {
 export const getPostcodeByCoords = (lat, lng) => {
   return axios
     .get(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?types=postcode&access_token=${process.env.VUE_APP_MAPBOX_API_KEY}`
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?types=postcode&access_token=${process.env.MAPBOX_API_KEY}`
     )
     .then(({ data }) => {
       return data;
@@ -131,7 +131,7 @@ export const getPostcodeByCoords = (lat, lng) => {
 export const getCoordsByPostcode = (postcode) => {
   return axios
     .get(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${postcode}.json?types=postcode&access_token=${process.env.VUE_APP_MAPBOX_API_KEY}`
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${postcode}.json?types=postcode&access_token=${process.env.MAPBOX_API_KEY}`
     )
     .then(({ data }) => {
       return data;
