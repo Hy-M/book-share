@@ -9,6 +9,8 @@ import App from "./App";
 import router from "./router";
 import config from "./aws-exports";
 
+// require("dotenv").config();
+
 Amplify.configure(config);
 Vue.use(VueRouter);
 Vue.use(VueLocation);
@@ -16,6 +18,6 @@ Vue.use(AmplifyPlugin, AmplifyModules);
 Vue.config.productionTip = false;
 
 new Vue({
-  render: (h) => h(App),
-  router,
+  render: h => h(App),
+  router
 }).$mount("#app");
