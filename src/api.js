@@ -2,7 +2,7 @@ import axios from "axios";
 const baseURL =
   "https://9s48615mc2.execute-api.us-east-2.amazonaws.com/production/";
 // import * as config from "../config";
-const { MAPBOX_API_KEY, DISTANCEMATRIX_API_KEY } = require("../config");
+// const { MAPBOX_API_KEY, DISTANCEMATRIX_API_KEY } = require("../config");
 
 export const getUser = username => {
   return axios.get(`${baseURL}user/${username}`).then(({ data }) => {
