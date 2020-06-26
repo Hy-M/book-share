@@ -107,7 +107,6 @@ export const validatePostcode = (postcode) => {
 };
 
 export const getDistance = (srcLat, srcLng, desLat, desLng) => {
-  console.log(process.env.VUE_APP_DISTANCEMATRIX_API_KEY);
   return axios
     .get(
       `https://api.distancematrix.ai/maps/api/distancematrix/json?origins=${srcLat},${srcLng}&destinations=${desLat},${desLng}&key=${process.env.VUE_APP_DISTANCEMATRIX_API_KEY}`
@@ -119,7 +118,6 @@ export const getDistance = (srcLat, srcLng, desLat, desLng) => {
 };
 
 export const getPostcodeByCoords = (lat, lng) => {
-  console.log(process.env.VUE_APP_MAPBOX_API_KEY);
   return axios
     .get(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?types=postcode&access_token=${process.env.VUE_APP_MAPBOX_API_KEY}`
@@ -131,7 +129,6 @@ export const getPostcodeByCoords = (lat, lng) => {
 };
 
 export const getCoordsByPostcode = (postcode) => {
-  console.log(process.env.VUE_APP_MAPBOX_API_KEY);
   return axios
     .get(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${postcode}.json?types=postcode&access_token=${process.env.VUE_APP_MAPBOX_API_KEY}`
