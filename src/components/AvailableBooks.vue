@@ -22,9 +22,9 @@
               class="availableBooks--book-info book--author"
             >{{ book.bookDetails.volumeInfo.authors[0] }}</p>
 
-            <p class="availableBooks--book-info book--subText">
-              Distance: {{ book.distance || "Unknown" }}
-            </p>
+            <p
+              class="availableBooks--book-info book--subText"
+            >Distance: {{ book.distance || "Unknown" }}</p>
           </div>
         </section>
       </section>
