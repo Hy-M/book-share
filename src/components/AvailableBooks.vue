@@ -99,16 +99,15 @@ export default {
     this.getLocation();
   },
   methods: {
-    getLocation() {
+    async getLocation() {
       try {
-        this.$getLocation({
+        const coordinates = await this.$getLocation({
           enableHighAccuracy: true,
-        }).then((coordinates) => {
-          this.srcCoordinates = {
-            latitude: coordinates.lat,
-            longitude: coordinates.lng,
-          };
         });
+        this.srcCoordinates = {
+          latitude: coordinates.lat,
+          longitude: coordinates.lng,
+        };
       } catch (error) {
         console.log(error);
       }
