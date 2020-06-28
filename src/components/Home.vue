@@ -132,7 +132,7 @@ export default {
               api
                 .getCoordsByPostcode(formattedPostcode)
                 .then((coordinates) => {
-                  if (coordinates.results[0].geometry.location.lat) {
+                  if (coordinates.results.length > 0) {
                     let Latitude = coordinates.results[0].geometry.location.lat;
                     let Longitude =
                       coordinates.results[0].geometry.location.lng;
