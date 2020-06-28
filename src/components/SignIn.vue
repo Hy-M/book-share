@@ -3,9 +3,15 @@
   <section class="main">
     <h3 class="h3">Sign in</h3>
     <span v-if="err !== null">{{ this.err.error }}</span>
-    <span v-if="this.signInHasBeenClicked && this.loading">Loading</span>
+    <span v-if="this.signInHasBeenClicked && this.loading && err === null"
+      >Loading</span
+    >
     <form class="formcontainer" v-on:submit.prevent="signIn">
-      <input v-model="form.username" class="input" placeholder="Enter your email address" />
+      <input
+        v-model="form.username"
+        class="input"
+        placeholder="Enter your email address"
+      />
       <input
         required
         type="password"
@@ -15,7 +21,9 @@
       />
       <button class="signIn--btn btn">Sign in</button>
     </form>
-    <button v-on:click="forgotPasswordFlow" class="signIn--btn btn">Forgot my password</button>
+    <button v-on:click="forgotPasswordFlow" class="signIn--btn btn">
+      Forgot my password
+    </button>
   </section>
 </template>
 
@@ -29,11 +37,11 @@ export default {
       err: null,
       form: {
         username: "",
-        password: ""
+        password: "",
       },
       signInHasBeenClicked: false,
       loading: false,
-      successfulSignIn: false
+      successfulSignIn: false,
     };
   },
   methods: {
@@ -45,7 +53,6 @@ export default {
         await Auth.signIn(username, password);
         AmplifyEventBus.$emit("authState", "signedIn");
         this.successfulSignIn = true;
-        this.loading = false;
         this.signInHasBeenClicked = false;
         this.$router.push("/profile");
       } catch (err) {
@@ -57,7 +64,7 @@ export default {
         } else if (err.code === "UserNotFoundException") {
           // The error happens when the supplied username/email does not exist in the Cognito user pool
           this.err = {
-            error: "Sorry, we cannot find an account with that e-mail address"
+            error: "Sorry, we cannot find an account with that e-mail address",
           };
         } else {
           this.err = { error: "An error has occurred. Please try again." };
@@ -71,8 +78,8 @@ export default {
         console.log(err, "err in forgotPasswordFlow");
         alert(err.message);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
