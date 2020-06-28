@@ -10,21 +10,19 @@
             v-bind:key="index"
           >
             <router-link
-              :to="
-                `/browse/${book.user}/${book.bookDetails.volumeInfo.title}`
-              "
+              :to="`/browse/${book.user}/${book.bookDetails.volumeInfo.title}`"
             >
               <img
                 class="availableBooks--book-img imgPreview"
                 :src="book.bookDetails.volumeInfo.imageLinks.smallThumbnail"
               />
-              <h4
-                class="availableBooks--book-h4 book--title"
-              >{{ book.bookDetails.volumeInfo.title }}</h4>
+              <h4 class="availableBooks--book-h4 book--title">
+                {{ book.bookDetails.volumeInfo.title }}
+              </h4>
             </router-link>
-            <p
-              class="availableBooks--book-info book--author"
-            >{{ book.bookDetails.volumeInfo.authors[0] }}</p>
+            <p class="availableBooks--book-info book--author">
+              {{ book.bookDetails.volumeInfo.authors[0] }}
+            </p>
 
             <!-- <p
               class="availableBooks--book-info book--subText"
@@ -47,12 +45,12 @@ import * as api from "../api.js";
 
 export default {
   components: {
-    BooksList
+    BooksList,
   },
   props: {
     searchResults: {
-      type: Array
-    }
+      type: Array,
+    },
   },
   data() {
     return {
@@ -63,7 +61,7 @@ export default {
       desCoordinates: {},
       srcCoordinates: {},
       distance: "",
-      userDistances: []
+      userDistances: [],
     };
   },
   beforeMount() {
@@ -86,7 +84,7 @@ export default {
     fetchAllSellingBooks() {
       return api
         .getAllSellingBooks()
-        .then(allBooks => {
+        .then((allBooks) => {
           let availableBookTitles = [];
           if (allBooks.body.length >= 1) {
             for (let user of allBooks.body) {
@@ -95,7 +93,7 @@ export default {
                   user: user.User,
                   email: user.Email,
                   titles: [...user.Selling],
-                  address: user.Address
+                  address: user.Address,
                 });
               }
             }
@@ -106,10 +104,10 @@ export default {
             this.error = true;
           }
         })
-        .then(availableBookTitles => {
+        .then((availableBookTitles) => {
           this.fetchBookByTitle(availableBookTitles);
         })
-        .catch(err => {
+        .catch((err) => {
           this.loading = false;
           this.error = true;
         });
@@ -119,7 +117,7 @@ export default {
         for (let title of user.titles) {
           api
             .getBookByTitle(title)
-            .then(book => {
+            .then((book) => {
               // if (user.address) {
               //   const formattedPostcode = user.address.replace(/\s/g, "");
               //   api
@@ -209,22 +207,22 @@ export default {
                 email: user.email,
                 bookDetails: book.items[0].volumeInfo,
                 distance: undefined,
-                address: user.address
+                address: user.address,
               });
             })
-            .catch(err => {
+            .catch((err) => {
               console.log(err, "err in fetchBookByTitle");
               this.loading = false;
               this.error = true;
             });
         }
       }
-    }
+    },
   },
 
   mounted() {
     this.fetchAllSellingBooks();
-  }
+  },
 };
 </script>
 

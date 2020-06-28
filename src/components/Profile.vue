@@ -417,9 +417,18 @@ export default {
 }
 
 .upload--form-input {
-  margin: 8px 0;
+  height: 0.6%;
+  border: solid 0.3px none;
 }
 
+.upload--form-btn {
+  /* margin-top: 2px;
+  margin-bottom: 5px;
+  padding-top: 15px; */
+  padding-bottom: 20px;
+  padding-top: 5px;
+  margin-bottom: 21px;
+}
 .list {
   margin-top: 4rem;
   display: flex;

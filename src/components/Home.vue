@@ -1,7 +1,10 @@
 <template>
   <div>
     <section class="searchBar main">
-      <form class="searchBar--form form" v-on:submit.prevent="fetchAllSellingBooks">
+      <form
+        class="searchBar--form form"
+        v-on:submit.prevent="fetchAllSellingBooks"
+      >
         <input
           class="searchBar--form-input input"
           type="text"
@@ -12,7 +15,9 @@
       </form>
     </section>
     <p v-if="this.searchHasBeenClicked && this.loading">Loading</p>
-    <p v-if="this.searchHasBeenClicked && this.error">Sorry, something went wrong.</p>
+    <p v-if="this.searchHasBeenClicked && this.error">
+      Sorry, something went wrong.
+    </p>
 
     <AvailableBooks :searchResults="this.searchResults" />
     <router-link to="/profile">
@@ -28,7 +33,7 @@ import * as api from "../api";
 export default {
   name: "home",
   components: {
-    AvailableBooks
+    AvailableBooks,
   },
   props: {},
   data() {
@@ -36,13 +41,13 @@ export default {
       loading: false,
       error: false,
       searchForm: {
-        input: ""
+        input: "",
       },
       booksByInput: [],
       searchResults: [],
       searchHasBeenClicked: false,
       desCoordinates: {},
-      srcCoordinates: {}
+      srcCoordinates: {},
     };
   },
   beforeMount() {
@@ -69,7 +74,7 @@ export default {
       this.searchResults = [];
       return api
         .getAllSellingBooks()
-        .then(allBooks => {
+        .then((allBooks) => {
           let availableBookTitles = [];
           for (let user of allBooks.body) {
             if (user.Selling) {
@@ -77,7 +82,7 @@ export default {
                 user: user.User,
                 email: user.Email,
                 titles: [...user.Selling],
-                address: user.Address
+                address: user.Address,
               });
             }
           }
@@ -88,7 +93,7 @@ export default {
           }
           this.checkBooksByInput(availableBookTitles);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err, "err in fetchALlSellingBooks");
           this.loading = false;
           this.error = true;
@@ -104,7 +109,7 @@ export default {
               user: obj.user,
               email: obj.email,
               title: title,
-              address: obj.address
+              address: obj.address,
             });
           }
         }
@@ -121,7 +126,7 @@ export default {
       for (let user of this.booksByInput) {
         api
           .getBookByTitle(user.title)
-          .then(book => {
+          .then((book) => {
             // if (user.address) {
             //   const formattedPostcode = user.address.replace(/\s/g, "");
             //   api
@@ -210,21 +215,21 @@ export default {
               email: user.email,
               bookDetails: book.items[0],
               address: user.address,
-              distance: undefined
+              distance: undefined,
             });
           })
           .then(() => {
             this.loading = false;
             this.error = false;
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err, "< err in fetchBooksByInputDetails");
             this.loading = false;
             this.error = true;
           });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -235,29 +240,48 @@ export default {
 .searchBar {
   border-top: 1px solid var(--pink-color);
   border-bottom: 1px solid var(--pink-color);
-  padding-bottom: 40px;
+  padding-bottom: 25px;
 }
 
 @media (min-width: 425px) {
   .searchBar {
-    padding: 10px 0 50px 0;
+    padding: 10px 0 px 0;
   }
 }
 
 @media (min-width: 768px) {
+  .searchBar--form-input {
+    height: 0.8%;
+    border: solid 0.3px none;
+  }
+
   .searchBar {
-    padding: 20px 0 100px 0;
+    margin: 0px 50 0px 50;
+    padding: 0px 0 0px 50;
   }
 
   .searchBar--form-btn {
-    margin-top: 0.5rem;
+    margin-top: -0.6rem;
+    margin-bottom: -1em;
+    padding-bottom: 2px;
   }
 }
 
 @media (min-width: 1024px) {
+  .searchBar--form-input {
+    height: 0.8%;
+    border: solid 0.3px none;
+  }
+
   .searchBar {
-    width: 30%;
-    border: none;
+    margin: 0px 50 0px 50;
+    padding: 0px 0 0px 50;
+  }
+
+  .searchBar--form-btn {
+    margin-top: -0.6rem;
+    margin-bottom: -1em;
+    padding-bottom: 2px;
   }
 }
 </style>
