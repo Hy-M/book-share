@@ -149,14 +149,24 @@ export default {
                 })
                 .then((result) => {
                   let distance = result.rows[0].elements[0].distance.text;
-                  this.searchResults.push({
-                    user: user.user,
-                    email: user.email,
-                    bookDetails: book.items[0],
-                    distance: distance,
-                    address: user.address,
-                  });
-                  this.loading = false;
+                  if (distance !== undefined) {
+                    this.searchResults.push({
+                      user: user.user,
+                      email: user.email,
+                      bookDetails: book.items[0],
+                      distance: distance,
+                      address: user.address,
+                    });
+                    this.loading = false;
+                  } else {
+                    this.searchResults.push({
+                      user: user.user,
+                      email: user.email,
+                      bookDetails: book.items[0],
+                      distance: undefined,
+                      address: user.address,
+                    });
+                  }
                 })
                 .catch((err) => {
                   console.log(err, "err in getBookByTitle/ getCoordinates");
