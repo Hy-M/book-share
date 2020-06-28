@@ -125,13 +125,16 @@ export default {
                 api
                   .getCoordsByPostcode(formattedPostcode)
                   .then((coordinates) => {
-                    let Latitude = coordinates.results[0].geometry.location.lat;
-                    let Longitude =
-                      coordinates.results[0].geometry.location.lng;
-                    Object.assign(this.desCoordinates, {
-                      Latitude,
-                      Longitude,
-                    });
+                    if (coordinates) {
+                      let Latitude =
+                        coordinates.results[0].geometry.location.lat;
+                      let Longitude =
+                        coordinates.results[0].geometry.location.lng;
+                      Object.assign(this.desCoordinates, {
+                        Latitude,
+                        Longitude,
+                      });
+                    }
                   })
                   .then(() => {
                     return api.getDistance(

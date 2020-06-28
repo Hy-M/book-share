@@ -112,7 +112,11 @@ export const getDistance = (srcLat, srcLng, desLat, desLng) => {
       `https://api.distancematrix.ai/maps/api/distancematrix/json?origins=${srcLat},${srcLng}&destinations=${desLat},${desLng}&key=${process.env.VUE_APP_DISTANCEMATRIX_API_KEY}`
     )
     .then(({ data }) => {
-      return data;
+      if (data.results) {
+        return data;
+      } else {
+        return Promise.reject("Distance not found");
+      }
     })
     .catch((err) => console.log(err, "< err in getDistance"));
 };
