@@ -18,17 +18,17 @@
                 class="availableBooks--book-img imgPreview"
                 :src="book.bookDetails.volumeInfo.imageLinks.smallThumbnail"
               />
-              <h4 class="availableBooks--book-h4 book--title">
-                {{ book.bookDetails.volumeInfo.title }}
-              </h4>
+              <h4
+                class="availableBooks--book-h4 book--title"
+              >{{ book.bookDetails.volumeInfo.title }}</h4>
             </router-link>
-            <p class="availableBooks--book-info book--author">
-              {{ book.bookDetails.volumeInfo.authors[0] }}
-            </p>
+            <p
+              class="availableBooks--book-info book--author"
+            >{{ book.bookDetails.volumeInfo.authors[0] }}</p>
 
-            <p class="availableBooks--book-info book--subText">
-              Distance: {{ book.distance || "Unknown" }}
-            </p>
+            <p
+              class="availableBooks--book-info book--subText"
+            >Distance: {{ book.distance || "Unknown" }}</p>
           </div>
         </section>
       </section>
@@ -47,12 +47,12 @@ import * as api from "../api.js";
 
 export default {
   components: {
-    BooksList,
+    BooksList
   },
   props: {
     searchResults: {
-      type: Array,
-    },
+      type: Array
+    }
   },
   data() {
     return {
@@ -63,7 +63,7 @@ export default {
       desCoordinates: {},
       srcCoordinates: {},
       distance: "",
-      userDistances: [],
+      userDistances: []
     };
   },
   beforeMount() {
@@ -73,11 +73,11 @@ export default {
     async getLocation() {
       try {
         const coordinates = await this.$getLocation({
-          enableHighAccuracy: true,
+          enableHighAccuracy: true
         });
         this.srcCoordinates = {
           latitude: coordinates.lat,
-          longitude: coordinates.lng,
+          longitude: coordinates.lng
         };
       } catch (error) {
         console.log(error);
@@ -86,7 +86,7 @@ export default {
     fetchAllSellingBooks() {
       return api
         .getAllSellingBooks()
-        .then((allBooks) => {
+        .then(allBooks => {
           let availableBookTitles = [];
           if (allBooks.body.length >= 1) {
             for (let user of allBooks.body) {
@@ -95,7 +95,7 @@ export default {
                   user: user.User,
                   email: user.Email,
                   titles: [...user.Selling],
-                  address: user.Address,
+                  address: user.Address
                 });
               }
             }
@@ -106,10 +106,10 @@ export default {
             this.error = true;
           }
         })
-        .then((availableBookTitles) => {
+        .then(availableBookTitles => {
           this.fetchBookByTitle(availableBookTitles);
         })
-        .catch((err) => {
+        .catch(err => {
           this.loading = false;
           this.error = true;
         });
@@ -119,50 +119,67 @@ export default {
         for (let title of user.titles) {
           api
             .getBookByTitle(title)
-            .then((book) => {
+            .then(book => {
               if (user.address) {
                 const formattedPostcode = user.address.replace(/\s/g, "");
                 api
                   .getCoordsByPostcode(formattedPostcode)
-                  .then((coordinates) => {
-                    if (coordinates.results.length > 0) {
+                  .then(coordinates => {
+                    console.log(coordinates, "in getCoordsByPostcode");
+                    if (coordinates.results[0]) {
                       let Latitude =
                         coordinates.results[0].geometry.location.lat;
                       let Longitude =
                         coordinates.results[0].geometry.location.lng;
                       Object.assign(this.desCoordinates, {
                         Latitude,
-                        Longitude,
+                        Longitude
                       });
                     } else {
-                      this.availableBooks.push({
-                        user: user.user,
-                        email: user.email,
-                        bookDetails: book.items[0].volumeInfo,
-                        distance: undefined,
-                        address: user.address,
-                      });
-                      this.loading = false;
+                      console.log("in the else of getCoordsByPOstocde");
                     }
+                    // else {
+                    //   this.availableBooks.push({
+                    //     user: user.user,
+                    //     email: user.email,
+                    //     bookDetails: book.items[0].volumeInfo,
+                    //     distance: undefined,
+                    //     address: user.address,
+                    //   });
+                    //   this.loading = false;
+                    // }
                   })
                   .then(() => {
-                    return api.getDistance(
-                      this.srcCoordinates.latitude,
-                      this.srcCoordinates.longitude,
-                      this.desCoordinates.Latitude,
-                      this.desCoordinates.Longitude
-                    );
+                    if (this.desCoordinates.Latitude) {
+                      return api.getDistance(
+                        this.srcCoordinates.latitude,
+                        this.srcCoordinates.longitude,
+                        this.desCoordinates.Latitude,
+                        this.desCoordinates.Longitude
+                      );
+                    }
                   })
-                  .then((result) => {
-                    if (result.rows[0].elements[0].distance.text) {
-                      let distance = result.rows[0].elements[0].distance.text;
-                      this.availableBooks.push({
-                        user: user.user,
-                        email: user.email,
-                        distance: distance,
-                        address: user.address,
-                        bookDetails: book.items[0].volumeInfo,
-                      });
+                  .then(result => {
+                    if (result) {
+                      if (result.rows[0].elements[0].distance.text) {
+                        let distance = result.rows[0].elements[0].distance.text;
+                        this.availableBooks.push({
+                          user: user.user,
+                          email: user.email,
+                          distance: distance,
+                          address: user.address,
+                          bookDetails: book.items[0].volumeInfo
+                        });
+                        this.loading = false;
+                      } else {
+                        this.availableBooks.push({
+                          user: user.user,
+                          email: user.email,
+                          bookDetails: book.items[0].volumeInfo,
+                          distance: undefined,
+                          address: user.address
+                        });
+                      }
                       this.loading = false;
                     } else {
                       this.availableBooks.push({
@@ -170,12 +187,12 @@ export default {
                         email: user.email,
                         bookDetails: book.items[0].volumeInfo,
                         distance: undefined,
-                        address: user.address,
+                        address: user.address
                       });
+                      this.loading = false;
                     }
-                    this.loading = false;
                   })
-                  .catch((err) => {
+                  .catch(err => {
                     console.log(err, "err in getBookByTitle/ getCoordinates");
                   });
               } else {
@@ -184,23 +201,23 @@ export default {
                   email: user.email,
                   bookDetails: book.items[0].volumeInfo,
                   distance: undefined,
-                  address: user.address,
+                  address: user.address
                 });
               }
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(err, "err in fetchBookByTitle");
               this.loading = false;
               this.error = true;
             });
         }
       }
-    },
+    }
   },
 
   mounted() {
     this.fetchAllSellingBooks();
-  },
+  }
 };
 </script>
 
