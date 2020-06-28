@@ -270,7 +270,7 @@ export default {
 @media (min-width: 1024px) {
   .searchBar--form-input {
     height: 0.8%;
-    border: solid 0.3px none;
+    border: solid 0.3px black;
   }
 
   .searchBar {

@@ -418,7 +418,7 @@ export default {
 
 .upload--form-input {
   height: 0.6%;
-  border: solid 0.3px none;
+  border: solid 0.3px black;
 }
 
 .upload--form-btn {
