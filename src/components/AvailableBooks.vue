@@ -154,7 +154,7 @@ export default {
                     );
                   })
                   .then((result) => {
-                    if (result.rows[0].length > 0) {
+                    if (result.rows[0].elements[0].distance.text) {
                       let distance = result.rows[0].elements[0].distance.text;
                       this.availableBooks.push({
                         user: user.user,
