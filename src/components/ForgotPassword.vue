@@ -94,15 +94,6 @@ export default {
       }
     },
     async forgotPasswordSubmit() {
-      if (!this.username) {
-        this.err = { error: "Email required" };
-      }
-      if (!this.authCode) {
-        this.err = { error: "Verification code required" };
-      }
-      if (!this.newPassword) {
-        this.err = { error: "New password required" };
-      }
       const { username, authCode, newPassword } = this.form;
       if (this.form) {
         try {
