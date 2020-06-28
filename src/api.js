@@ -118,14 +118,19 @@ export const getDistance = (srcLat, srcLng, desLat, desLng) => {
 };
 
 export const getPostcodeByCoords = (lat, lng) => {
-  return axios
-    .get(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?types=postcode&access_token=${process.env.VUE_APP_MAPBOX_API_KEY}`
-    )
-    .then(({ data }) => {
-      return data;
-    })
-    .catch((err) => console.log(err, "< err in getPostcodeByCoords"));
+  return (
+    axios
+      .get(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&result_type=postal_code&key=${process.env.VUE_APP_GOOGLE_DISTANCE_API_KEY}`
+      )
+      // .get(
+      //   `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?types=postcode&access_token=${process.env.VUE_APP_MAPBOX_API_KEY}`
+      // )
+      .then(({ data }) => {
+        return data;
+      })
+      .catch((err) => console.log(err, "< err in getPostcodeByCoords"))
+  );
 };
 
 export const getCoordsByPostcode = (postcode) => {

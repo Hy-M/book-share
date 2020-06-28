@@ -6,13 +6,25 @@
     </section>
     <section class="bookshelves" id="Selling">
       <h4 class="h4">Books you're giving away</h4>
-      <p class="list--subtext" v-if="!this.deleteHasBeenClicked && this.loading">Loading</p>
+      <p
+        class="list--subtext"
+        v-if="!this.deleteHasBeenClicked && this.loading"
+      >
+        Loading
+      </p>
       <p
         class="list--subtext"
         v-if="!this.sellingBooks.length && !this.loading"
-      >You aren't selling any books yet</p>
-      <p class="list--subtext" v-if="this.deleteHasBeenClicked && this.loading">Deleting</p>
-      <CarouselComponent :images="this.sellingBooksImages" :deleteBook="this.deleteBook" />
+      >
+        You aren't selling any books yet
+      </p>
+      <p class="list--subtext" v-if="this.deleteHasBeenClicked && this.loading">
+        Deleting
+      </p>
+      <CarouselComponent
+        :images="this.sellingBooksImages"
+        :deleteBook="this.deleteBook"
+      />
     </section>
     <section class="upload">
       <h3 class="h3">Shook - share your old books!</h3>
@@ -36,9 +48,9 @@
         />
         <button class="upload--form-btn btn">
           {{
-          this.uploadHasBeenClicked && this.loading
-          ? "Loading"
-          : "Find this book"
+            this.uploadHasBeenClicked && this.loading
+              ? "Loading"
+              : "Find this book"
           }}
         </button>
       </form>
@@ -50,7 +62,11 @@
           Please enter the postcode where this book will be available to collect
           from in UPPERCASE
         </p>
-        <form class="upload--form form" v-on:submit.prevent="checkPostcode" v-if="noLocation">
+        <form
+          class="upload--form form"
+          v-on:submit.prevent="checkPostcode"
+          v-if="noLocation"
+        >
           <input
             required
             class="upload--form-input input"
@@ -60,17 +76,26 @@
           />
           <button class="upload--form-btn btn">
             {{
-            this.listHasBeenClicked && this.loading
-            ? "Loading"
-            : "List this book"
+              this.listHasBeenClicked && this.loading
+                ? "Loading"
+                : "List this book"
             }}
           </button>
         </form>
-        <form class="upload--form form" v-on:submit.prevent="checkPostcode" v-if="!noLocation">
+        <form
+          class="upload--form form"
+          v-on:submit.prevent="checkPostcode"
+          v-if="!noLocation"
+        >
           <button class="upload--form-btn btn">List this book</button>
         </form>
-        <section class="list--conditionals" v-if="this.listHasBeenClicked && this.error">
-          <p class="list--subtext">Something went wrong when listing your book</p>
+        <section
+          class="list--conditionals"
+          v-if="this.listHasBeenClicked && this.error"
+        >
+          <p class="list--subtext">
+            Something went wrong when listing your book
+          </p>
         </section>
         <section
           class="list--conditionals"
@@ -97,7 +122,7 @@ const sellingData = require("../sellingData.json");
 export default {
   name: "Profile",
   components: {
-    CarouselComponent
+    CarouselComponent,
   },
   data() {
     return {
@@ -110,7 +135,7 @@ export default {
       uploadForm: {
         inputTitle: null,
         inputAuthor: null,
-        inputPostcode: null
+        inputPostcode: null,
       },
       bookToSell: {},
       purchasedBooks: [],
@@ -121,7 +146,7 @@ export default {
       listHasBeenClicked: false,
       deletedBooks: [],
       success: false,
-      deleteHasBeenClicked: false
+      deleteHasBeenClicked: false,
     };
   },
   beforeMount() {
@@ -129,10 +154,10 @@ export default {
   },
   beforeCreate() {
     Auth.currentAuthenticatedUser()
-      .then(user => {
+      .then((user) => {
         this.user = user;
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err, "err in currentAuthenticatedUser");
       });
   },
@@ -149,20 +174,24 @@ export default {
     async getLocation() {
       try {
         const coordinates = await this.$getLocation({
-          enableHighAccuracy: true
+          enableHighAccuracy: true,
         });
         this.coordinates = {
           latitude: coordinates.lat,
-          longitude: coordinates.lng
+          longitude: coordinates.lng,
         };
         return api
           .getPostcodeByCoords(
             this.coordinates.latitude,
             this.coordinates.longitude
           )
-          .then(postcode => {
-            this.postcode = postcode.features[0].text;
-            this.noLocation = false;
+          .then((postcode) => {
+            if (postcode.results.length > 0) {
+              this.postcode =
+                postcode.results[0].address_components[0].short_name;
+              // this.postcode = postcode.features[0].text;
+              this.noLocation = false;
+            }
           });
       } catch (error) {
         this.noLocation = true;
@@ -170,19 +199,19 @@ export default {
     },
     getUserAttributes() {
       Auth.currentUserInfo()
-        .then(currentUser => {
+        .then((currentUser) => {
           this.username = currentUser.username;
           // this.fetchPurchasedBooks();
           this.fetchSellingBooks();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err, "err in getUserAttributes");
         });
     },
     fetchPurchasedBooks() {
       api
         .getPurchasedBooks(this.username)
-        .then(books => {
+        .then((books) => {
           if (books.Purchased) {
             this.error = false;
             this.purchasedBooks = books.Purchased;
@@ -194,7 +223,7 @@ export default {
             this.loading = false;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.error = true;
           this.loading = false;
           console.log(err, "< err in fetchPurchasedBooks");
@@ -203,7 +232,7 @@ export default {
     fetchSellingBooks() {
       return api
         .getSellingBooks(this.username)
-        .then(books => {
+        .then((books) => {
           if (books.Selling) {
             this.loading = false;
             this.error = false;
@@ -216,7 +245,7 @@ export default {
             this.loading = false;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.error = true;
           this.loading = false;
           console.log(err, "< err in fetchSellingBooks");
@@ -226,23 +255,23 @@ export default {
       for (let book of collection) {
         api
           .getBookByTitle(book)
-          .then(bookDetails => {
+          .then((bookDetails) => {
             this.loading = false;
             this.error = false;
             if (
               !collectionImages.filter(
-                obj =>
+                (obj) =>
                   obj.img ===
                   bookDetails.items[0].volumeInfo.imageLinks.thumbnail
               ).length
             ) {
               collectionImages.push({
                 img: bookDetails.items[0].volumeInfo.imageLinks.thumbnail,
-                title: bookDetails.items[0].volumeInfo.title
+                title: bookDetails.items[0].volumeInfo.title,
               });
             }
           })
-          .catch(err => {
+          .catch((err) => {
             this.error = true;
             this.loading = false;
             console.log(err, "< err in fetchUsersBooksImages()");
@@ -267,7 +296,7 @@ export default {
             this.error = true;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.error = true;
           this.loading = false;
           console.log(err, "< err in checkPostcode");
@@ -280,7 +309,7 @@ export default {
       this.loading = true;
       return api
         .getBookToUpload(title, author)
-        .then(book => {
+        .then((book) => {
           if (book.items[0]) {
             this.error = false;
             this.loading = false;
@@ -292,7 +321,7 @@ export default {
             this.error = true;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.error = true;
           this.loading = false;
           console.log(err, "< err in fetchBookToUpload");
@@ -310,7 +339,7 @@ export default {
           this.fetchSellingBooks();
           return api.updateUserDetails(this.username, validatedPostcode);
         })
-        .catch(err => {
+        .catch((err) => {
           this.error = true;
           this.loading = false;
           console.log(err, "err in listBook");
@@ -344,21 +373,21 @@ export default {
     removeBookFromDb(bookTitle) {
       return api
         .deleteFromCollection(this.username, bookTitle, "Selling")
-        .then(data => {
+        .then((data) => {
           this.loading = false;
           this.deleteHasBeenClicked = false;
           this.sellingBooksImages = this.sellingBooksImages.filter(
-            obj => obj.title !== bookTitle
+            (obj) => obj.title !== bookTitle
           );
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err, "err in deleteBook");
         });
-    }
+    },
   },
   mounted() {
     this.getUserAttributes();
-  }
+  },
 };
 </script>
 
