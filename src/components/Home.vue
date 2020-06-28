@@ -129,13 +129,11 @@ export default {
           .then((book) => {
             if (user.address) {
               const formattedPostcode = user.address.replace(/\s/g, "");
-              return api
+              api
                 .getCoordsByPostcode(formattedPostcode)
                 .then((coordinates) => {
-                  let Latitude =
-                    coordinates.features[0].geometry.coordinates[1];
-                  let Longitude =
-                    coordinates.features[0].geometry.coordinates[0];
+                  let Latitude = coordinates.results[0].geometry.location.lat;
+                  let Longitude = coordinates.results[0].geometry.location.lng;
                   Object.assign(this.desCoordinates, {
                     Latitude,
                     Longitude,

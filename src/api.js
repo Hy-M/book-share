@@ -129,14 +129,19 @@ export const getPostcodeByCoords = (lat, lng) => {
 };
 
 export const getCoordsByPostcode = (postcode) => {
-  return axios
-    .get(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${postcode}.json?types=postcode&access_token=${process.env.VUE_APP_MAPBOX_API_KEY}`
-    )
-    .then(({ data }) => {
-      return data;
-    })
-    .catch((err) => console.log(err, "< err in getCoordsByPostcode"));
+  return (
+    axios
+      .get(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${postcode}&key=${process.env.VUE_APP_GOOGLE_DISTANCE_API_KEY}`
+      )
+      // .get(
+      //   `https://api.mapbox.com/geocoding/v5/mapbox.places/${postcode}.json?types=postcode&access_token=${process.env.VUE_APP_MAPBOX_API_KEY}`
+      // )
+      .then(({ data }) => {
+        return data;
+      })
+      .catch((err) => console.log(err, "< err in getCoordsByPostcode"))
+  );
 };
 
 // Database tree schema
