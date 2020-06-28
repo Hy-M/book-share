@@ -125,13 +125,25 @@ export default {
                 api
                   .getCoordsByPostcode(formattedPostcode)
                   .then((coordinates) => {
-                    let Latitude = coordinates.results[0].geometry.location.lat;
-                    let Longitude =
-                      coordinates.results[0].geometry.location.lng;
-                    Object.assign(this.desCoordinates, {
-                      Latitude,
-                      Longitude,
-                    });
+                    if (coordinates.results.length > 0) {
+                      let Latitude =
+                        coordinates.results[0].geometry.location.lat;
+                      let Longitude =
+                        coordinates.results[0].geometry.location.lng;
+                      Object.assign(this.desCoordinates, {
+                        Latitude,
+                        Longitude,
+                      });
+                    } else {
+                      this.availableBooks.push({
+                        user: user.user,
+                        email: user.email,
+                        bookDetails: book.items[0].volumeInfo,
+                        distance: undefined,
+                        address: user.address,
+                      });
+                      this.loading = false;
+                    }
                   })
                   .then(() => {
                     return api.getDistance(
