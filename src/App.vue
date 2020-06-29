@@ -94,7 +94,7 @@ export default {
 
 .btn {
   border-radius: 8px;
-  padding: 4px 0;
+  padding: 10px 0;
   width: 50%;
   background-color: transparent;
   border: 1px solid var(--pink-color);
@@ -115,7 +115,7 @@ export default {
 }
 
 .input {
-  padding: 10px;
+  padding: 15px;
   border-radius: 8px;
   box-shadow: none;
   text-shadow: none;
@@ -169,14 +169,6 @@ export default {
     font-size: 1.1rem;
   }
 
-  .btn {
-    padding: 6px 0;
-  }
-
-  .input {
-    padding: 12px;
-  }
-
   .imgLarge {
     height: 300px;
     width: 250px;
@@ -188,14 +180,8 @@ export default {
     width: 75%;
   }
 
-  .btn {
-    padding: 8px 0;
-    margin: 1rem 0;
-  }
-
-  .input {
-    padding: 15px;
-    margin: 1rem 0;
+  .h3 {
+    margin: 3rem 0;
   }
 }
 
@@ -215,14 +201,15 @@ export default {
 
   .input {
     font-size: 1.1rem;
-    padding: 18px;
+    padding: 20px;
     width: 80%;
   }
 
   .btn {
     font-size: 1.1rem;
-    padding: 10px 0;
-    width: 30%;
+    padding: 15px;
+    width: 35%;
+    margin: 1rem 0;
   }
 
   .imgPreview {

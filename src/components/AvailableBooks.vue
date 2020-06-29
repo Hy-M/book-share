@@ -9,20 +9,18 @@
             v-for="(book, index) of searchResults"
             v-bind:key="index"
           >
-            <router-link
-              :to="`/browse/${book.user}/${book.bookDetails.volumeInfo.title}`"
-            >
+            <router-link :to="`/browse/${book.user}/${book.bookDetails.volumeInfo.title}`">
               <img
                 class="availableBooks--book-img imgPreview"
                 :src="book.bookDetails.volumeInfo.imageLinks.smallThumbnail"
               />
-              <h4 class="availableBooks--book-h4 book--title">
-                {{ book.bookDetails.volumeInfo.title }}
-              </h4>
+              <h4
+                class="availableBooks--book-h4 book--title"
+              >{{ book.bookDetails.volumeInfo.title }}</h4>
             </router-link>
-            <p class="availableBooks--book-info book--author">
-              {{ book.bookDetails.volumeInfo.authors[0] }}
-            </p>
+            <p
+              class="availableBooks--book-info book--author"
+            >{{ book.bookDetails.volumeInfo.authors[0] }}</p>
 
             <!-- <p
               class="availableBooks--book-info book--subText"
@@ -31,7 +29,11 @@
         </section>
       </section>
       <h3 class="availableBooks--h3 h3">Browse books for sharing near you</h3>
-      <section v-for="(book, index) of availableBooks" v-bind:key="index">
+      <section
+        class="availableBooks--all"
+        v-for="(book, index) of availableBooks"
+        v-bind:key="index"
+      >
         <BooksList :book="book" />
       </section>
     </main>
@@ -45,12 +47,12 @@ import * as api from "../api.js";
 
 export default {
   components: {
-    BooksList,
+    BooksList
   },
   props: {
     searchResults: {
-      type: Array,
-    },
+      type: Array
+    }
   },
   data() {
     return {
@@ -61,7 +63,7 @@ export default {
       desCoordinates: {},
       srcCoordinates: {},
       distance: "",
-      userDistances: [],
+      userDistances: []
     };
   },
   beforeMount() {
@@ -84,7 +86,7 @@ export default {
     fetchAllSellingBooks() {
       return api
         .getAllSellingBooks()
-        .then((allBooks) => {
+        .then(allBooks => {
           let availableBookTitles = [];
           if (allBooks.body.length >= 1) {
             for (let user of allBooks.body) {
@@ -93,7 +95,7 @@ export default {
                   user: user.User,
                   email: user.Email,
                   titles: [...user.Selling],
-                  address: user.Address,
+                  address: user.Address
                 });
               }
             }
@@ -104,10 +106,10 @@ export default {
             this.error = true;
           }
         })
-        .then((availableBookTitles) => {
+        .then(availableBookTitles => {
           this.fetchBookByTitle(availableBookTitles);
         })
-        .catch((err) => {
+        .catch(err => {
           this.loading = false;
           this.error = true;
         });
@@ -117,7 +119,7 @@ export default {
         for (let title of user.titles) {
           api
             .getBookByTitle(title)
-            .then((book) => {
+            .then(book => {
               // if (user.address) {
               //   const formattedPostcode = user.address.replace(/\s/g, "");
               //   api
@@ -207,22 +209,22 @@ export default {
                 email: user.email,
                 bookDetails: book.items[0].volumeInfo,
                 distance: undefined,
-                address: user.address,
+                address: user.address
               });
             })
-            .catch((err) => {
+            .catch(err => {
               console.log(err, "err in fetchBookByTitle");
               this.loading = false;
               this.error = true;
             });
         }
       }
-    },
+    }
   },
 
   mounted() {
     this.fetchAllSellingBooks();
-  },
+  }
 };
 </script>
 
@@ -231,85 +233,16 @@ export default {
   margin-top: 2rem;
 }
 
-.availableBooks--book {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  padding: 1rem 0;
-}
-
-.book--title {
-  text-decoration: none;
-  color: var(--brown-color);
-  margin: 0.3rem;
-  text-transform: capitalize;
-  line-height: 1.4rem;
-}
-
-.book--author {
-  text-transform: capitalize;
-  margin: 0.5rem;
-}
-
-.book--description {
-  line-height: 1.3rem;
-}
-
-.book--subText {
-  font-size: 0.9rem;
-  margin: 0.5rem;
+.availableBooks--all {
+  width: 100%;
 }
 
 @media (min-width: 425px) {
-  .book--title {
-    padding-top: 5px;
-    font-size: 1.3rem;
-    line-height: 1.8rem;
-  }
-
-  .book--description {
-    line-height: 1.4rem;
-  }
 }
 
 @media (min-width: 768px) {
-  .availableBooks--all {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .availableBooks--book {
-    justify-content: space-between;
-  }
-
-  .book--title {
-    font-size: 1.5rem;
-    line-height: 2rem;
-    margin-top: 1rem;
-  }
-
-  .book--subText {
-    margin: 1rem 0;
-  }
-
-  .book--description {
-    font-size: 1.1rem;
-    line-height: 1.8rem;
-  }
 }
 
 @media (min-width: 1024px) {
-  .availableBooks--all {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-
-  .book--author {
-    font-size: 1.1rem;
-    margin-top: 1rem;
-  }
-
-  .book--description {
-    margin-top: 2rem;
-  }
 }
 </style>

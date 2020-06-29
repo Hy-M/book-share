@@ -211,7 +211,6 @@ export default {
       return api
         .getSellingBooks(this.username)
         .then(books => {
-          console.log(books, "not getting in the else");
           if (books.Selling) {
             this.loading = false;
             this.error = false;
@@ -385,7 +384,7 @@ export default {
 
 .upload {
   border-top: 1px solid var(--pink-color);
-  margin: 1rem 0 4rem 0;
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -397,19 +396,6 @@ export default {
   padding: 8px 0;
 }
 
-.upload--form-input {
-  height: 0.6%;
-  border: solid 0.3px black;
-}
-
-.upload--form-btn {
-  /* margin-top: 2px;
-  margin-bottom: 5px;
-  padding-top: 15px; */
-  padding-bottom: 20px;
-  padding-top: 5px;
-  margin-bottom: 21px;
-}
 .list {
   margin-top: 4rem;
   display: flex;
@@ -448,14 +434,7 @@ export default {
 
 @media (min-width: 1024px) {
   .upload {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
     align-items: center;
-  }
-  .upload--form {
-    width: 70%;
-    margin: 0 auto;
   }
 }
 </style>
