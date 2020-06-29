@@ -9,7 +9,7 @@
       <p class="list--subtext" v-if="!this.deleteHasBeenClicked && this.loading">Loading</p>
       <p
         class="list--subtext"
-        v-if="!this.sellingBooks.length && !this.loading"
+        v-if="!this.sellingBooks.length && !this.loading && this.noBooks"
       >You aren't selling any books yet</p>
       <p class="list--subtext" v-if="this.deleteHasBeenClicked && this.loading">Deleting</p>
       <CarouselComponent :images="this.sellingBooksImages" :deleteBook="this.deleteBook" />
@@ -121,11 +121,12 @@ export default {
       listHasBeenClicked: false,
       deletedBooks: [],
       success: false,
+      noBooks: false,
       deleteHasBeenClicked: false
     };
   },
   beforeMount() {
-    this.getLocation();
+    // this.getLocation();
   },
   beforeCreate() {
     Auth.currentAuthenticatedUser()
@@ -146,36 +147,36 @@ export default {
         console.log("error signing out: ", error);
       }
     },
-    async getLocation() {
-      try {
-        const coordinates = await this.$getLocation({
-          enableHighAccuracy: true
-        });
-        this.coordinates = {
-          latitude: coordinates.lat,
-          longitude: coordinates.lng
-        };
-        return api
-          .getPostcodeByCoords(
-            this.coordinates.latitude,
-            this.coordinates.longitude
-          )
-          .then(postcode => {
-            if (postcode.results.length > 0) {
-              this.postcode =
-                postcode.results[0].address_components[0].short_name;
-              // this.postcode = postcode.features[0].text;
-              this.noLocation = false;
-            }
-          });
-      } catch (error) {
-        this.noLocation = true;
-      }
-    },
+    // async getLocation() {
+    //   try {
+    //     const coordinates = await this.$getLocation({
+    //       enableHighAccuracy: true
+    //     });
+    //     this.coordinates = {
+    //       latitude: coordinates.lat,
+    //       longitude: coordinates.lng
+    //     };
+    //     return api
+    //       .getPostcodeByCoords(
+    //         this.coordinates.latitude,
+    //         this.coordinates.longitude
+    //       )
+    //       .then(postcode => {
+    //         if (postcode.results.length > 0) {
+    //           this.postcode =
+    //             postcode.results[0].address_components[0].short_name;
+    //           // this.postcode = postcode.features[0].text;
+    //           this.noLocation = false;
+    //         }
+    //       });
+    //   } catch (error) {
+    //     this.noLocation = true;
+    //   }
+    // },
     getUserAttributes() {
       Auth.currentUserInfo()
         .then(currentUser => {
-          if (this.currentUser) {
+          if (currentUser.username) {
             this.username = currentUser.username;
             // this.fetchPurchasedBooks();
             this.fetchSellingBooks();
@@ -185,40 +186,43 @@ export default {
           console.log(err, "err in getUserAttributes");
         });
     },
-    fetchPurchasedBooks() {
-      api
-        .getPurchasedBooks(this.username)
-        .then(books => {
-          if (books.Purchased) {
-            this.error = false;
-            this.purchasedBooks = books.Purchased;
-            this.fetchUsersBooksImages(
-              this.purchasedBooks,
-              this.purchasedBooksImages
-            );
-          } else {
-            this.loading = false;
-          }
-        })
-        .catch(err => {
-          this.error = true;
-          this.loading = false;
-          console.log(err, "< err in fetchPurchasedBooks");
-        });
-    },
+    // fetchPurchasedBooks() {
+    //   api
+    //     .getPurchasedBooks(this.username)
+    //     .then(books => {
+    //       if (books.Purchased) {
+    //         this.error = false;
+    //         this.purchasedBooks = books.Purchased;
+    //         this.fetchUsersBooksImages(
+    //           this.purchasedBooks,
+    //           this.purchasedBooksImages
+    //         );
+    //       } else {
+    //         this.loading = false;
+    //       }
+    //     })
+    //     .catch(err => {
+    //       this.error = true;
+    //       this.loading = false;
+    //       console.log(err, "< err in fetchPurchasedBooks");
+    //     });
+    // },
     fetchSellingBooks() {
       return api
         .getSellingBooks(this.username)
         .then(books => {
+          console.log(books, "not getting in the else");
           if (books.Selling) {
             this.loading = false;
             this.error = false;
+            this.noBooks = false;
             this.sellingBooks = books.Selling;
             this.fetchUsersBooksImages(
               this.sellingBooks,
               this.sellingBooksImages
             );
           } else {
+            this.noBooks = true;
             this.loading = false;
           }
         })
