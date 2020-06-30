@@ -34,6 +34,7 @@
           placeholder="Enter book author"
           v-model="uploadForm.inputAuthor"
         />
+
         <button class="upload--form-btn btn">
           {{
           this.uploadHasBeenClicked && this.loading
@@ -41,16 +42,23 @@
           : "Find this book"
           }}
         </button>
+        <section
+          class="list--conditionals"
+          id="initial--conditional"
+          v-if="this.uploadHasBeenClicked && this.error && !this.loading"
+        >
+          <p class="list--subtext">Sorry, we can't find this book!</p>
+        </section>
       </form>
       <section class="list" v-if="this.bookToSell.title">
         <h4 class="list--title h4">{{ this.bookToSell.title }}</h4>
         <p class="list--info">{{ this.bookToSell.authors[0] }}</p>
         <img class="imgPreview" :src="this.bookToSell.imageLinks.thumbnail" />
-        <p v-if="noLocation" class="list--subtext">
+        <p class="list--subtext">
           Please enter the postcode where this book will be available to collect
           from in UPPERCASE
         </p>
-        <form class="upload--form form" v-on:submit.prevent="checkPostcode" v-if="noLocation">
+        <form class="upload--form form" v-on:submit.prevent="checkPostcode">
           <input
             required
             class="upload--form-input input"
@@ -66,21 +74,18 @@
             }}
           </button>
         </form>
-        <form class="upload--form form" v-on:submit.prevent="checkPostcode" v-if="!noLocation">
-          <button class="upload--form-btn btn">List this book</button>
-        </form>
-        <section class="list--conditionals" v-if="this.listHasBeenClicked && this.error">
+        <section
+          class="list--conditionals"
+          v-if="this.listHasBeenClicked && this.error && this.postcode !== 'invalid'"
+        >
           <p class="list--subtext">Something went wrong when listing your book</p>
         </section>
         <section
           class="list--conditionals"
-          v-if="this.uploadHasBeenClicked && this.error && !this.loading"
+          v-if="this.listHasBeenClicked && this.error && this.postcode === 'invalid'"
         >
-          <p class="list--subtext">Sorry, we can't find this book!</p>
+          <p class="list--subtext">Sorry, books can only be shared within the Kirklees area</p>
         </section>
-      </section>
-      <section class="list--conditionals" v-if="this.error && !this.loading">
-        <p class="list--subtext">Sorry, something went wrong!</p>
       </section>
     </section>
   </main>
@@ -102,7 +107,6 @@ export default {
   data() {
     return {
       user: {},
-      noLocation: true,
       postcode: "",
       username: "",
       uploadHasBeenClicked: false,
@@ -125,9 +129,6 @@ export default {
       deleteHasBeenClicked: false
     };
   },
-  beforeMount() {
-    // this.getLocation();
-  },
   beforeCreate() {
     Auth.currentAuthenticatedUser()
       .then(user => {
@@ -147,38 +148,11 @@ export default {
         console.log("error signing out: ", error);
       }
     },
-    // async getLocation() {
-    //   try {
-    //     const coordinates = await this.$getLocation({
-    //       enableHighAccuracy: true
-    //     });
-    //     this.coordinates = {
-    //       latitude: coordinates.lat,
-    //       longitude: coordinates.lng
-    //     };
-    //     return api
-    //       .getPostcodeByCoords(
-    //         this.coordinates.latitude,
-    //         this.coordinates.longitude
-    //       )
-    //       .then(postcode => {
-    //         if (postcode.results.length > 0) {
-    //           this.postcode =
-    //             postcode.results[0].address_components[0].short_name;
-    //           // this.postcode = postcode.features[0].text;
-    //           this.noLocation = false;
-    //         }
-    //       });
-    //   } catch (error) {
-    //     this.noLocation = true;
-    //   }
-    // },
     getUserAttributes() {
       Auth.currentUserInfo()
         .then(currentUser => {
           if (currentUser.username) {
             this.username = currentUser.username;
-            // this.fetchPurchasedBooks();
             this.fetchSellingBooks();
           }
         })
@@ -186,27 +160,6 @@ export default {
           console.log(err, "err in getUserAttributes");
         });
     },
-    // fetchPurchasedBooks() {
-    //   api
-    //     .getPurchasedBooks(this.username)
-    //     .then(books => {
-    //       if (books.Purchased) {
-    //         this.error = false;
-    //         this.purchasedBooks = books.Purchased;
-    //         this.fetchUsersBooksImages(
-    //           this.purchasedBooks,
-    //           this.purchasedBooksImages
-    //         );
-    //       } else {
-    //         this.loading = false;
-    //       }
-    //     })
-    //     .catch(err => {
-    //       this.error = true;
-    //       this.loading = false;
-    //       console.log(err, "< err in fetchPurchasedBooks");
-    //     });
-    // },
     fetchSellingBooks() {
       return api
         .getSellingBooks(this.username)
@@ -258,30 +211,6 @@ export default {
           });
       }
     },
-    checkPostcode() {
-      this.loading = true;
-      this.listHasBeenClicked = true;
-      let finalPostcode = this.postcode
-        ? this.postcode
-        : this.uploadForm.inputPostcode;
-      return api
-        .validatePostcode(finalPostcode)
-        .then(({ result }) => {
-          if (result) {
-            this.error = false;
-            this.listBook(finalPostcode);
-            this.uploadForm.inputPostcode = null;
-          } else {
-            this.uploadForm.inputPostcode = null;
-            this.error = true;
-          }
-        })
-        .catch(err => {
-          this.error = true;
-          this.loading = false;
-          console.log(err, "< err in checkPostcode");
-        });
-    },
     fetchBookToUpload() {
       let title = this.uploadForm.inputTitle;
       let author = this.uploadForm.inputAuthor;
@@ -299,12 +228,42 @@ export default {
             this.uploadHasBeenClicked = false;
           } else {
             this.error = true;
+            this.loading = false;
           }
         })
         .catch(err => {
           this.error = true;
           this.loading = false;
           console.log(err, "< err in fetchBookToUpload");
+        });
+    },
+    checkPostcode() {
+      this.loading = true;
+      this.listHasBeenClicked = true;
+      let finalPostcode = this.uploadForm.inputPostcode;
+      return api
+        .validatePostcode(finalPostcode)
+        .then(({ result }) => {
+          if (result) {
+            if (result.admin_district === "Kirklees") {
+              this.error = false;
+              this.listBook(finalPostcode);
+              this.uploadForm.inputPostcode = null;
+            } else {
+              this.loading = false;
+              this.error = true;
+              this.postcode = "invalid";
+              this.uploadForm.inputPostcode = null;
+            }
+          } else {
+            this.uploadForm.inputPostcode = null;
+            this.error = true;
+          }
+        })
+        .catch(err => {
+          this.error = true;
+          this.loading = false;
+          console.log(err, "< err in checkPostcode");
         });
     },
     listBook(validatedPostcode) {
@@ -413,6 +372,9 @@ export default {
   line-height: 1.4rem;
 }
 
+#initial--conditional {
+  margin-top: -1rem;
+}
 .list--conditionals {
   margin-top: 4rem;
 }
