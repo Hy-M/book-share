@@ -1,6 +1,6 @@
 <template>
   <footer class="footer">
-    <p>© 2020 Shook.</p>
+    <p>Shook &copy; 2020</p>
   </footer>
 </template>
 
