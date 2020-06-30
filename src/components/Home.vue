@@ -40,28 +40,10 @@ export default {
       },
       booksByInput: [],
       searchResults: [],
-      searchHasBeenClicked: false,
-      desCoordinates: {},
-      srcCoordinates: {}
+      searchHasBeenClicked: false
     };
   },
-  beforeMount() {
-    // this.getLocation();
-  },
   methods: {
-    // async getLocation() {
-    //   try {
-    //     const coordinates = await this.$getLocation({
-    //       enableHighAccuracy: true
-    //     });
-    //     this.srcCoordinates = {
-    //       latitude: coordinates.lat,
-    //       longitude: coordinates.lng
-    //     };
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // },
     fetchAllSellingBooks() {
       this.searchHasBeenClicked = true;
       this.loading = true;
@@ -122,89 +104,6 @@ export default {
         api
           .getBookByTitle(user.title)
           .then(book => {
-            // if (user.address) {
-            //   const formattedPostcode = user.address.replace(/\s/g, "");
-            //   api
-            //     .getCoordsByPostcode(formattedPostcode)
-            //     .then(coordinates => {
-            //       console.log(coordinates, "in getCoordsByPostcode");
-            //       if (coordinates.results[0]) {
-            //         let Latitude = coordinates.results[0].geometry.location.lat;
-            //         let Longitude =
-            //           coordinates.results[0].geometry.location.lng;
-            //         Object.assign(this.desCoordinates, {
-            //           Latitude,
-            //           Longitude
-            //         });
-            //       } else {
-            //         console.log("in the else");
-            //       }
-
-            //       // else {
-            //       //   this.searchResults.push({
-            //       //     user: user.user,
-            //       //     email: user.email,
-            //       //     bookDetails: book.items[0],
-            //       //     distance: undefined,
-            //       //     address: user.address
-            //       //   });
-            //       //   this.loading = false;
-            //       // }
-            //     })
-            //     .then(() => {
-            //       if (this.desCoordinates.Latitude) {
-            //         return api.getDistance(
-            //           this.srcCoordinates.latitude,
-            //           this.srcCoordinates.longitude,
-            //           this.desCoordinates.Latitude,
-            //           this.desCoordinates.Longitude
-            //         );
-            //       }
-            //     })
-            //     .then(result => {
-            //       if (result) {
-            //         if (result.rows[0].elements[0].distance.text) {
-            //           let distance = result.rows[0].elements[0].distance.text;
-            //           this.searchResults.push({
-            //             user: user.user,
-            //             email: user.email,
-            //             bookDetails: book.items[0],
-            //             distance: distance,
-            //             address: user.address
-            //           });
-            //           this.loading = false;
-            //         } else {
-            //           this.searchResults.push({
-            //             user: user.user,
-            //             email: user.email,
-            //             bookDetails: book.items[0],
-            //             distance: undefined,
-            //             address: user.address
-            //           });
-            //         }
-            //       } else {
-            //         this.searchResults.push({
-            //           user: user.user,
-            //           email: user.email,
-            //           bookDetails: book.items[0],
-            //           distance: undefined,
-            //           address: user.address
-            //         });
-            //         this.loading = false;
-            //       }
-            //     })
-            //     .catch(err => {
-            //       console.log(err, "err in getBookByTitle/ getCoordinates");
-            //     });
-            // } else {
-            //    this.searchResults.push({
-            //     user: user.user,
-            //     email: user.email,
-            //     bookDetails: book.items[0],
-            //     address: user.address,
-            //     distance: undefined
-            //   });
-            // }
             this.searchResults.push({
               user: user.user,
               email: user.email,
