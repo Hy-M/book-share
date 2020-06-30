@@ -3,7 +3,7 @@
   <section class="main">
     <h3 class="h3">Sign in</h3>
     <span v-if="err !== null">{{ this.err.error }}</span>
-    <span v-if="this.signInHasBeenClicked && this.loading">Loading</span>
+    <span v-if="this.signInHasBeenClicked && this.loading && err === null">Loading</span>
     <form class="formcontainer" v-on:submit.prevent="signIn">
       <input v-model="form.username" class="input" placeholder="Enter your email address" />
       <input
@@ -45,17 +45,14 @@ export default {
         await Auth.signIn(username, password);
         AmplifyEventBus.$emit("authState", "signedIn");
         this.successfulSignIn = true;
-        this.loading = false;
         this.signInHasBeenClicked = false;
         this.$router.push("/profile");
       } catch (err) {
         if (err.code === "UserNotConfirmedException") {
           this.err = { error: "Please enter a valid email" };
         } else if (err.code === "NotAuthorizedException") {
-          // The error happens when the incorrect password is provided
           this.err = { error: "Sorry, that email or password is incorrect." };
         } else if (err.code === "UserNotFoundException") {
-          // The error happens when the supplied username/email does not exist in the Cognito user pool
           this.err = {
             error: "Sorry, we cannot find an account with that e-mail address"
           };

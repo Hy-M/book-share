@@ -3,13 +3,22 @@
   <section class="main">
     <span v-if="err !== null">{{ this.err.error }}</span>
     <span v-if="notification !== undefined">
-      {{
-      this.notification.notification
-      }}
+      {{ this.notification.notification }}
     </span>
-    <h3 class="h3">{{ formState === "signUp" ? "Sign up" : "Confirm sign up" }}</h3>
-    <form class="formcontainer" v-if="formState === 'signUp'" v-on:submit.prevent="this.signUp">
-      <input v-model="form.username" class="input" placeholder="Enter your email address" required />
+    <h3 class="h3">
+      {{ formState === "signUp" ? "Sign up" : "Confirm sign up" }}
+    </h3>
+    <form
+      class="formcontainer"
+      v-if="formState === 'signUp'"
+      v-on:submit.prevent="this.signUp"
+    >
+      <input
+        v-model="form.username"
+        class="input"
+        placeholder="Enter your email address"
+        required
+      />
       <input
         type="password"
         v-model="form.password"
@@ -24,10 +33,16 @@
       v-if="formState === 'confirmSignUp'"
       v-on:submit.prevent="this.confirmSignUp"
     >
-      <input v-model="form.authCode" class="input" placeholder="Enter your verification code" />
+      <input
+        v-model="form.authCode"
+        class="input"
+        placeholder="Enter your verification code"
+      />
       <button class="btn">Confirm sign up</button>
     </form>
-    <button v-on:click="resendConfirmationCode" class="btn">Resend verification code</button>
+    <button v-on:click="resendConfirmationCode" class="btn">
+      Resend verification code
+    </button>
   </section>
 </template>
 
@@ -43,10 +58,10 @@ export default {
       form: {
         username: "",
         password: "",
-        email: ""
+        email: "",
       },
       err: null,
-      notification: undefined
+      notification: undefined,
     };
   },
   methods: {
@@ -56,7 +71,7 @@ export default {
         await Auth.signUp({
           username,
           password,
-          attributes: { email: username }
+          attributes: { email: username },
         });
         this.formState = "confirmSignUp";
       } catch (err) {
@@ -65,7 +80,7 @@ export default {
         } else if (err.code === "UsernameExistsException") {
           this.err = {
             error:
-              "An account with the given email already exists. Please Sign in."
+              "An account with the given email already exists. Please Sign in.",
           };
         } else {
           this.err = { error: "An error has occurred. Please try again." };
@@ -78,13 +93,13 @@ export default {
         await Auth.confirmSignUp(username, authCode);
         this.notification = {
           notification:
-            "You have successfully signed up. Sign in to view the app"
+            "You have successfully signed up. Sign in to view the app",
         };
         this.toggle();
       } catch (err) {
         if (err.code === "CodeMismatchException") {
           this.err = {
-            error: "Invalid verification code provided, please try again."
+            error: "Invalid verification code provided, please try again.",
           };
         }
       }
@@ -94,16 +109,16 @@ export default {
       try {
         await Auth.resendSignUp(username);
         this.notification = {
-          notification: "A new verification code has been sent to your email."
+          notification: "A new verification code has been sent to your email.",
         };
       } catch (err) {
         this.err = {
           error:
-            "An error has occurred. Please try resending the verification code."
+            "An error has occurred. Please try resending the verification code.",
         };
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

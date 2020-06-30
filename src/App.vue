@@ -17,14 +17,9 @@
       </router-link>
     </div>
     <router-view></router-view>
-    <div class="sign-out">
-      <!-- <amplify-sign-out v-if="signedIn"></amplify-sign-out> -->
-      <!--if user is signed in, it will render out a sign out page-->
-    </div>
     <Footer />
   </div>
 </template>
-<!--Displays the navigation links, renders the router and authentication logic for signing and signing out -->
 
 <script>
 import { AmplifyEventBus } from "aws-amplify-vue";
@@ -43,8 +38,6 @@ export default {
       signedIn: false
     };
   },
-  //beforeCreate is a lifecycle  which will listen to the authState event by using AmplifyEventBus
-  //if signed in they can view their profile and set signed in to true or if not then redirected to auth so they can sign in
   beforeCreate() {
     AmplifyEventBus.$on("authState", info => {
       if (info === "signedIn") {
@@ -56,8 +49,6 @@ export default {
         this.signedIn = false;
       }
     });
-
-    //when app loads we also call auth.currentauthenticated user to check whether or not the user has signed in and set it to true
 
     Auth.currentAuthenticatedUser()
       .then(user => {
@@ -75,7 +66,6 @@ export default {
   --grey-color: rgb(139, 139, 139);
 }
 
-/* make all router-links cursor: pointer */
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -94,7 +84,7 @@ export default {
 
 .btn {
   border-radius: 8px;
-  padding: 4px 0;
+  padding: 10px 0;
   width: 50%;
   background-color: transparent;
   border: 1px solid var(--pink-color);
@@ -115,7 +105,7 @@ export default {
 }
 
 .input {
-  padding: 10px;
+  padding: 15px;
   border-radius: 8px;
   box-shadow: none;
   text-shadow: none;
@@ -128,8 +118,6 @@ export default {
 .form {
   height: 80px;
   width: 100%;
-  display: flex;
-  flex-direction: column;
   justify-content: space-between;
   align-items: center;
 }
@@ -169,14 +157,6 @@ export default {
     font-size: 1.1rem;
   }
 
-  .btn {
-    padding: 6px 0;
-  }
-
-  .input {
-    padding: 12px;
-  }
-
   .imgLarge {
     height: 300px;
     width: 250px;
@@ -188,14 +168,8 @@ export default {
     width: 75%;
   }
 
-  .btn {
-    padding: 8px 0;
-    margin: 1rem 0;
-  }
-
-  .input {
-    padding: 15px;
-    margin: 1rem 0;
+  .h3 {
+    margin: 3rem 0;
   }
 }
 
@@ -215,14 +189,15 @@ export default {
 
   .input {
     font-size: 1.1rem;
-    padding: 18px;
+    padding: 20px;
     width: 80%;
   }
 
   .btn {
     font-size: 1.1rem;
-    padding: 10px 0;
-    width: 30%;
+    padding: 15px;
+    width: 35%;
+    margin: 1rem 0;
   }
 
   .imgPreview {

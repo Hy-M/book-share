@@ -40,28 +40,10 @@ export default {
       },
       booksByInput: [],
       searchResults: [],
-      searchHasBeenClicked: false,
-      desCoordinates: {},
-      srcCoordinates: {}
+      searchHasBeenClicked: false
     };
   },
-  beforeMount() {
-    this.getLocation();
-  },
   methods: {
-    async getLocation() {
-      try {
-        const coordinates = await this.$getLocation({
-          enableHighAccuracy: true
-        });
-        this.srcCoordinates = {
-          latitude: coordinates.lat,
-          longitude: coordinates.lng
-        };
-      } catch (error) {
-        console.log(error);
-      }
-    },
     fetchAllSellingBooks() {
       this.searchHasBeenClicked = true;
       this.loading = true;
@@ -122,51 +104,13 @@ export default {
         api
           .getBookByTitle(user.title)
           .then(book => {
-            if (user.address) {
-              const formattedPostcode = user.address.replace(/\s/g, "");
-              api
-                .getCoordsByPostcode(formattedPostcode)
-                .then(coordinates => {
-                  let Latitude =
-                    coordinates.features[0].geometry.coordinates[1];
-                  let Longitude =
-                    coordinates.features[0].geometry.coordinates[0];
-                  Object.assign(this.desCoordinates, {
-                    Latitude,
-                    Longitude
-                  });
-                })
-                .then(() => {
-                  return api.getDistance(
-                    this.srcCoordinates.latitude,
-                    this.srcCoordinates.longitude,
-                    this.desCoordinates.Latitude,
-                    this.desCoordinates.Longitude
-                  );
-                })
-                .then(result => {
-                  let distance = result.rows[0].elements[0].distance.text;
-                  this.searchResults.push({
-                    user: user.user,
-                    email: user.email,
-                    bookDetails: book.items[0],
-                    distance: distance,
-                    address: user.address
-                  });
-                  this.loading = false;
-                })
-                .catch(err => {
-                  console.log(err, "err in getBookByTitle/ getCoordinates");
-                });
-            } else {
-              this.searchResults.push({
-                user: user.user,
-                email: user.email,
-                bookDetails: book.items[0],
-                address: user.address,
-                distance: undefined
-              });
-            }
+            this.searchResults.push({
+              user: user.user,
+              email: user.email,
+              bookDetails: book.items[0],
+              address: user.address,
+              distance: undefined
+            });
           })
           .then(() => {
             this.loading = false;
@@ -187,32 +131,25 @@ export default {
 .availableBooks--h3 {
   color: var(--pink-color);
 }
+
 .searchBar {
   border-top: 1px solid var(--pink-color);
   border-bottom: 1px solid var(--pink-color);
-  padding-bottom: 40px;
+  padding: 1rem 0 4rem 0;
 }
 
 @media (min-width: 425px) {
   .searchBar {
-    padding: 10px 0 50px 0;
+    padding-bottom: 4.3rem;
   }
 }
 
 @media (min-width: 768px) {
-  .searchBar {
-    padding: 20px 0 100px 0;
-  }
-
-  .searchBar--form-btn {
-    margin-top: 0.5rem;
-  }
 }
 
 @media (min-width: 1024px) {
   .searchBar {
-    width: 30%;
-    border: none;
+    padding-bottom: 5.3rem;
   }
 }
 </style>
