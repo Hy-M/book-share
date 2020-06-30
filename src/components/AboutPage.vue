@@ -3,7 +3,7 @@
     <h3 class="h3">What's Shook?</h3>
     <p class="book--description">
       Shook is a site that allows you to list books that you're no longer
-      reading for other users to collect off you for free.
+      reading for other users to collect off you for free, in the metropolitan borough of Kirklees.
     </p>
     <p class="book--description">
       You can collect books off other users without listing any books of your

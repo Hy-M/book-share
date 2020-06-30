@@ -1,5 +1,4 @@
 <template>
-  <!-- <main class="main"> -->
   <div class="availableBooks--book">
     <router-link :to="`/browse/${book.user}/${book.bookDetails.title}`">
       <img
@@ -9,12 +8,7 @@
       <h4 class="availableBooks--book-h4 book--title">{{ book.bookDetails.title }}</h4>
     </router-link>
     <p class="availableBooks--book-info book--author">{{ book.bookDetails.authors[0] }}</p>
-
-    <!-- <p class="availableBooks--book-info book--subText">
-        Distance: {{ book.distance || "Unknown" }}
-    </p>-->
   </div>
-  <!-- </main> -->
 </template>
 
 <script>
@@ -83,9 +77,6 @@ export default {
 }
 
 @media (min-width: 425px) {
-  .availableBooks--book {
-    /* width: 91vw; */
-  }
   .book--title {
     padding-top: 5px;
     font-size: 1.3rem;
@@ -99,7 +90,6 @@ export default {
 
 @media (min-width: 768px) {
   .availableBooks--book {
-    /* width: 73.5vw; */
     justify-content: space-between;
   }
 

@@ -21,14 +21,10 @@
             <p
               class="availableBooks--book-info book--author"
             >{{ book.bookDetails.volumeInfo.authors[0] }}</p>
-
-            <!-- <p
-              class="availableBooks--book-info book--subText"
-            >Distance: {{ book.distance || "Unknown" }}</p>-->
           </div>
         </section>
       </section>
-      <h3 class="availableBooks--h3 h3">Browse books for sharing near you</h3>
+      <h3 class="availableBooks--h3 h3">Browse books for sharing in Kirklees</h3>
       <section
         class="availableBooks--all"
         v-for="(book, index) of availableBooks"
@@ -66,23 +62,7 @@ export default {
       userDistances: []
     };
   },
-  beforeMount() {
-    // this.getLocation();
-  },
   methods: {
-    // async getLocation() {
-    //   try {
-    //     const coordinates = await this.$getLocation({
-    //       enableHighAccuracy: true
-    //     });
-    //     this.srcCoordinates = {
-    //       latitude: coordinates.lat,
-    //       longitude: coordinates.lng
-    //     };
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // },
     fetchAllSellingBooks() {
       return api
         .getAllSellingBooks()
@@ -120,90 +100,6 @@ export default {
           api
             .getBookByTitle(title)
             .then(book => {
-              // if (user.address) {
-              //   const formattedPostcode = user.address.replace(/\s/g, "");
-              //   api
-              //     .getCoordsByPostcode(formattedPostcode)
-              //     .then(coordinates => {
-              //       console.log(coordinates, "in getCoordsByPostcode");
-              //       if (coordinates.results[0]) {
-              //         let Latitude =
-              //           coordinates.results[0].geometry.location.lat;
-              //         let Longitude =
-              //           coordinates.results[0].geometry.location.lng;
-              //         Object.assign(this.desCoordinates, {
-              //           Latitude,
-              //           Longitude
-              //         });
-              //       } else {
-              //         console.log("in the else of getCoordsByPOstocde");
-              //       }
-              //       // else {
-              //       //   this.availableBooks.push({
-              //       //     user: user.user,
-              //       //     email: user.email,
-              //       //     bookDetails: book.items[0].volumeInfo,
-              //       //     distance: undefined,
-              //       //     address: user.address,
-              //       //   });
-              //       //   this.loading = false;
-              //       // }
-              //     })
-              //     .then(() => {
-              //       if (this.desCoordinates.Latitude) {
-              //         return api.getDistance(
-              //           this.srcCoordinates.latitude,
-              //           this.srcCoordinates.longitude,
-              //           this.desCoordinates.Latitude,
-              //           this.desCoordinates.Longitude
-              //         );
-              //       }
-              //     })
-              //     .then(result => {
-              //       if (result) {
-              //         if (result.rows[0].elements[0].distance.text) {
-              //           let distance = result.rows[0].elements[0].distance.text;
-              //           this.availableBooks.push({
-              //             user: user.user,
-              //             email: user.email,
-              //             distance: distance,
-              //             address: user.address,
-              //             bookDetails: book.items[0].volumeInfo
-              //           });
-              //           this.loading = false;
-              //         } else {
-              //           this.availableBooks.push({
-              //             user: user.user,
-              //             email: user.email,
-              //             bookDetails: book.items[0].volumeInfo,
-              //             distance: undefined,
-              //             address: user.address
-              //           });
-              //         }
-              //         this.loading = false;
-              //       } else {
-              //         this.availableBooks.push({
-              //           user: user.user,
-              //           email: user.email,
-              //           bookDetails: book.items[0].volumeInfo,
-              //           distance: undefined,
-              //           address: user.address
-              //         });
-              //         this.loading = false;
-              //       }
-              //     })
-              //     .catch(err => {
-              //       console.log(err, "err in getBookByTitle/ getCoordinates");
-              //     });
-              // } else {
-              //   this.availableBooks.push({
-              //     user: user.user,
-              //     email: user.email,
-              //     bookDetails: book.items[0].volumeInfo,
-              //     distance: undefined,
-              //     address: user.address
-              //   });
-              // }
               this.availableBooks.push({
                 user: user.user,
                 email: user.email,
@@ -221,7 +117,6 @@ export default {
       }
     }
   },
-
   mounted() {
     this.fetchAllSellingBooks();
   }
