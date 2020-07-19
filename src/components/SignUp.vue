@@ -47,9 +47,8 @@ export default {
   },
   methods: {
     async signUp() {
-      console.log("helooooo");
       const { username, password, email } = this.form;
-      console.log(username, password, "<--details");
+
       try {
         await Auth.signUp({
           username,
