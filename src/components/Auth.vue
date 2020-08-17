@@ -5,9 +5,9 @@
     <sign-in v-if="formState === 'signIn'"></sign-in>
     <p v-on:click="toggle" class="toggle">
       {{
-        formState === "signUp"
-          ? "Already signed up? Sign In"
-          : "Need an account? Sign Up"
+      formState === "signUp"
+      ? "Already signed up? Sign In"
+      : "Need an account? Sign Up"
       }}
     </p>
   </div>
@@ -22,7 +22,7 @@ export default {
   name: "app",
   data() {
     return {
-      formState: "signUp",
+      formState: "signUp"
     };
   },
   methods: {
@@ -30,19 +30,19 @@ export default {
       this.formState === "signUp"
         ? (this.formState = "signIn")
         : (this.formState = "signUp");
-    },
+    }
   },
   components: {
     SignUp,
-    SignIn,
-  },
+    SignIn
+  }
 };
 </script>
 
 <style>
 .auth {
   margin: 0 auto;
-  width: 460px;
+  /* width: 460px; */
 }
 .toggle {
   cursor: pointer;

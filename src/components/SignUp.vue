@@ -109,6 +109,16 @@ export default {
   align-items: center;
 }
 
+@media (min-width: 320px) {
+  .btn {
+    width: 60%;
+  }
+  .main {
+    margin: auto;
+    padding-right: 1rem;
+  }
+}
+
 @media (min-width: 425px) {
   .btn {
     width: 60%;
